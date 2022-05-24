@@ -1,4 +1,4 @@
-# iacg-craft
+# craft
 
 ## Project setup
 ```

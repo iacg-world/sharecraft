@@ -2077,7 +2077,7 @@
 
 "@vue/eslint-config-typescript@^9.1.0":
   version "9.1.0"
-  resolved "https://registry.npmmirror.com/@vue/eslint-config-typescript/-/eslint-config-typescript-9.1.0.tgz#b98a64352b312085444a08b98728962e2a8425ab"
+  resolved "https://registry.npmjs.org/@vue/eslint-config-typescript/-/eslint-config-typescript-9.1.0.tgz#b98a64352b312085444a08b98728962e2a8425ab"
   integrity sha512-j/852/ZYQ5wDvCD3HE2q4uqJwJAceer2FwoEch1nFo+zTOsPrbzbE3cuWIs3kvu5hdFsGTMYwRwjI6fqZKDMxQ==
   dependencies:
     vue-eslint-parser "^8.0.0"

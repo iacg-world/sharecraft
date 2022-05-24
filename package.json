@@ -1,5 +1,5 @@
 {
-  "name": "iacg-craft",
+  "name": "craft",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -38,5 +38,10 @@
     "prettier": "^2.4.1",
     "ts-jest": "^27.0.4",
     "typescript": "~4.5.5"
+  },
+  "eslintConfig": {
+    "rules": {
+      "vue/no-multiple-template-root": "off"
+    }
   }
 }
