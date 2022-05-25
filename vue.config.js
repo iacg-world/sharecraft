@@ -17,15 +17,6 @@ module.exports = defineConfig({
         tsconfigRaw: require('./tsconfig.json'),
       })
 
-    // 用cdn方式引入
-    config.externals({
-      vue: 'Vue',
-      vuex: 'Vuex',
-      'vue-router': 'VueRouter',
-      moment: 'moment',
-      lodash: '_',
-      // tinymce: 'tinymce',
-    })
     if (NODE_ENV === 'production') {
       config.plugin('html').tap((args) => {
         return [
