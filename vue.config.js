@@ -29,6 +29,7 @@ module.exports = defineConfig({
     }
   },
   configureWebpack: (config) => {
+    config.devtool = 'source-map'
     config.entry = './src/main.ts'
     config.performance = {
       hints: false,
@@ -74,8 +75,6 @@ module.exports = defineConfig({
         },
       },
     }
-    config.module.noParse =
-      /^(vue|vue-router|vuex|vuex-router-sync|lodash|moment)$/
 
     if (NODE_ENV === 'production') {
       // config.plugins = config.plugins.concat([compressionPlugin])

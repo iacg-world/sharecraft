@@ -7,7 +7,7 @@
             <template v-slot:cover>
               <img :src="item.coverImg" v-if="item.coverImg" />
               <img
-                src="http://typescript-vue.oss-cn-beijing.aliyuncs.com/vue-marker/5f81cca3f3bf7a0e1ebaf885.png"
+                src="https://static.jiebao.zhenai.com/seeyou/home/topic-activity/topic_activity-top_bg.png"
                 v-else
               />
               <div class="hover-item">
@@ -31,7 +31,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import { TemplateProps } from '../store'
+import { TemplateProps } from '../store/templates'
 export default defineComponent({
   name: 'template-list',
   props: {

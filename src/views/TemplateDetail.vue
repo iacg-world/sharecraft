@@ -1,19 +1,15 @@
 <template>
   <div class="work-detail-container">
-    <pre>{{ route }}</pre>
-    <a-row type="flex" justify="center">
+    <a-row type="flex" justify="center" v-if="template">
       <a-col :span="8" class="cover-img">
-        <img
-          src="https://static.jiebao.zhenai.com/seeyou/home/topic-activity/topic_activity-top_bg.png"
-          alt=""
-        />
+        <img :src="template.coverImg" alt="" />
       </a-col>
       <a-col :span="8">
-        <h2>iacg落地页海报</h2>
-        <p>如何突破前端成长瓶颈？</p>
+        <h2>{{ template.title }}</h2>
+        <p>{{ template.title }}</p>
         <div class="author">
           <a-avatar>V</a-avatar>
-          该模版由 <b>Viking</b> 创作
+          该模版由 <b>{{ template.author }}</b> 创作
         </div>
         <div class="bar-code-area">
           <span>扫一扫，手机预览</span>
@@ -31,13 +27,22 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, computed } from 'vue'
 import { useRoute } from 'vue-router'
+import { useStore } from 'vuex'
+import { GlobalDataProps } from '../store/index'
+import { TemplateProps } from '../store/templates'
 export default defineComponent({
   setup() {
     const route = useRoute()
+    const store = useStore<GlobalDataProps>()
+    const currentId = route.params.id as string
+    const template = computed<TemplateProps>(() =>
+      store.getters.getTemplateById(parseInt(currentId))
+    )
     return {
       route,
+      template,
     }
   },
 })

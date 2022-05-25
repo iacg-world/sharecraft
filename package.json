@@ -12,6 +12,8 @@
     "ant-design-vue": "^3.2.4",
     "babel-plugin-import": "^1.13.5",
     "core-js": "^3.8.3",
+    "lodash-es": "^4.17.21",
+    "uuid": "^8.3.2",
     "vue": "^3.2.13",
     "vue-class-component": "^8.0.0-0",
     "vue-router": "^4.0.3",
@@ -19,6 +21,8 @@
   },
   "devDependencies": {
     "@types/jest": "^27.0.1",
+    "@types/lodash-es": "^4.17.6",
+    "@types/uuid": "^8.3.4",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.0",
     "@vue/cli-plugin-babel": "~5.0.0",
