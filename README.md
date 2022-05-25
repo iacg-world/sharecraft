@@ -1,4 +1,4 @@
-# craft
+# sharecraft
 
 ## Project setup
 ```

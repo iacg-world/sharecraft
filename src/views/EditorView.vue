@@ -1,10 +1,5 @@
 <template>
-  <div class="editor" id="editor-layout-main">
-    <a-layout :style="{ background: '#fff' }">
-      <a-layout-header class="header">
-        <div class="page-title" :style="{ color: '#fff' }">i分享</div>
-      </a-layout-header>
-    </a-layout>
+  <div class="editor-container">
     <a-layout>
       <a-layout-sider width="300" style="background: yellow">
         <div class="sidebar-container">组件列表</div>
@@ -33,7 +28,7 @@ export default defineComponent({})
 </script>
 
 <style>
-.preview-container {
+.editor-container .preview-container {
   padding: 24px;
   margin: 0;
   min-height: 85vh;
@@ -42,7 +37,7 @@ export default defineComponent({})
   align-items: center;
   position: relative;
 }
-.preview-list {
+.editor-container .preview-list {
   padding: 0;
   margin: 0;
   min-width: 375px;
