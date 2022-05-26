@@ -3,11 +3,11 @@
     class="edit-wrapper"
     @click="onItemClick(id)"
     @dblclick="onChangeEditStatus(id)"
-    :class="{ active: active }"
+    :class="{ active: active && isEditing }"
   >
     <slot></slot>
     <close-circle-two-tone
-      v-if="active"
+      v-if="active && isEditing"
       @click="removeEditComponent(id)"
       :class="{
         'remove-edit_component-active': active,
@@ -19,6 +19,7 @@
 
 <script lang="ts">
 import { GlobalDataProps } from '@/store'
+import { computed } from '@vue/reactivity'
 import { defineComponent } from 'vue'
 import { useStore } from 'vuex'
 
@@ -36,6 +37,7 @@ export default defineComponent({
   emits: ['set-active', 'remove-component'],
   setup(props, context) {
     const store = useStore<GlobalDataProps>()
+    const isEditing = computed(() => store.state.editor.isEditing)
 
     const onItemClick = (id: string) => {
       if (store.state.editor.isEditing) {
@@ -44,11 +46,11 @@ export default defineComponent({
     }
     const onChangeEditStatus = (id: string) => {
       const isEditing = store.state.editor.isEditing
+      store.commit('clearClickTimeout')
+      store.commit('setEditStatus', isEditing)
       if (!isEditing) {
         onItemClick(id)
       }
-      store.commit('clearClickTimeout')
-      store.commit('setEditStatus', isEditing)
     }
     const removeEditComponent = (id: string) => {
       if (store.state.editor.isEditing) {
@@ -59,6 +61,7 @@ export default defineComponent({
       onItemClick,
       onChangeEditStatus,
       removeEditComponent,
+      isEditing,
     }
   },
 })
