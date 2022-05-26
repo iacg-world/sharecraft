@@ -16,6 +16,7 @@
           <div class="preview-list" id="canvas-area">
             <edit-wrapper
               @setActive="setActive"
+              @removeComponent="removeComponent"
               v-for="component in components"
               :key="component.id"
               :id="component.id"
@@ -77,6 +78,9 @@ export default defineComponent({
     const setActive = (id: string) => {
       store.commit('setActive', id)
     }
+    const removeComponent = (id: string) => {
+      store.commit('removeComponent', id)
+    }
     const handleChange = (e: any) => {
       console.log('event', e)
       store.commit('updateComponent', e)
@@ -86,6 +90,7 @@ export default defineComponent({
       defaultTextTemplates,
       addItem,
       setActive,
+      removeComponent,
       currentElement,
       handleChange,
       isEditing,

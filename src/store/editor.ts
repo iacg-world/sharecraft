@@ -92,6 +92,13 @@ const editor: Module<EditorProps, GlobalDataProps> = {
     setActive(state, currentId: string) {
       state.currentElementId = currentId
     },
+    removeComponent(state, targetId: string) {
+      state.components = state.components.filter((item) => {
+        if (item.id !== targetId) {
+          return item
+        }
+      })
+    },
     updateComponent(state, { key, value }) {
       const updatedComponent = state.components.find(
         (component) => component.id === state.currentElementId
