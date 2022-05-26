@@ -66,6 +66,7 @@ export const mapPropsToForms: PropsToForms = {
   },
   fontFamily: {
     component: 'a-select',
+    extraProps: { style: 'min-width: 100px' },
     subComponent: 'a-select-option',
     text: '字体',
     options: [{ value: '', text: '无' }, ...fontFamilyOptions],

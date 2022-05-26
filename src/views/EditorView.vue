@@ -53,7 +53,7 @@ import { GlobalDataProps } from '../store/index'
 import CText from '../components/CText.vue'
 import ComponentsList from '../components/ComponentsList.vue'
 import EditWrapper from '../components/EditWrapper.vue'
-import PropsTable from '../components/PropsTable.vue'
+import PropsTable from '../components/PropsTable'
 import { ComponentData } from '../store/editor'
 import { defaultTextTemplates } from '../defaultTemplates'
 export default defineComponent({
