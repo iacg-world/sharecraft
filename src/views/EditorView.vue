@@ -1,21 +1,14 @@
 <template>
   <div class="editor-container">
     <a-layout>
-      <a-layout-sider
-        width="300"
-        style="background: #fff"
-        class="settings-panel"
-      >
-        组件属性
-        <props-table
-          v-if="currentElement && currentElement.props"
-          :props="currentElement.props"
-          @change="handleChange"
-        ></props-table>
-        <pre>
-        {{ currentElement && currentElement.props }}
-      </pre
-        >
+      <a-layout-sider width="200" style="background: #fff">
+        <div class="sidebar-container">
+          组件列表
+          <components-list
+            :list="defaultTextTemplates"
+            @onItemClick="addItem"
+          />
+        </div>
       </a-layout-sider>
       <a-layout style="padding: 0 24px 24px">
         <a-layout-content class="preview-container">
@@ -33,15 +26,21 @@
           </div>
         </a-layout-content>
       </a-layout>
-
-      <a-layout-sider width="300" style="background: #fff">
-        <div class="sidebar-container">
-          组件列表
-          <components-list
-            :list="defaultTextTemplates"
-            @onItemClick="addItem"
-          />
-        </div>
+      <a-layout-sider
+        width="300"
+        style="background: #fff"
+        class="settings-panel"
+      >
+        组件属性
+        <props-table
+          v-if="currentElement && currentElement.props"
+          :props="currentElement.props"
+          @change="handleChange"
+        ></props-table>
+        <pre>
+        {{ currentElement && currentElement.props }}
+      </pre
+        >
       </a-layout-sider>
     </a-layout>
   </div>

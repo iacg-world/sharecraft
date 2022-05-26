@@ -13,8 +13,12 @@ module.exports = {
     ecmaVersion: 2020,
   },
   rules: {
-    'prettier/prettier': ['error', { singleQuote: true, semi: false }],
+    'prettier/prettier': [
+      'error',
+      { singleQuote: true, semi: false, endOfLine: 'auto' },
+    ],
     indent: ['error', 2],
+    '@typescript-eslint/no-explicit-any': ['off'],
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
   },
@@ -29,4 +33,4 @@ module.exports = {
       },
     },
   ],
-};
+}

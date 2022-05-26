@@ -29,7 +29,6 @@ module.exports = defineConfig({
     }
   },
   configureWebpack: (config) => {
-    config.devtool = 'source-map'
     config.entry = './src/main.ts'
     config.performance = {
       hints: false,
