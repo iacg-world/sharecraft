@@ -1,4 +1,6 @@
 import { mapValues, without } from 'lodash-es'
+
+// 组件通用属性
 export interface CommonComponentProps {
   // actions
   actionType: string
@@ -49,6 +51,8 @@ export const commonDefaultProps: CommonComponentProps = {
   top: '0',
   right: '0',
 }
+
+// 文本组件通用属性
 export interface TextComponentProps extends CommonComponentProps {
   text: string
   fontSize: string
@@ -82,6 +86,7 @@ export const textStylePropNames = without(
   'text'
 )
 
+// 将text属性转换成Vue Props属性
 export const transformToComponentProps = (props: TextComponentProps) => {
   return mapValues(props, (item) => {
     return {

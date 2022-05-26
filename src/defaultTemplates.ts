@@ -1,3 +1,4 @@
+// 文本通用属性
 export const defaultTextTemplates = [
   {
     text: '大标题',
