@@ -2,6 +2,7 @@
   <div
     class="edit-wrapper"
     @click="onItemClick(id)"
+    @dblclick="onChangeEditStatus(id)"
     :class="{ active: active }"
   >
     <slot></slot>
@@ -9,7 +10,10 @@
 </template>
 
 <script lang="ts">
+import { GlobalDataProps } from '@/store'
 import { defineComponent } from 'vue'
+import { useStore } from 'vuex'
+
 export default defineComponent({
   props: {
     id: {
@@ -23,11 +27,24 @@ export default defineComponent({
   },
   emits: ['set-active'],
   setup(props, context) {
+    const store = useStore<GlobalDataProps>()
+
     const onItemClick = (id: string) => {
-      context.emit('set-active', id)
+      if (store.state.editor.isEditing) {
+        context.emit('set-active', id)
+      }
+    }
+    const onChangeEditStatus = (id: string) => {
+      const isEditing = store.state.editor.isEditing
+      if (!isEditing) {
+        onItemClick(id)
+      }
+      store.commit('clearClickTimeout')
+      store.commit('setEditStatus', isEditing)
     }
     return {
       onItemClick,
+      onChangeEditStatus,
     }
   },
 })

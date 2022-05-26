@@ -3,6 +3,9 @@ import { v4 as uuidv4 } from 'uuid'
 import { GlobalDataProps } from './index'
 import { TextComponentProps } from '../defaultProps'
 export interface EditorProps {
+  // 是否在编辑状态
+  isEditing: boolean
+  clickTimeout: number
   // 供中间编辑器渲染的数组
   components: ComponentData[]
   // 当前编辑的是哪个元素，uuid
@@ -59,10 +62,24 @@ export const testComponents: ComponentData[] = [
 
 const editor: Module<EditorProps, GlobalDataProps> = {
   state: {
+    isEditing: false,
+    clickTimeout: 0,
     components: testComponents,
     currentElementId: '',
   },
   mutations: {
+    setEditStatus(state, status) {
+      // status是当前的编辑状态
+      state.isEditing = !status
+    },
+    clearClickTimeout(state) {
+      clearTimeout(state.clickTimeout)
+      state.clickTimeout = 0
+    },
+    setClickTimeout(state, event, delay = 300) {
+      clearTimeout(state.clickTimeout)
+      state.clickTimeout = setTimeout(event, delay)
+    },
     // 给画布添加组件渲染
     addComponent(state, props: Partial<TextComponentProps>) {
       const newComponent: ComponentData = {

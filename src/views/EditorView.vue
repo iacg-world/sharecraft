@@ -27,6 +27,7 @@
         </a-layout-content>
       </a-layout>
       <a-layout-sider
+        v-show="isEditing"
         width="300"
         style="background: #fff"
         class="settings-panel"
@@ -66,6 +67,7 @@ export default defineComponent({
   setup() {
     const store = useStore<GlobalDataProps>()
     const components = computed(() => store.state.editor.components)
+    const isEditing = computed(() => store.state.editor.isEditing)
     const currentElement = computed<ComponentData | null>(
       () => store.getters.getCurrentElement
     )
@@ -86,6 +88,7 @@ export default defineComponent({
       setActive,
       currentElement,
       handleChange,
+      isEditing,
     }
   },
 })
