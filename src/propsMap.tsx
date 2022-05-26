@@ -6,8 +6,8 @@ export interface PropToForm {
   extraProps?: { [key: string]: any }
   text?: string
   options?: { text: string | VNode; value: any }[]
-  initalTransform?: (v: any) => any
-  afterTransform?: (v: any) => any
+  initalTransform?: (v: any) => any // 初始化输入转换，值传递到表单可能需要转换类型
+  afterTransform?: (v: any) => any // 处理表单change事件传递输出的参数
   valueProp?: string
   eventName?: string
 }
@@ -18,8 +18,12 @@ export type PropsToForms = {
 const fontFamilyArr = [
   { text: '宋体', value: '"SimSun","STSong"' },
   { text: '黑体', value: '"SimHei","STHeiti"' },
+  { text: '微软雅黑', value: '"Microsoft YaHei' },
   { text: '楷体', value: '"KaiTi","STKaiti"' },
   { text: '仿宋', value: '"FangSong","STFangsong"' },
+  { text: 'Palatino Linotype', value: '"Palatino Linotype", "Book Antiqua"' },
+  { text: 'Comic Sans MS', value: '"Comic Sans MS"' },
+  { text: 'Impact', value: '"Impact"' },
 ]
 const fontFamilyOptions = fontFamilyArr.map((font) => {
   return {
@@ -65,5 +69,17 @@ export const mapPropsToForms: PropsToForms = {
     subComponent: 'a-select-option',
     text: '字体',
     options: [{ value: '', text: '无' }, ...fontFamilyOptions],
+  },
+  fontWeight: {
+    component: 'a-radio-group',
+    subComponent: 'a-radio-button',
+    text: '加粗',
+    options: [
+      { value: 'lighter', text: '细' },
+      { value: 'normal', text: '正常' },
+      { value: 'bold', text: '粗' },
+      { value: 'bolder', text: '加粗' },
+    ],
+    afterTransform: (e: any) => e.target.value,
   },
 }

@@ -8,12 +8,14 @@ export const defaultTextTemplates = [
   },
   {
     text: '正文内容',
+    fontWeight: 'normal',
     tag: 'p',
   },
   {
     text: '链接内容',
     color: '#1890ff',
     textDecoration: 'underline',
+    fontWeight: 'normal',
     tag: 'p',
   },
   {
@@ -31,5 +33,6 @@ export const defaultTextTemplates = [
     width: '100px',
     tag: 'button',
     textAlign: 'center',
+    fontWeight: 'normal',
   },
 ]
