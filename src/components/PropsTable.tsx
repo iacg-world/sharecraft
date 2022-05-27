@@ -3,6 +3,7 @@ import { reduce } from 'lodash'
 import { PropsToForms, mapPropsToForms } from '../propsMap'
 import { TextComponentProps } from '../defaultProps'
 import { Input, InputNumber, Slider, Radio, Select } from 'ant-design-vue'
+import ColorPicker from './ColorPicker.vue'
 const mapToComponent = {
   'a-textarea': Input.TextArea,
   'a-input-number': InputNumber,
@@ -11,6 +12,7 @@ const mapToComponent = {
   'a-radio-button': Radio.Button,
   'a-select': Select,
   'a-select-option': Select.Option,
+  'color-picker': ColorPicker,
 } as any
 
 interface FormProps {

@@ -10,6 +10,10 @@ export interface PropToForm {
   afterTransform?: (v: any) => any // 处理表单change事件传递输出的参数
   valueProp?: string
   eventName?: string
+  color?: {
+    component: string
+    text: string
+  }
 }
 
 export type PropsToForms = {
@@ -70,6 +74,10 @@ export const mapPropsToForms: PropsToForms = {
     subComponent: 'a-select-option',
     text: '字体',
     options: [{ value: '', text: '无' }, ...fontFamilyOptions],
+  },
+  color: {
+    component: 'color-picker',
+    text: '字体颜色',
   },
   fontWeight: {
     component: 'a-radio-group',
