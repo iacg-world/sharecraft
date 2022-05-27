@@ -1,4 +1,5 @@
 import { mount, VueWrapper } from '@vue/test-utils'
+import rgbHex from 'rgb-hex'
 import ColorPicker from '@/components/ColorPicker.vue'
 const defaultColors = [
   '#ffffff',
@@ -40,7 +41,7 @@ describe('UserProfile component', () => {
     )
     // 检查一个元素的 css backgroundColor属性是否相等对应的颜色
     const firstItem = wrapper.get('li:first-child div').element as HTMLElement
-    expect(firstItem.style.backgroundColor).toBe(defaultColors[0])
+    expect('#' + rgbHex(firstItem.style.backgroundColor)).toBe(defaultColors[0])
     // 测试最后一个元素是否有特殊的类名
     const lastItem = wrapper.get('li:last-child div').element as HTMLElement
     expect(lastItem.classList.contains('transparent-back')).toBeTruthy()
