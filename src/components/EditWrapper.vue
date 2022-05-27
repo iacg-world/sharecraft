@@ -10,7 +10,7 @@
       v-if="active && isEditing"
       @click="removeEditComponent(id)"
       :class="{
-        'remove-edit_component-active': active,
+        'remove-edit_component-active': true,
         'remove-edit_component': true,
       }"
     />
@@ -88,7 +88,7 @@ export default defineComponent({
   right: 0;
   top: 0;
 }
-.remove-edit_component:hover {
-  color: red;
+.remove-edit_component-active:hover {
+  transform: scale(1.1);
 }
 </style>
