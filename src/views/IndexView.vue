@@ -5,6 +5,7 @@
         <div class="page-title">
           <router-link to="/">i分享</router-link>
         </div>
+        <user-profile :user="user"></user-profile>
       </a-layout-header>
       <a-layout-content class="home-layout">
         <router-view></router-view>
@@ -15,11 +16,30 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-export default defineComponent({})
+import { computed, defineComponent } from 'vue'
+import { useStore } from 'vuex'
+import { GlobalDataProps } from '../store/index'
+import UserProfile from '../components/UserProfile.vue'
+export default defineComponent({
+  components: {
+    UserProfile,
+  },
+  setup() {
+    const store = useStore<GlobalDataProps>()
+    const user = computed(() => store.state.user)
+    return {
+      user,
+    }
+  },
+})
 </script>
 
 <style>
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 .page-title {
   color: #fff;
 }
