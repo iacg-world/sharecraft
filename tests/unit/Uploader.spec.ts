@@ -63,7 +63,7 @@ describe('Uploader Component', () => {
   it('上传默失败', async () => {
     mockedAxios.post.mockRejectedValueOnce({ error: 'error' })
     await wrapper.get('input').trigger('change')
-    expect(mockedAxios.post).toHaveBeenCalledTimes(2)
+    expect(mockedAxios.post).toHaveBeenCalledTimes(1)
     expect(wrapper.get('button').text()).toBe('正在上传')
     await flushPromises()
     expect(wrapper.get('button').text()).toBe('点击上传')
@@ -104,5 +104,72 @@ describe('Uploader Component', () => {
     expect(wrapper.get('.loading').text()).toBe('custom loading')
     await flushPromises()
     expect(wrapper.get('.custom-loaded').text()).toBe('xyz.url')
+  })
+  it('上传前文件检查', async () => {
+    const callback = jest.fn()
+    mockedAxios.post.mockResolvedValueOnce({ data: { url: 'dummy.url' } })
+    const checkFileSize = (file: File) => {
+      if (file.size > 2) {
+        callback()
+        return false
+      }
+      return true
+    }
+    const wrapper = shallowMount(Uploader, {
+      props: {
+        action: 'test.url',
+        beforeUpload: checkFileSize,
+      },
+    })
+    const fileInput = wrapper.get('input').element as HTMLInputElement
+    setInputValue(fileInput)
+    await wrapper.get('input').trigger('change')
+    expect(mockedAxios.post).not.toHaveBeenCalled()
+    expect(wrapper.findAll('li').length).toBe(0)
+    expect(callback).toHaveBeenCalled()
+  }),
+    it('检查promise', async () => {
+      mockedAxios.post.mockResolvedValueOnce({ data: { url: 'dummy.url' } })
+      const failedPromise = (file: File) => {
+        return Promise.reject('wrong type')
+      }
+      const successPromise = (file: File) => {
+        const newFile = new File([file], 'new_name.docx', { type: file.type })
+        return Promise.resolve(newFile)
+      }
+
+      const successPromiseWithWrongType = () => {
+        return Promise.resolve('abcd')
+      }
+
+      const wrapper = shallowMount(Uploader, {
+        props: {
+          action: 'test.url',
+          beforeUpload: failedPromise,
+        },
+      })
+      const fileInput = wrapper.get('input').element as HTMLInputElement
+      setInputValue(fileInput)
+      await wrapper.get('input').trigger('change')
+      await flushPromises()
+      expect(mockedAxios.post).not.toHaveBeenCalled()
+      expect(wrapper.findAll('li').length).toBe(0)
+      // success promise with wrong file
+      await wrapper.setProps({ beforeUpload: successPromiseWithWrongType })
+      await wrapper.get('input').trigger('change')
+      await flushPromises()
+      expect(mockedAxios.post).not.toHaveBeenCalled()
+      expect(wrapper.findAll('li').length).toBe(0)
+      // success promise with file
+      await wrapper.setProps({ beforeUpload: successPromise })
+      await wrapper.get('input').trigger('change')
+      await flushPromises()
+      expect(mockedAxios.post).toHaveBeenCalled()
+      const firstItem = wrapper.get('li:first-child')
+      expect(firstItem.classes()).toContain('upload-success')
+      expect(firstItem.get('.filename').text()).toBe('new_name.docx')
+    })
+  afterEach(() => {
+    mockedAxios.post.mockReset()
   })
 })
