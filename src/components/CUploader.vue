@@ -25,12 +25,18 @@
       :style="{ display: 'none' }"
       @change="handleFileChange"
     />
-    <ul class="upload-list">
+    <ul :class="`upload-list upload-list-${listType}`">
       <li
         :class="`uploaded-file upload-${file.status}`"
         v-for="file in filesList"
         :key="file.uid"
       >
+        <img
+          v-if="file.url && listType === 'picture'"
+          class="upload-list-thumbnail"
+          :src="file.url"
+          :alt="file.name"
+        />
         <span v-if="file.status === 'loading'" class="file-icon"
           ><LoadingOutlined
         /></span>
@@ -54,6 +60,7 @@ import axios from 'axios'
 import { v4 as uuidv4 } from 'uuid'
 import { last } from 'lodash-es'
 type UploadStatus = 'ready' | 'loading' | 'success' | 'error'
+type FileListType = 'picture' | 'text'
 type CheckUpload = (file: File) => boolean | Promise<File>
 export interface UploadFile {
   uid: string
@@ -62,6 +69,7 @@ export interface UploadFile {
   status: UploadStatus
   raw: File
   resp?: any
+  url?: string
 }
 export default defineComponent({
   components: {
@@ -84,6 +92,10 @@ export default defineComponent({
     autoUpload: {
       type: Boolean,
       default: true,
+    },
+    listType: {
+      type: String as PropType<FileListType>,
+      defualt: 'text',
     },
   },
   setup(props) {
@@ -144,6 +156,18 @@ export default defineComponent({
         status: 'ready',
         raw: uploadedFile,
       })
+      if (props.listType === 'picture') {
+        try {
+          // fileObj.url = URL.createObjectURL(uploadedFile)
+          const fileReader = new FileReader()
+          fileReader.readAsDataURL(uploadedFile)
+          fileReader.addEventListener('load', () => {
+            fileObj.url = fileReader.result as string
+          })
+        } catch (err) {
+          console.error('upload File error', err)
+        }
+      }
       filesList.value.push(fileObj)
       if (props.autoUpload) {
         postFile(fileObj)
@@ -243,6 +267,16 @@ export default defineComponent({
   position: relative;
   &:first-child {
     margin-top: 10px;
+  }
+  .upload-list-thumbnail {
+    vertical-align: middle;
+    display: inline-block;
+    width: 70px;
+    height: 70px;
+    position: relative;
+    z-index: 1;
+    background-color: #fff;
+    object-fit: cover;
   }
   .file-icon {
     svg {

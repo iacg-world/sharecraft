@@ -4,6 +4,7 @@
       action="https://service-97v3wgkr-1300321168.sh.apigw.tencentcs.com/release/UploadFileToCOSByAPIGW-1653728119"
       drag
       :autoUpload="false"
+      listType="picture"
       ref="uploader"
     >
     </c-uploader>
