@@ -25,7 +25,7 @@
       :style="{ display: 'none' }"
       @change="handleFileChange"
     />
-    <ul :class="`upload-list upload-list-${listType}`">
+    <ul :class="`upload-list upload-list-${listType}`" v-if="showUploadList">
       <li
         :class="`uploaded-file upload-${file.status}`"
         v-for="file in filesList"
@@ -97,8 +97,13 @@ export default defineComponent({
       type: String as PropType<FileListType>,
       defualt: 'text',
     },
+    showUploadList: {
+      type: Boolean,
+      default: true,
+    },
   },
-  setup(props) {
+  emits: ['success', 'error', 'change'],
+  setup(props, { emit }) {
     const fileInput = ref<null | HTMLInputElement>(null)
     const filesList = ref<UploadFile[]>([])
     const isDragOver = ref(false)
@@ -137,9 +142,15 @@ export default defineComponent({
         .then((resp) => {
           readyFile.status = 'success'
           readyFile.resp = resp.data
+          emit('success', {
+            resp: resp.data,
+            file: readyFile,
+            list: filesList.value,
+          })
         })
-        .catch(() => {
+        .catch((e: any) => {
           readyFile.status = 'error'
+          emit('error', { error: e, file: readyFile, list: filesList.value })
         })
         .finally(() => {
           if (fileInput.value) {
