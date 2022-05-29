@@ -6,7 +6,7 @@
     :beforeUpload="commonUploadCheck"
     @success="
       (data) => {
-        handleUploadSuccess(data.resp)
+        handleUploadSuccess(data.resp, data.file.raw)
       }
     "
   >
@@ -42,8 +42,8 @@ export default defineComponent({
   },
   emits: ['success'],
   setup(props, { emit }) {
-    const handleUploadSuccess = (resp: any) => {
-      emit('success', resp)
+    const handleUploadSuccess = (resp: any, file: File) => {
+      emit('success', { resp, file })
     }
     return {
       commonUploadCheck,

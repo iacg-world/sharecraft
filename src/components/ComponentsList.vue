@@ -21,6 +21,7 @@ import StyledUploader from '../components/StyledUploader.vue'
 import { ComponentData } from '../store/editor'
 import { imageDefaultProps, TextComponentProps } from '../defaultProps'
 import { UploadResp } from '../types/extractTypes'
+import { getImageDimensions } from '../helper'
 export default defineComponent({
   props: {
     list: {
@@ -43,7 +44,8 @@ export default defineComponent({
       }
       context.emit('on-item-click', componentData)
     }
-    const onImageUploaded = (resp: UploadResp) => {
+    const onImageUploaded = (data: { resp: UploadResp; file: File }) => {
+      const { resp, file } = data
       const componentData: ComponentData = {
         name: 'c-image',
         id: uuidv4(),
@@ -53,7 +55,11 @@ export default defineComponent({
       }
       message.success('上传成功')
       componentData.props.src = resp.data.url
-      context.emit('on-item-click', componentData)
+      getImageDimensions(file).then(({ width }) => {
+        const maxWidth = 373
+        componentData.props.width = (width > maxWidth ? maxWidth : width) + 'px'
+        context.emit('on-item-click', componentData)
+      })
     }
     return {
       onItemClick,

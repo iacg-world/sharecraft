@@ -37,6 +37,13 @@ const fontFamilyOptions = fontFamilyArr.map((font) => {
     ) as VNode,
   }
 })
+
+const pxToNumberHandler: PropToForm = {
+  component: 'a-input-number',
+  initalTransform: (v: string) => parseInt(v),
+  afterTransform: (e: number) => (e ? `${e}px` : ''),
+}
+
 export const mapPropsToForms: PropsToForms = {
   text: {
     text: '文本',
@@ -46,9 +53,7 @@ export const mapPropsToForms: PropsToForms = {
   },
   fontSize: {
     text: '字号',
-    component: 'a-input-number',
-    initalTransform: (v: string) => parseInt(v),
-    afterTransform: (e: number) => (e ? `${e}px` : ''),
+    ...pxToNumberHandler,
   },
   lineHeight: {
     text: '行高',
@@ -74,6 +79,10 @@ export const mapPropsToForms: PropsToForms = {
     subComponent: 'a-select-option',
     text: '字体',
     options: [{ value: '', text: '无' }, ...fontFamilyOptions],
+  },
+  width: {
+    text: '宽度',
+    ...pxToNumberHandler,
   },
   color: {
     component: 'color-picker',
