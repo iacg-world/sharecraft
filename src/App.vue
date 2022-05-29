@@ -6,20 +6,6 @@
       :autoUpload="false"
       ref="uploader"
     >
-      <div class="uploader-container">
-        <h4>上传图片</h4>
-      </div>
-      <template #loading>
-        <div class="uploader-container">
-          <h4>上传中</h4>
-        </div>
-      </template>
-      <!-- <template #uploaded="{ uploadedData }">
-        <div class="uploaded-area">
-          <img :src="uploadedData.data.url" />
-          <h3>点击重新上传</h3>
-        </div>
-      </template> -->
     </c-uploader>
     <button @click="callUpload">手动上传</button>
     <router-view />
@@ -56,11 +42,15 @@ export default defineComponent({
         const formData = new FormData()
         formData.append(uploadedFile.name, uploadedFile)
         axios
-          .post('http://local.test:7001/api/upload', formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          })
+          .post(
+            'https://service-97v3wgkr-1300321168.sh.apigw.tencentcs.com/release/UploadFileToCOSByAPIGW-1653728119',
+            formData,
+            {
+              headers: {
+                'Content-Type': 'multipart/form-data',
+              },
+            }
+          )
           .then((resp) => {
             console.log(resp.data)
           })
