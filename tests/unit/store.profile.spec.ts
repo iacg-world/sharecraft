@@ -1,7 +1,6 @@
 import store from '@/store/index'
 import { testData } from '@/store/templates'
 import { testComponents, ComponentData } from '@/store/editor'
-import { TextComponentProps } from '../../src/defaultProps'
 import { clone, last } from 'lodash-es'
 const cloneComponents = clone(testComponents)
 describe('test vuex store', () => {
@@ -51,8 +50,12 @@ describe('test vuex store', () => {
 
     describe('component event: ', () => {
       it('component add should works fine', () => {
-        const payload: Partial<TextComponentProps> = {
-          text: 'text1',
+        const payload: ComponentData = {
+          name: 'c-text',
+          id: '1234',
+          props: {
+            text: 'text1',
+          },
         }
         store.commit('addComponent', payload)
         expect(store.state.editor.components).toHaveLength(

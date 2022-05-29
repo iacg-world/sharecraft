@@ -53,6 +53,7 @@ import { defineComponent, computed } from 'vue'
 import { useStore } from 'vuex'
 import { GlobalDataProps } from '../store/index'
 import CText from '../components/CText.vue'
+import CImage from '../components/CImage.vue'
 import ComponentsList from '../components/ComponentsList.vue'
 import EditWrapper from '../components/EditWrapper.vue'
 import PropsTable from '../components/PropsTable'
@@ -61,6 +62,7 @@ import { defaultTextTemplates } from '../defaultTemplates'
 export default defineComponent({
   components: {
     CText,
+    CImage,
     ComponentsList,
     EditWrapper,
     PropsTable,
@@ -72,8 +74,10 @@ export default defineComponent({
     const currentElement = computed<ComponentData | null>(
       () => store.getters.getCurrentElement
     )
-    const addItem = (props: any) => {
-      store.commit('addComponent', props)
+    const addItem = (component: any) => {
+      console.log(component)
+
+      store.commit('addComponent', component)
     }
     const setActive = (id: string) => {
       store.commit('setActive', id)

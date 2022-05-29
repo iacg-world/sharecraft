@@ -1,7 +1,7 @@
 <template>
   <c-uploader
     class="styled-uploader"
-    action="https://service-97v3wgkr-1300321168.sh.apigw.tencentcs.com/release/UploadFileToCOSByAPIGW-1653728119"
+    action="https://service-autvutk3-1300321168.sh.apigw.tencentcs.com/release/UploadFileToCOSByAPIGW-1653814616"
     :showUploadList="false"
     :beforeUpload="commonUploadCheck"
     @success="
