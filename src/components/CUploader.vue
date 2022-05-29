@@ -1,6 +1,10 @@
 <template>
   <div class="file-upload">
-    <div class="upload-area" @click="triggerUpload">
+    <div
+      class="upload-area"
+      :class="{ 'is-dragover': drag && isDragOver }"
+      v-on="events"
+    >
       <slot v-if="isUploading" name="loading">
         <button disabled>正在上传</button>
       </slot>
@@ -73,10 +77,15 @@ export default defineComponent({
     beforeUpload: {
       type: Function as PropType<CheckUpload>,
     },
+    drag: {
+      type: Boolean,
+      default: false,
+    },
   },
   setup(props) {
     const fileInput = ref<null | HTMLInputElement>(null)
     const uploadedFiles = ref<UploadFile[]>([])
+    const isDragOver = ref(false)
     const isUploading = computed(() => {
       return uploadedFiles.value.some((file) => file.status === 'loading')
     })
@@ -101,6 +110,7 @@ export default defineComponent({
         fileInput.value.click()
       }
     }
+
     const postFile = (uploadedFile: File) => {
       const formData = new FormData()
       formData.append(uploadedFile.name, uploadedFile)
@@ -132,9 +142,7 @@ export default defineComponent({
           }
         })
     }
-    const handleFileChange = (e: Event) => {
-      const target = e.target as HTMLInputElement
-      const files = target.files
+    const uploadFiles = (files: null | FileList) => {
       if (files) {
         const uploadedFile = files[0]
         if (props.beforeUpload) {
@@ -161,6 +169,38 @@ export default defineComponent({
         }
       }
     }
+    let events: { [key: string]: (e: any) => void } = {
+      click: triggerUpload,
+    }
+    const handleFileChange = (e: Event) => {
+      const target = e.target as HTMLInputElement
+      uploadFiles(target.files)
+    }
+    const handleDrag = (e: DragEvent, over: boolean) => {
+      e.preventDefault()
+      isDragOver.value = over
+    }
+    const handleDrop = (e: DragEvent) => {
+      e.preventDefault()
+      isDragOver.value = false
+      if (e.dataTransfer) {
+        uploadFiles(e.dataTransfer.files)
+      }
+    }
+    if (props.drag) {
+      events = {
+        ...events,
+        dragover: (e: DragEvent) => {
+          console.log('dragover')
+
+          handleDrag(e, true)
+        },
+        dragleave: (e: DragEvent) => {
+          handleDrag(e, false)
+        },
+        drop: handleDrop,
+      }
+    }
     return {
       fileInput,
       triggerUpload,
@@ -169,6 +209,8 @@ export default defineComponent({
       uploadedFiles,
       removeFile,
       lastFileData,
+      isDragOver,
+      events,
     }
   },
 })

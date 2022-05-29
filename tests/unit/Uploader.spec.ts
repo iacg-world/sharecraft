@@ -127,48 +127,66 @@ describe('Uploader Component', () => {
     expect(mockedAxios.post).not.toHaveBeenCalled()
     expect(wrapper.findAll('li').length).toBe(0)
     expect(callback).toHaveBeenCalled()
-  }),
-    it('检查promise', async () => {
-      mockedAxios.post.mockResolvedValueOnce({ data: { url: 'dummy.url' } })
-      const failedPromise = (file: File) => {
-        return Promise.reject('wrong type')
-      }
-      const successPromise = (file: File) => {
-        const newFile = new File([file], 'new_name.docx', { type: file.type })
-        return Promise.resolve(newFile)
-      }
+  })
+  it('检查promise', async () => {
+    mockedAxios.post.mockResolvedValueOnce({ data: { url: 'dummy.url' } })
+    const failedPromise = (file: File) => {
+      return Promise.reject('wrong type')
+    }
+    const successPromise = (file: File) => {
+      const newFile = new File([file], 'new_name.docx', { type: file.type })
+      return Promise.resolve(newFile)
+    }
 
-      const successPromiseWithWrongType = () => {
-        return Promise.resolve('abcd')
-      }
+    const successPromiseWithWrongType = () => {
+      return Promise.resolve('abcd')
+    }
 
-      const wrapper = shallowMount(Uploader, {
-        props: {
-          action: 'test.url',
-          beforeUpload: failedPromise,
-        },
-      })
-      const fileInput = wrapper.get('input').element as HTMLInputElement
-      setInputValue(fileInput)
-      await wrapper.get('input').trigger('change')
-      await flushPromises()
-      expect(mockedAxios.post).not.toHaveBeenCalled()
-      expect(wrapper.findAll('li').length).toBe(0)
-      // success promise with wrong file
-      await wrapper.setProps({ beforeUpload: successPromiseWithWrongType })
-      await wrapper.get('input').trigger('change')
-      await flushPromises()
-      expect(mockedAxios.post).not.toHaveBeenCalled()
-      expect(wrapper.findAll('li').length).toBe(0)
-      // success promise with file
-      await wrapper.setProps({ beforeUpload: successPromise })
-      await wrapper.get('input').trigger('change')
-      await flushPromises()
-      expect(mockedAxios.post).toHaveBeenCalled()
-      const firstItem = wrapper.get('li:first-child')
-      expect(firstItem.classes()).toContain('upload-success')
-      expect(firstItem.get('.filename').text()).toBe('new_name.docx')
+    const wrapper = shallowMount(Uploader, {
+      props: {
+        action: 'test.url',
+        beforeUpload: failedPromise,
+      },
     })
+    const fileInput = wrapper.get('input').element as HTMLInputElement
+    setInputValue(fileInput)
+    await wrapper.get('input').trigger('change')
+    await flushPromises()
+    expect(mockedAxios.post).not.toHaveBeenCalled()
+    expect(wrapper.findAll('li').length).toBe(0)
+    // success promise with wrong file
+    await wrapper.setProps({ beforeUpload: successPromiseWithWrongType })
+    await wrapper.get('input').trigger('change')
+    await flushPromises()
+    expect(mockedAxios.post).not.toHaveBeenCalled()
+    expect(wrapper.findAll('li').length).toBe(0)
+    // success promise with file
+    await wrapper.setProps({ beforeUpload: successPromise })
+    await wrapper.get('input').trigger('change')
+    await flushPromises()
+    expect(mockedAxios.post).toHaveBeenCalled()
+    const firstItem = wrapper.get('li:first-child')
+    expect(firstItem.classes()).toContain('upload-success')
+    expect(firstItem.get('.filename').text()).toBe('new_name.docx')
+  })
+  it('拖拽事件', async () => {
+    mockedAxios.post.mockResolvedValueOnce({ data: { url: 'dummy.url' } })
+    const wrapper = shallowMount(Uploader, {
+      props: {
+        action: 'test.url',
+        drag: true,
+      },
+    })
+    const uploadArea = wrapper.get('.upload-area')
+    await uploadArea.trigger('dragover')
+    expect(uploadArea.classes()).toContain('is-dragover')
+    await uploadArea.trigger('dragleave')
+    expect(uploadArea.classes()).not.toContain('is-dragover')
+    await uploadArea.trigger('drop', { dataTransfer: { files: [testFile] } })
+    expect(mockedAxios.post).toHaveBeenCalled()
+    await flushPromises()
+    expect(wrapper.findAll('li').length).toBe(1)
+  })
   afterEach(() => {
     mockedAxios.post.mockReset()
   })
