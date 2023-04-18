@@ -1,7 +1,7 @@
 <template>
   <c-uploader
     class="styled-uploader"
-    action="https://service-autvutk3-1300321168.sh.apigw.tencentcs.com/release/UploadFileToCOSByAPIGW-1653814616"
+    action="http://150.158.18.62:7002/api/utils/upload-img"
     :showUploadList="false"
     :beforeUpload="commonUploadCheck"
     @success="

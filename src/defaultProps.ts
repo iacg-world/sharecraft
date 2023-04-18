@@ -68,6 +68,7 @@ export interface TextComponentProps extends CommonComponentProps {
 export interface ImageComponentProps extends CommonComponentProps {
   src: string
 }
+export type AllComponentProps = TextComponentProps & ImageComponentProps
 export const textDefaultProps: TextComponentProps = {
   // basic props - font styles
   text: '正文内容',

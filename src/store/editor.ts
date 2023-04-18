@@ -9,7 +9,7 @@ export interface ComponentData {
   // id，uuid v4 生成
   id: string
   // 业务组件库名称 c-text，c-image 等等
-  name: 'c-text' | 'c-image'
+  name: 'c-text' | 'c-image' | 'l-shape'
 }
 
 export interface EditorProps {
@@ -59,6 +59,14 @@ export const testComponents: ComponentData[] = [
       lineHeight: '3',
       textAlign: 'left',
       fontFamily: '',
+    },
+  },
+  {
+    id: uuidv4(),
+    name: 'c-image',
+    props: {
+      src: 'https://sharecraft-backend.oss-cn-shanghai.aliyuncs.com/sharecraft-test/LxdNjP.png',
+      width: '450px',
     },
   },
 ]

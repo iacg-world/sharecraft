@@ -5,6 +5,7 @@ import store from './store'
 import Antd from 'ant-design-vue'
 import 'ant-design-vue/dist/antd.css' // or 'ant-design-vue/dist/antd.less'
 import * as Icons from '@ant-design/icons-vue'
+import 'cropperjs/dist/cropper.css'
 
 const app = createApp(App)
 app.use(store).use(router).use(Antd).mount('#app')

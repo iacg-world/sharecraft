@@ -1,7 +1,13 @@
 const { ESBuildMinifyPlugin } = require('esbuild-loader')
 const { defineConfig } = require('@vue/cli-service')
+const isStaging = !!process.env.VUE_APP_STAGINE
 const NODE_ENV = process.env.NODE_ENV
+const isProduction = NODE_ENV === 'production'
 module.exports = defineConfig({
+  publicPath:
+    isProduction && !isStaging
+      ? 'https://sharecraft-backend.oss-cn-shanghai.aliyuncs.com/'
+      : '/',
   transpileDependencies: true,
   chainWebpack: (config) => {
     const jsRule = config.module.rule('js')
@@ -94,5 +100,12 @@ module.exports = defineConfig({
         }),
       ]
     }
+  },
+  devServer: {
+    proxy: {
+      '/api': {
+        target: 'http://150.158.18.62:7002', // 我们要代理的真实接口地址
+      },
+    },
   },
 })
