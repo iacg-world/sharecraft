@@ -56,7 +56,7 @@ import CText from '../components/CText.vue'
 import CImage from '../components/CImage.vue'
 import ComponentsList from '../components/ComponentsList.vue'
 import EditWrapper from '../components/EditWrapper.vue'
-import PropsTable from '../components/PropsTable'
+import PropsTable from '../components/PropsTable.vue'
 import { ComponentData } from '../store/editor'
 import { defaultTextTemplates } from '../defaultTemplates'
 export default defineComponent({
