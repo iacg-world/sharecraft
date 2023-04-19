@@ -3,13 +3,13 @@
     <a-modal
       title="裁剪图片"
       v-model:visible="showModal"
-      @ok="showModal = false"
+      @ok="handleOk"
       @cancel="showModal = false"
       okText="确认"
       cancelText="取消"
     >
       <div class="image-cropper">
-        <img :src="value" id="processed-image" ref="cropperImg" />
+        <img :src="baseImageUrl" id="processed-image" ref="cropperImg" />
       </div>
     </a-modal>
     <div
@@ -36,6 +36,13 @@ import Cropper from 'cropperjs'
 import { DeleteOutlined, ScissorOutlined } from '@ant-design/icons-vue'
 import StyledUploader from './StyledUploader.vue'
 import { UploadResp } from '../extraType'
+interface CropDataProps {
+  x: number
+  y: number
+  width: number
+  height: number
+}
+
 export default defineComponent({
   props: {
     value: {
@@ -59,8 +66,10 @@ export default defineComponent({
   setup(props, context) {
     const showModal = ref(false)
     const backgrondUrl = computed(() => `url(${props.value})`)
+    const baseImageUrl = computed(() => props.value.split('?')[0])
     const cropperImg = ref<null | HTMLImageElement>(null)
     let cropper: Cropper
+    let cropData: CropDataProps | null = null
     watch(showModal, async (newValue) => {
       if (newValue) {
         await nextTick()
@@ -68,7 +77,13 @@ export default defineComponent({
         if (cropperImg.value) {
           cropper = new Cropper(cropperImg.value, {
             crop(event) {
-              console.log(event)
+              const { x, y, width, height } = event.detail
+              cropData = {
+                x: Math.floor(x),
+                y: Math.floor(y),
+                width: Math.floor(width),
+                height: Math.floor(height),
+              }
             },
           })
         }
@@ -78,6 +93,16 @@ export default defineComponent({
         }
       }
     })
+    const handleOk = () => {
+      if (cropData) {
+        const { x, y, width, height } = cropData
+        const cropperURL =
+          baseImageUrl.value +
+          `?x-oss-process=image/crop,x_${x},y_${y},w_${width},h_${height}`
+        context.emit('change', cropperURL)
+      }
+      showModal.value = false
+    }
     const handleFileUploaded = (data: { resp: UploadResp; file: File }) => {
       const { resp } = data
       message.success('上传成功')
@@ -93,6 +118,8 @@ export default defineComponent({
       backgrondUrl,
       showModal,
       cropperImg,
+      handleOk,
+      baseImageUrl,
     }
   },
 })
