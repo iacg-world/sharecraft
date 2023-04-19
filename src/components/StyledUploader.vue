@@ -9,6 +9,11 @@
         handleUploadSuccess(data.resp, data.file.raw)
       }
     "
+    @error="
+      (data) => {
+        handleUploadError(data.resp, data.file.raw)
+      }
+    "
   >
     <div class="uploader-container">
       <FileImageOutlined />
@@ -40,14 +45,18 @@ export default defineComponent({
     FileImageOutlined,
     LoadingOutlined,
   },
-  emits: ['success'],
+  emits: ['success', 'error'],
   setup(props, { emit }) {
     const handleUploadSuccess = (resp: any, file: File) => {
       emit('success', { resp, file })
     }
+    const handleUploadError = (resp: any, file: File) => {
+      emit('error', { resp, file })
+    }
     return {
       commonUploadCheck,
       handleUploadSuccess,
+      handleUploadError,
     }
   },
 })
