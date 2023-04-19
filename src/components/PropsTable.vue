@@ -41,6 +41,7 @@ import ColorPicker from './ColorPicker.vue'
 import ImageProcesser from './ImageProcesser.vue'
 import ShadowPicker from './ShadowPicker.vue'
 import IconSwitch from './IconSwitch.vue'
+import BackgroundProcesser from './BackgroundProcesser.vue'
 interface FormProps {
   component: string
   subComponent?: string
@@ -66,6 +67,7 @@ export default defineComponent({
     ImageProcesser,
     ShadowPicker,
     IconSwitch,
+    BackgroundProcesser,
   },
   emits: ['change'],
   setup(props, context) {

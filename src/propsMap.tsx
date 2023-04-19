@@ -1,5 +1,6 @@
 import { VNode, h } from 'vue'
 import { AllComponentProps } from './defaultProps'
+import { AllFormProps } from '@/store/editor'
 export interface PropToForm {
   component: string
   subComponent?: string
@@ -17,7 +18,7 @@ export interface PropToForm {
 }
 
 export type PropsToForms = {
-  [P in keyof AllComponentProps]?: PropToForm
+  [P in keyof AllFormProps]?: PropToForm
 }
 const fontFamilyArr = [
   { text: '宋体', value: '"SimSun","STSong"' },
@@ -211,5 +212,9 @@ export const mapPropsToForms: PropsToForms = {
     ...defaultHandler,
     afterTransform: (e: any) => e.target.value,
     text: '链接',
+  },
+  backgroundImage: {
+    ...defaultHandler,
+    component: 'background-processer',
   },
 }

@@ -94,9 +94,19 @@ export const testComponents: ComponentData[] = [
   },
 ]
 
+export interface PageProps {
+  backgroundColor: string
+  backgroundImage: string
+  backgroundRepeat: string
+  backgroundSize: string
+  height: string
+}
+export type AllFormProps = PageProps & AllComponentProps
+
 const pageDefaultProps = {
   backgroundColor: '#ffffff',
-  backgroundImage: '',
+  backgroundImage:
+    'url("https://sharecraft-backend.oss-cn-shanghai.aliyuncs.com/sharecraft-test/20180421210121_KddAy.jpeg")',
   backgroundRepeat: 'no-repeat',
   backgroundSize: 'cover',
   height: '560px',
