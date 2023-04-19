@@ -1,67 +1,73 @@
 <template>
-  <ul
+  <draggable
     :list="list"
     class="ant-list-items ant-list-bordered"
-    @drop="onDrop"
-    @dragover="onDragOver"
+    ghost-class="ghost"
+    handle=".handle"
+    item-key="id"
   >
-    <li
-      class="ant-list-item"
-      :class="{
-        active: item.id === selectedId,
-        ghost: dragData.currentDragging === item.id,
-      }"
-      v-for="(item, index) in list"
-      :draggable="true"
-      :key="item.id"
-      :data-index="index"
-      @click="handleClick(item.id)"
-      @dragstart="onDragStart($event, item.id, index)"
-      @dragenter="onDragEnter($event, index)"
-    >
-      <a-tooltip :title="item.isHidden ? '显示' : '隐藏'">
-        <a-button
-          shape="circle"
-          @click.stop="handleChange(item.id, 'isHidden', !item.isHidden)"
-        >
-          <template v-slot:icon v-if="item.isHidden"><EyeOutlined /> </template>
-          <template v-slot:icon v-else><EyeInvisibleOutlined /> </template>
-        </a-button>
-      </a-tooltip>
-      <a-tooltip :title="item.isLocked ? '解锁' : '锁定'">
-        <a-button
-          shape="circle"
-          @click.stop="handleChange(item.id, 'isLocked', !item.isLocked)"
-        >
-          <template v-slot:icon v-if="item.isLocked"
-            ><UnlockOutlined />
-          </template>
-          <template v-slot:icon v-else><LockOutlined /> </template>
-        </a-button>
-      </a-tooltip>
-      <inline-edit
-        :value="item.layerName || '未命名图层'"
-        @change="
-          (value) => {
-            handleChange(item.id, 'layerName', value)
-          }
-        "
-      ></inline-edit>
-    </li>
-  </ul>
+    <template #item="{ element }">
+      <li
+        class="ant-list-item"
+        :class="{ active: element.id === selectedId }"
+        @click="handleClick(element.id)"
+      >
+        <a-tooltip :title="element.isHidden ? '显示' : '隐藏'">
+          <a-button
+            shape="circle"
+            @click.stop="
+              handleChange(element.id, 'isHidden', !element.isHidden)
+            "
+          >
+            <template v-slot:icon v-if="element.isHidden"
+              ><EyeOutlined />
+            </template>
+            <template v-slot:icon v-else><EyeInvisibleOutlined /> </template>
+          </a-button>
+        </a-tooltip>
+        <a-tooltip :title="element.isLocked ? '解锁' : '锁定'">
+          <a-button
+            shape="circle"
+            @click.stop="
+              handleChange(element.id, 'isLocked', !element.isLocked)
+            "
+          >
+            <template v-slot:icon v-if="element.isLocked"
+              ><UnlockOutlined />
+            </template>
+            <template v-slot:icon v-else><LockOutlined /> </template>
+          </a-button>
+        </a-tooltip>
+        <inline-edit
+          class="edit-area"
+          :value="element.layerName"
+          @change="
+            (value) => {
+              handleChange(element.id, 'layerName', value)
+            }
+          "
+        ></inline-edit>
+        <a-tooltip title="拖动排序">
+          <a-button shape="circle" class="handle">
+            <template v-slot:icon><DragOutlined /> </template
+          ></a-button>
+        </a-tooltip>
+      </li>
+    </template>
+  </draggable>
 </template>
 <script lang="ts">
-import { defineComponent, PropType, reactive } from 'vue'
-import { arrayMoveImmutable, arrayMoveMutable } from 'array-move'
+import { defineComponent, PropType } from 'vue'
+import draggable from 'vuedraggable'
 import {
   EyeOutlined,
   EyeInvisibleOutlined,
   LockOutlined,
   UnlockOutlined,
+  DragOutlined,
 } from '@ant-design/icons-vue'
 import { ComponentData } from '../store/editor'
 import InlineEdit from '../components/InlineEdit.vue'
-import { getParentElement } from '../helper'
 export default defineComponent({
   props: {
     list: {
@@ -80,44 +86,12 @@ export default defineComponent({
     LockOutlined,
     UnlockOutlined,
     InlineEdit,
+    draggable,
+    DragOutlined,
   },
   setup(props, context) {
-    const dragData = reactive({
-      currentDragging: '',
-      currentIndex: -1,
-    })
-
-    let start = -1
-    let end = -1
     const handleClick = (id: string) => {
       context.emit('select', id)
-    }
-    const onDragStart = (e: DragEvent, id: string, index: number) => {
-      dragData.currentDragging = id
-      dragData.currentIndex = index
-    }
-    const onDragEnter = (e: DragEvent, index: number) => {
-      if (index !== dragData.currentIndex) {
-        console.log('enter', index, dragData.currentIndex)
-        arrayMoveMutable(props.list, dragData.currentIndex, index)
-        dragData.currentIndex = index
-        end = index
-      }
-    }
-    const onDrop = (e: DragEvent) => {
-      const currentEle = getParentElement(
-        e.target as HTMLElement,
-        'ant-list-item'
-      )
-      if (currentEle && currentEle.dataset.index) {
-        const moveIndex = parseInt(currentEle.dataset.index)
-        console.log(moveIndex)
-        arrayMoveImmutable(props.list, dragData.currentIndex, moveIndex)
-      }
-      dragData.currentDragging = ''
-    }
-    const onDragOver = (e: DragEvent) => {
-      e.preventDefault()
     }
     const handleChange = (id: string, key: string, value: boolean) => {
       const data = {
@@ -131,11 +105,6 @@ export default defineComponent({
     return {
       handleChange,
       handleClick,
-      onDragStart,
-      dragData,
-      onDrop,
-      onDragOver,
-      onDragEnter,
     }
   },
 })
@@ -165,5 +134,13 @@ export default defineComponent({
 }
 .ant-list-item button {
   font-size: 12px;
+}
+
+.ant-list-item .handle {
+  cursor: move;
+  margin-left: auto;
+}
+.ant-list-item .edit-area {
+  width: 100%;
 }
 </style>
