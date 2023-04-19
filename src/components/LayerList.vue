@@ -1,11 +1,21 @@
 <template>
-  <ul :list="list" class="ant-list-items ant-list-bordered">
+  <ul
+    :list="list"
+    class="ant-list-items ant-list-bordered"
+    @drop="onDrop"
+    @dragover="onDragOver"
+  >
     <li
       class="ant-list-item"
-      :class="{ active: item.id === selectedId }"
+      :class="{
+        active: item.id === selectedId,
+        ghost: dragData.currentDragging === item.id,
+      }"
       v-for="item in list"
       :key="item.id"
       @click="handleClick(item.id)"
+      @dragstart="onDragStart($event, item.id)"
+      draggable="true"
     >
       <a-tooltip :title="item.isHidden ? '显示' : '隐藏'">
         <a-button
@@ -28,7 +38,7 @@
         </a-button>
       </a-tooltip>
       <inline-edit
-        :value="item.layerName || '未命名图层'"
+        :value="item.layerName"
         @change="
           (value) => {
             handleChange(item.id, 'layerName', value)
@@ -39,7 +49,7 @@
   </ul>
 </template>
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
+import { defineComponent, PropType, reactive } from 'vue'
 import {
   EyeOutlined,
   EyeInvisibleOutlined,
@@ -47,8 +57,7 @@ import {
   UnlockOutlined,
 } from '@ant-design/icons-vue'
 import { ComponentData } from '../store/editor'
-import InlineEdit from './InlineEdit.vue'
-
+import InlineEdit from '../components/InlineEdit.vue'
 export default defineComponent({
   props: {
     list: {
@@ -69,8 +78,20 @@ export default defineComponent({
     InlineEdit,
   },
   setup(props, context) {
+    const dragData = reactive({
+      currentDragging: '',
+    })
     const handleClick = (id: string) => {
       context.emit('select', id)
+    }
+    const onDragStart = (e: DragEvent, id: string) => {
+      dragData.currentDragging = id
+    }
+    const onDrop = (e: DragEvent) => {
+      dragData.currentDragging = ''
+    }
+    const onDragOver = (e: DragEvent) => {
+      e.preventDefault()
     }
     const handleChange = (id: string, key: string, value: boolean) => {
       const data = {
@@ -84,6 +105,10 @@ export default defineComponent({
     return {
       handleChange,
       handleClick,
+      onDragStart,
+      dragData,
+      onDrop,
+      onDragOver,
     }
   },
 })
@@ -101,6 +126,10 @@ export default defineComponent({
 .ant-list-item.active {
   border: 1px solid #1890ff;
 }
+.ant-list-item.ghost {
+  opacity: 0.5;
+}
+
 .ant-list-item:hover {
   background: #e6f7ff;
 }
