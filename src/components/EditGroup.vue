@@ -1,10 +1,14 @@
-<!-- 功能分组 -->
 <template>
   <div class="edit-groups">
-    <div v-for="item in newGroups" :key="item.text">
-      <h1>{{ item.text }}</h1>
-      <pre>{{ item.items }}</pre>
-    </div>
+    <a-collapse v-model:activeKey="currentKey">
+      <a-collapse-panel
+        v-for="(item, index) in editGroups"
+        :key="`item-${index}`"
+        :header="item.text"
+      >
+        <props-table :props="item.props" @change="handleChange"></props-table>
+      </a-collapse-panel>
+    </a-collapse>
   </div>
 </template>
 
@@ -12,6 +16,7 @@
 import { AllComponentProps } from '@/defaultProps'
 import { difference } from 'lodash'
 import { defineComponent, PropType, computed, ref } from 'vue'
+import PropsTable from './PropsTable.vue'
 export interface GroupProps {
   text: string
   items: string[]
@@ -57,7 +62,12 @@ export default defineComponent({
       default: defaultEditGroups,
     },
   },
+  components: {
+    PropsTable,
+  },
+  emits: ['change'],
   setup(props, context) {
+    const currentKey = ref('item-0')
     const newGroups = computed(() => {
       const allNormalProps = props.groups.reduce((prev, current) => {
         return [...prev, ...current.items]
@@ -71,8 +81,26 @@ export default defineComponent({
         ...props.groups,
       ]
     })
+    const editGroups = computed(() => {
+      return newGroups.value.map((group) => {
+        const propsMap = {} as AllComponentProps
+        group.items.forEach((item) => {
+          const key = item as keyof AllComponentProps
+          propsMap[key] = props.props[key]
+        })
+        return {
+          ...group,
+          props: propsMap,
+        }
+      })
+    })
+    const handleChange = (e: any) => {
+      context.emit('change', e)
+    }
     return {
-      newGroups,
+      editGroups,
+      currentKey,
+      handleChange,
     }
   },
 })

@@ -4,7 +4,7 @@
       <template v-slot:title>
         {{ tip }}
       </template>
-      <a-button :type="checked ? 'primary' : ''" shape="circle">
+      <a-button :type="checked ? 'primary' : 'default'" shape="circle">
         <template v-slot:icon><component :is="iconName" /></template>
       </a-button>
     </a-tooltip>
