@@ -141,16 +141,16 @@ export default defineComponent({
         })
         .then((resp) => {
           readyFile.status = 'success'
-          const fakeData = {
+          const resData = {
             data: {
-              url: URL.createObjectURL(readyFile.raw),
+              url: resp.data.data.urls[0],
             },
           }
-          readyFile.resp = fakeData
+          readyFile.resp = resData
 
           // readyFile.resp = resp.data
           emit('success', {
-            resp: fakeData,
+            resp: resData,
             file: readyFile,
             list: filesList.value,
           })
@@ -208,7 +208,7 @@ export default defineComponent({
                 }
               })
               .catch((e) => {
-                throw e
+                console.error(e)
               })
           } else if (result === true) {
             addFileToList(uploadedFile)
