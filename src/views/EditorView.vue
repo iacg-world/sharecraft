@@ -14,17 +14,19 @@
         <a-layout-content class="preview-container">
           <p>画布区域</p>
           <div class="preview-list" id="canvas-area">
-            <edit-wrapper
-              @setActive="setActive"
-              @removeComponent="removeComponent"
-              v-for="component in components"
-              :key="component.id"
-              :id="component.id"
-              :active="component.id === (currentElement && currentElement.id)"
-              :hidden="component.isHidden"
-            >
-              <component :is="component.name" v-bind="component.props" />
-            </edit-wrapper>
+            <div class="body-container" :style="page.props">
+              <edit-wrapper
+                @setActive="setActive"
+                @removeComponent="removeComponent"
+                v-for="component in components"
+                :key="component.id"
+                :id="component.id"
+                :active="component.id === (currentElement && currentElement.id)"
+                :hidden="component.isHidden"
+              >
+                <component :is="component.name" v-bind="component.props" />
+              </edit-wrapper>
+            </div>
           </div>
         </a-layout-content>
       </a-layout>
@@ -64,6 +66,9 @@
             >
             </layer-list>
           </a-tab-pane>
+          <a-tab-pane key="page" tab="页面设置">
+            <props-table :props="page.props"></props-table>
+          </a-tab-pane>
         </a-tabs>
       </a-layout-sider>
     </a-layout>
@@ -102,8 +107,10 @@ export default defineComponent({
     const currentElement = computed<ComponentData | null>(
       () => store.getters.getCurrentElement
     )
+    const page = computed(() => store.state.editor.page)
+
     const addItem = (component: any) => {
-      console.log(component)
+      console.log('addItem: ', component)
 
       store.commit('addComponent', component)
     }
@@ -114,7 +121,6 @@ export default defineComponent({
       store.commit('removeComponent', id)
     }
     const handleChange = (e: any) => {
-      console.log('event', e)
       store.commit('updateComponent', e)
     }
     return {
@@ -127,6 +133,7 @@ export default defineComponent({
       handleChange,
       isEditing,
       activePanel,
+      page,
     }
   },
 })

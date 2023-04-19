@@ -23,6 +23,10 @@ export interface ComponentData {
   layerName?: string
 }
 
+export interface PageData {
+  props: { [key: string]: any }
+  title: string
+}
 export interface EditorProps {
   // 是否在编辑状态
   isEditing: boolean
@@ -31,7 +35,7 @@ export interface EditorProps {
   components: ComponentData[]
   // 当前编辑的是哪个元素，uuid
   currentElementId: string
-  // 当然最后保存的时候还有有一些项目信息，这里并没有写出，等做到的时候再补充
+  page: PageData
 }
 
 export const testComponents: ComponentData[] = [
@@ -90,12 +94,24 @@ export const testComponents: ComponentData[] = [
   },
 ]
 
+const pageDefaultProps = {
+  backgroundColor: '#ffffff',
+  backgroundImage: '',
+  backgroundRepeat: 'no-repeat',
+  backgroundSize: 'cover',
+  height: '560px',
+}
+
 const editor: Module<EditorProps, GlobalDataProps> = {
   state: {
     isEditing: false,
     clickTimeout: 0,
     components: testComponents,
     currentElementId: '',
+    page: {
+      props: pageDefaultProps,
+      title: 'test title',
+    },
   },
   mutations: {
     setEditStatus(state, status) {
