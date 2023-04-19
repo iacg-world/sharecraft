@@ -11,10 +11,11 @@
         active: item.id === selectedId,
         ghost: dragData.currentDragging === item.id,
       }"
-      v-for="item in list"
+      v-for="(item, index) in list"
       :key="item.id"
       @click="handleClick(item.id)"
-      @dragstart="onDragStart($event, item.id)"
+      @dragstart="onDragStart($event, item.id, index)"
+      :data-index="index"
       draggable="true"
     >
       <a-tooltip :title="item.isHidden ? '显示' : '隐藏'">
@@ -38,7 +39,7 @@
         </a-button>
       </a-tooltip>
       <inline-edit
-        :value="item.layerName"
+        :value="item.layerName || '未命名图层'"
         @change="
           (value) => {
             handleChange(item.id, 'layerName', value)
@@ -50,6 +51,7 @@
 </template>
 <script lang="ts">
 import { defineComponent, PropType, reactive } from 'vue'
+import { arrayMoveImmutable } from 'array-move'
 import {
   EyeOutlined,
   EyeInvisibleOutlined,
@@ -58,6 +60,7 @@ import {
 } from '@ant-design/icons-vue'
 import { ComponentData } from '../store/editor'
 import InlineEdit from '../components/InlineEdit.vue'
+import { getParentElement } from '../helper'
 export default defineComponent({
   props: {
     list: {
@@ -80,14 +83,25 @@ export default defineComponent({
   setup(props, context) {
     const dragData = reactive({
       currentDragging: '',
+      currentIndex: -1,
     })
     const handleClick = (id: string) => {
       context.emit('select', id)
     }
-    const onDragStart = (e: DragEvent, id: string) => {
+    const onDragStart = (e: DragEvent, id: string, index: number) => {
       dragData.currentDragging = id
+      dragData.currentIndex = index
     }
     const onDrop = (e: DragEvent) => {
+      const currentEle = getParentElement(
+        e.target as HTMLElement,
+        'ant-list-item'
+      )
+      if (currentEle && currentEle.dataset.index) {
+        const moveIndex = parseInt(currentEle.dataset.index)
+        console.log(moveIndex)
+        arrayMoveImmutable(props.list, dragData.currentIndex, moveIndex)
+      }
       dragData.currentDragging = ''
     }
     const onDragOver = (e: DragEvent) => {

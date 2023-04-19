@@ -7,6 +7,9 @@ dependencies:
   ant-design-vue:
     specifier: ^3.2.4
     version: 3.2.10(vue@3.2.37)
+  array-move:
+    specifier: ^4.0.0
+    version: registry.npmmirror.com/array-move@4.0.0
   axios:
     specifier: ^0.27.2
     version: 0.27.2
@@ -10125,6 +10128,13 @@ packages:
     dependencies:
       color-convert: registry.npmmirror.com/color-convert@1.9.3
     dev: true
+
+  registry.npmmirror.com/array-move@4.0.0:
+    resolution: {integrity: sha512-+RY54S8OuVvg94THpneQvFRmqWdAHeqtMzgMW6JNurHxe8rsS07cHQdfGkXnTUXiBcyZ0j3SiDIxxj0RPiqCkQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/array-move/-/array-move-4.0.0.tgz}
+    name: array-move
+    version: 4.0.0
+    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
+    dev: false
 
   registry.npmmirror.com/array-union@2.1.0:
     resolution: {integrity: sha512-HGyxoOTYUyCM6stUe6EJgnd4EoewAI7zMdfqO+kGjnlZmBDz/cR5pf8r/cR4Wq60sL/p0IkcjUEEPwS3GFrIyw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/array-union/-/array-union-2.1.0.tgz}
