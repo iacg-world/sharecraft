@@ -3,7 +3,7 @@
     class="edit-wrapper"
     @click="onItemClick(id)"
     @dblclick="onChangeEditStatus(id)"
-    :class="{ active: active && isEditing }"
+    :class="{ active: active && isEditing, hidden: hidden }"
   >
     <slot></slot>
     <close-circle-two-tone
@@ -30,6 +30,10 @@ export default defineComponent({
       required: true,
     },
     active: {
+      type: Boolean,
+      default: false,
+    },
+    hidden: {
       type: Boolean,
       default: false,
     },
@@ -82,6 +86,9 @@ export default defineComponent({
   border: 1px solid #1890ff;
   user-select: none;
   z-index: 1500;
+}
+.edit-wrapper.hidden {
+  display: none;
 }
 .remove-edit_component {
   position: absolute;

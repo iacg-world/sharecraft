@@ -10,6 +10,12 @@ export interface ComponentData {
   id: string
   // 业务组件库名称 c-text，c-image 等等
   name: 'c-text' | 'c-image' | 'l-shape'
+  // 图层是否隐藏
+  isHidden?: boolean
+  // 图层是否锁定
+  isLocked?: boolean
+  // 图层名称
+  layerName?: string
 }
 
 export interface EditorProps {
@@ -27,6 +33,7 @@ export const testComponents: ComponentData[] = [
   {
     id: uuidv4(),
     name: 'c-text',
+    layerName: '图层1',
     props: {
       text: 'hello',
       fontSize: '20px',
@@ -39,6 +46,7 @@ export const testComponents: ComponentData[] = [
   {
     id: uuidv4(),
     name: 'c-text',
+    layerName: '图层2',
     props: {
       text: 'hello2',
       fontSize: '10px',
@@ -51,6 +59,7 @@ export const testComponents: ComponentData[] = [
   {
     id: uuidv4(),
     name: 'c-text',
+    layerName: '图层3',
     props: {
       text: 'hello3',
       fontSize: '15px',
@@ -64,6 +73,7 @@ export const testComponents: ComponentData[] = [
   {
     id: uuidv4(),
     name: 'c-image',
+    layerName: '图层4',
     props: {
       src: 'https://sharecraft-backend.oss-cn-shanghai.aliyuncs.com/sharecraft-test/LxdNjP.png',
       width: '450px',
@@ -105,12 +115,17 @@ const editor: Module<EditorProps, GlobalDataProps> = {
         }
       })
     },
-    updateComponent(state, { key, value }) {
+    updateComponent(state, { key, value, id, isRoot }) {
       const updatedComponent = state.components.find(
-        (component) => component.id === state.currentElementId
+        (component) => component.id === (id || state.currentElementId)
       )
       if (updatedComponent) {
-        updatedComponent.props[key as keyof TextComponentProps] = value
+        if (isRoot) {
+          // https://github.com/microsoft/TypeScript/issues/31663
+          ;(updatedComponent as any)[key] = value
+        } else {
+          updatedComponent.props[key as keyof TextComponentProps] = value
+        }
       }
     },
   },

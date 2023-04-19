@@ -21,6 +21,7 @@
               :key="component.id"
               :id="component.id"
               :active="component.id === (currentElement && currentElement.id)"
+              :hidden="component.isHidden"
             >
               <component :is="component.name" v-bind="component.props" />
             </edit-wrapper>
@@ -33,23 +34,44 @@
         style="background: #fff"
         class="settings-panel"
       >
-        组件属性
-        <props-table
-          v-if="currentElement && currentElement.props"
-          :props="currentElement.props"
-          @change="handleChange"
-        ></props-table>
-        <pre>
-        {{ currentElement && currentElement.props }}
-      </pre
-        >
+        <a-tabs type="card" v-model:activeKey="activePanel">
+          <a-tab-pane key="component" tab="属性设置" class="no-top-radius">
+            <div v-if="currentElement">
+              <props-table
+                v-if="!currentElement.isLocked"
+                :props="currentElement.props"
+                @change="handleChange"
+              ></props-table>
+              <div v-else>
+                <a-empty>
+                  <template #description>
+                    <p>该元素被锁定，无法编辑</p>
+                  </template>
+                </a-empty>
+              </div>
+            </div>
+            <pre>
+            {{ currentElement && currentElement.props }}
+          </pre
+            >
+          </a-tab-pane>
+          <a-tab-pane key="layer" tab="图层设置">
+            <layer-list
+              :list="components"
+              :selectedId="currentElement && currentElement.id"
+              @change="handleChange"
+              @select="setActive"
+            >
+            </layer-list>
+          </a-tab-pane>
+        </a-tabs>
       </a-layout-sider>
     </a-layout>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
+import { defineComponent, computed, ref } from 'vue'
 import { useStore } from 'vuex'
 import { GlobalDataProps } from '../store/index'
 import CText from '../components/CText.vue'
@@ -57,8 +79,10 @@ import CImage from '../components/CImage.vue'
 import ComponentsList from '../components/ComponentsList.vue'
 import EditWrapper from '../components/EditWrapper.vue'
 import PropsTable from '../components/PropsTable.vue'
+import LayerList from '../components/LayerList.vue'
 import { ComponentData } from '../store/editor'
 import { defaultTextTemplates } from '../defaultTemplates'
+export type TabType = 'component' | 'layer' | 'page'
 export default defineComponent({
   components: {
     CText,
@@ -66,9 +90,11 @@ export default defineComponent({
     ComponentsList,
     EditWrapper,
     PropsTable,
+    LayerList,
   },
   setup() {
     const store = useStore<GlobalDataProps>()
+    const activePanel = ref<TabType>('component')
     const components = computed(() => store.state.editor.components)
     const isEditing = computed(() => store.state.editor.isEditing)
     const currentElement = computed<ComponentData | null>(
@@ -98,6 +124,7 @@ export default defineComponent({
       currentElement,
       handleChange,
       isEditing,
+      activePanel,
     }
   },
 })
