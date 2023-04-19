@@ -12,11 +12,12 @@
         ghost: dragData.currentDragging === item.id,
       }"
       v-for="(item, index) in list"
+      :draggable="true"
       :key="item.id"
+      :data-index="index"
       @click="handleClick(item.id)"
       @dragstart="onDragStart($event, item.id, index)"
-      :data-index="index"
-      draggable="true"
+      @dragenter="onDragEnter($event, index)"
     >
       <a-tooltip :title="item.isHidden ? '显示' : '隐藏'">
         <a-button
@@ -51,7 +52,7 @@
 </template>
 <script lang="ts">
 import { defineComponent, PropType, reactive } from 'vue'
-import { arrayMoveImmutable } from 'array-move'
+import { arrayMoveImmutable, arrayMoveMutable } from 'array-move'
 import {
   EyeOutlined,
   EyeInvisibleOutlined,
@@ -72,7 +73,7 @@ export default defineComponent({
       required: true,
     },
   },
-  emits: ['select', 'change'],
+  emits: ['select', 'change', 'drop'],
   components: {
     EyeOutlined,
     EyeInvisibleOutlined,
@@ -85,12 +86,23 @@ export default defineComponent({
       currentDragging: '',
       currentIndex: -1,
     })
+
+    let start = -1
+    let end = -1
     const handleClick = (id: string) => {
       context.emit('select', id)
     }
     const onDragStart = (e: DragEvent, id: string, index: number) => {
       dragData.currentDragging = id
       dragData.currentIndex = index
+    }
+    const onDragEnter = (e: DragEvent, index: number) => {
+      if (index !== dragData.currentIndex) {
+        console.log('enter', index, dragData.currentIndex)
+        arrayMoveMutable(props.list, dragData.currentIndex, index)
+        dragData.currentIndex = index
+        end = index
+      }
     }
     const onDrop = (e: DragEvent) => {
       const currentEle = getParentElement(
@@ -123,6 +135,7 @@ export default defineComponent({
       dragData,
       onDrop,
       onDragOver,
+      onDragEnter,
     }
   },
 })
