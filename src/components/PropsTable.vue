@@ -1,8 +1,14 @@
 <template>
   <div class="props-table">
-    <div v-for="(value, key) in finalProps" :key="key" class="prop-item">
+    <div
+      v-for="(value, key) in finalProps"
+      :key="key"
+      :class="{ 'no-text': !value.text }"
+      class="prop-item"
+      :id="`item-${key}`"
+    >
       <span class="label" v-if="value.text">{{ value.text }}</span>
-      <div class="prop-component">
+      <div :class="`prop-component component-${value.component}`">
         <component
           :is="value.component"
           :[value.valueProp]="value.value"
@@ -28,11 +34,13 @@
 <script lang="ts">
 import { computed, defineComponent, PropType, VNode } from 'vue'
 import { reduce } from 'lodash'
-import { PropsToForms, mapPropsToForms } from '../propsMap'
-import { TextComponentProps } from '../defaultProps'
+import { mapPropsToForms } from '../propsMap'
+import { AllComponentProps } from '@/defaultProps'
 import RenderVnode from './RenderVnode'
 import ColorPicker from './ColorPicker.vue'
 import ImageProcesser from './ImageProcesser.vue'
+import ShadowPicker from './ShadowPicker.vue'
+import IconSwitch from './IconSwitch.vue'
 interface FormProps {
   component: string
   subComponent?: string
@@ -48,7 +56,7 @@ export default defineComponent({
   name: 'props-table',
   props: {
     props: {
-      type: Object as PropType<TextComponentProps>,
+      type: Object as PropType<AllComponentProps>,
       required: true,
     },
   },
@@ -56,6 +64,8 @@ export default defineComponent({
     RenderVnode,
     ColorPicker,
     ImageProcesser,
+    ShadowPicker,
+    IconSwitch,
   },
   emits: ['change'],
   setup(props, context) {
@@ -63,7 +73,7 @@ export default defineComponent({
       return reduce(
         props.props,
         (result, value, key) => {
-          const newKey = key as keyof TextComponentProps
+          const newKey = key as keyof AllComponentProps
           const item = mapPropsToForms[newKey]
           if (item) {
             const {
@@ -111,5 +121,20 @@ export default defineComponent({
 }
 .prop-component {
   width: 70%;
+}
+.prop-item.no-text {
+  display: inline-block;
+  margin: 0 10px 0 0;
+}
+#item-fontWeight {
+  margin-left: 28%;
+}
+.component-a-select .ant-select {
+  width: 150px;
+}
+.prop-component.component-shadow-picker,
+.prop-component.component-image-processer,
+.prop-component.component-background-processer {
+  width: 100%;
 }
 </style>

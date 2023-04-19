@@ -1,11 +1,16 @@
 import { Module } from 'vuex'
 import { v4 as uuidv4 } from 'uuid'
 import { GlobalDataProps } from './index'
-import { TextComponentProps, ImageComponentProps } from '../defaultProps'
+import {
+  TextComponentProps,
+  AllComponentProps,
+  imageDefaultProps,
+  textDefaultProps,
+} from '../defaultProps'
 
 export interface ComponentData {
   // 这个元素的 属性，属性请详见下面
-  props: Partial<TextComponentProps & ImageComponentProps>
+  props: Partial<AllComponentProps>
   // id，uuid v4 生成
   id: string
   // 业务组件库名称 c-text，c-image 等等
@@ -35,6 +40,7 @@ export const testComponents: ComponentData[] = [
     name: 'c-text',
     layerName: '图层1',
     props: {
+      ...textDefaultProps,
       text: 'hello',
       fontSize: '20px',
       color: 'red',
@@ -48,6 +54,7 @@ export const testComponents: ComponentData[] = [
     name: 'c-text',
     layerName: '图层2',
     props: {
+      ...textDefaultProps,
       text: 'hello2',
       fontSize: '10px',
       fontWeight: 'bold',
@@ -61,6 +68,7 @@ export const testComponents: ComponentData[] = [
     name: 'c-text',
     layerName: '图层3',
     props: {
+      ...textDefaultProps,
       text: 'hello3',
       fontSize: '15px',
       actionType: 'url',
@@ -75,6 +83,7 @@ export const testComponents: ComponentData[] = [
     name: 'c-image',
     layerName: '图层4',
     props: {
+      ...textDefaultProps,
       src: 'https://sharecraft-backend.oss-cn-shanghai.aliyuncs.com/sharecraft-test/LxdNjP.png',
       width: '450px',
     },
@@ -124,7 +133,7 @@ const editor: Module<EditorProps, GlobalDataProps> = {
           // https://github.com/microsoft/TypeScript/issues/31663
           ;(updatedComponent as any)[key] = value
         } else {
-          updatedComponent.props[key as keyof TextComponentProps] = value
+          updatedComponent.props[key as keyof AllComponentProps] = value
         }
       }
     },
