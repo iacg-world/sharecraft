@@ -27,7 +27,14 @@
           <template v-slot:icon v-else><LockOutlined /> </template>
         </a-button>
       </a-tooltip>
-      <span>{{ item.layerName }}</span>
+      <inline-edit
+        :value="item.layerName || '未命名图层'"
+        @change="
+          (value) => {
+            handleChange(item.id, 'layerName', value)
+          }
+        "
+      ></inline-edit>
     </li>
   </ul>
 </template>
@@ -40,6 +47,8 @@ import {
   UnlockOutlined,
 } from '@ant-design/icons-vue'
 import { ComponentData } from '../store/editor'
+import InlineEdit from './InlineEdit.vue'
+
 export default defineComponent({
   props: {
     list: {
@@ -57,6 +66,7 @@ export default defineComponent({
     EyeInvisibleOutlined,
     LockOutlined,
     UnlockOutlined,
+    InlineEdit,
   },
   setup(props, context) {
     const handleClick = (id: string) => {
