@@ -2,7 +2,7 @@
   <div
     class="edit-wrapper"
     ref="editWrapper"
-    :styles="styles"
+    :style="styles"
     @click="onItemClick(id)"
     @dblclick="onChangeEditStatus(id)"
     @mousedown="startMove"
