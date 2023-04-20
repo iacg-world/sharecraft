@@ -90,6 +90,7 @@ import LayerList from '../components/LayerList.vue'
 import EditGroup from '../components/EditGroup.vue'
 import { ComponentData } from '../store/editor'
 import { defaultTextTemplates } from '../defaultTemplates'
+import { pickBy, forEach } from 'lodash-es'
 export type TabType = 'component' | 'layer' | 'page'
 export default defineComponent({
   components: {
@@ -135,10 +136,13 @@ export default defineComponent({
       top: number
       id: string
     }) => {
-      const { left, top, id } = data
-
-      store.commit('updateComponent', { key: 'left', value: left + 'px', id })
-      store.commit('updateComponent', { key: 'top', value: top + 'px', id })
+      const { id } = data
+      const updatedData = pickBy<number>(data, (v, k) => k !== 'id')
+      forEach(updatedData, (v, key) => {
+        // 循环更新
+        store.commit('updateComponent', { key, value: v + 'px', id })
+        console.log(v, key)
+      })
     }
     return {
       components,
