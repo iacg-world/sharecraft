@@ -10,10 +10,22 @@
   >
     <slot></slot>
     <div class="resizers">
-      <div class="resizer top-left"></div>
-      <div class="resizer top-right"></div>
-      <div class="resizer bottom-left"></div>
-      <div class="resizer bottom-right" @mousedown.stop="startResize"></div>
+      <div
+        class="resizer top-left"
+        @mousedown.stop="startResize('top-left')"
+      ></div>
+      <div
+        class="resizer top-right"
+        @mousedown.stop="startResize('top-right')"
+      ></div>
+      <div
+        class="resizer bottom-left"
+        @mousedown.stop="startResize('bottom-left')"
+      ></div>
+      <div
+        class="resizer bottom-right"
+        @mousedown.stop="startResize('bottom-right')"
+      ></div>
     </div>
     <!-- <close-circle-two-tone
       v-if="active && isEditing"
@@ -31,6 +43,14 @@ import { GlobalDataProps } from '@/store'
 import { defineComponent, computed, ref, nextTick } from 'vue'
 import { useStore } from 'vuex'
 import { pick } from 'lodash-es'
+
+type ResizeDirection = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
+interface OriginalPositions {
+  left: number
+  right: number
+  top: number
+  bottom: number
+}
 
 export default defineComponent({
   props: {
@@ -92,21 +112,6 @@ export default defineComponent({
         top,
       }
     }
-    const startResize = (e: MouseEvent) => {
-      const currentElement = editWrapper.value
-      const handleMove = (e: MouseEvent) => {
-        if (currentElement) {
-          const { left, top } = currentElement.getBoundingClientRect()
-          currentElement.style.height = e.clientY - top + 'px'
-          currentElement.style.width = e.clientX - left + 'px'
-        }
-      }
-      const handleMouseUp = () => {
-        document.removeEventListener('mousemove', handleMove)
-      }
-      document.addEventListener('mousemove', handleMove)
-      document.addEventListener('mouseup', handleMouseUp)
-    }
     const startMove = (e: MouseEvent) => {
       const currentElement = editWrapper.value
       if (currentElement) {
@@ -136,7 +141,80 @@ export default defineComponent({
       document.addEventListener('mousemove', handleMove)
       document.addEventListener('mouseup', handleMouseUp)
     }
-
+    const calculateSize = (
+      direction: ResizeDirection,
+      e: MouseEvent,
+      positions: OriginalPositions
+    ) => {
+      const { clientX, clientY } = e
+      const { left, right, top, bottom } = positions
+      const container = document.getElementById('canvas-area') as HTMLElement
+      const rightWidth = clientX - left
+      const leftWidth = right - clientX
+      const bottomHeight = clientY - top
+      const topHeight = bottom - clientY
+      const topOffset = clientY - container.offsetTop
+      const leftOffset = clientX - container.offsetLeft
+      const directionMap = {
+        'top-left': () => {
+          return {
+            width: leftWidth,
+            height: topHeight,
+            top: topOffset,
+            left: leftOffset,
+          }
+        },
+        'top-right': () => {
+          return {
+            width: rightWidth,
+            height: topHeight,
+            top: topOffset,
+            left: undefined,
+          }
+        },
+        'bottom-left': () => {
+          return {
+            width: leftWidth,
+            height: bottomHeight,
+            top: undefined,
+            left: leftOffset,
+          }
+        },
+        'bottom-right': () => {
+          return {
+            width: rightWidth,
+            height: bottomHeight,
+            top: undefined,
+            left: undefined,
+          }
+        },
+      }
+      return directionMap[direction]()
+    }
+    const startResize = (direction: ResizeDirection) => {
+      const currentElement = editWrapper.value as HTMLElement
+      const { left, right, top, bottom } =
+        currentElement.getBoundingClientRect()
+      const handleMove = (e: MouseEvent) => {
+        const size = calculateSize(direction, e, { left, right, top, bottom })
+        const { style } = currentElement
+        if (size) {
+          style.width = size.width + 'px'
+          style.height = size.height + 'px'
+          if (size.left) {
+            style.left = size.left + 'px'
+          }
+          if (size.top) {
+            style.top = size.top + 'px'
+          }
+        }
+      }
+      const handleMouseUp = () => {
+        document.removeEventListener('mousemove', handleMove)
+      }
+      document.addEventListener('mousemove', handleMove)
+      document.addEventListener('mouseup', handleMouseUp)
+    }
     return {
       onItemClick,
       onChangeEditStatus,

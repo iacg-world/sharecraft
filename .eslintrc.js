@@ -17,7 +17,7 @@ module.exports = {
       'error',
       { singleQuote: true, semi: false, endOfLine: 'auto' },
     ],
-    indent: ['error', 2],
+    indent: ['error', 2, { SwitchCase: 1 }],
     '@typescript-eslint/ban-types': [
       'error',
       {
