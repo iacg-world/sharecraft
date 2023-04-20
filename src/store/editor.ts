@@ -1,6 +1,6 @@
 import { Module } from 'vuex'
 import { v4 as uuidv4 } from 'uuid'
-import { GlobalDataProps } from './index'
+import store, { GlobalDataProps } from './index'
 import {
   TextComponentProps,
   AllComponentProps,
@@ -9,6 +9,8 @@ import {
 } from '../defaultProps'
 import { message } from 'ant-design-vue'
 import { cloneDeep } from 'lodash-es'
+
+export type MoveDirection = 'Up' | 'Down' | 'Left' | 'Right'
 export interface ComponentData {
   // 这个元素的 属性，属性请详见下面
   props: Partial<AllComponentProps>
@@ -148,6 +150,7 @@ const editor: Module<EditorProps, GlobalDataProps> = {
     },
     // 给画布添加组件渲染
     addComponent(state, component: ComponentData) {
+      component.layerName = '图层' + (state.components.length + 1)
       state.components.push(component)
     },
     setActive(state, currentId: string) {
@@ -161,9 +164,8 @@ const editor: Module<EditorProps, GlobalDataProps> = {
       })
     },
     updateComponent(state, { key, value, id, isRoot }) {
-      const updatedComponent = state.components.find(
-        (component) => component.id === (id || state.currentElementId)
-      )
+      const updatedComponent = store.getters.getElement(id)
+
       if (updatedComponent) {
         if (isRoot) {
           // https://github.com/microsoft/TypeScript/issues/31663
@@ -178,9 +180,7 @@ const editor: Module<EditorProps, GlobalDataProps> = {
     },
 
     copyComponent(state, id) {
-      const currentComponent = state.components.find(
-        (component) => component.id === id
-      )
+      const currentComponent = store.getters.getElement(id)
       if (currentComponent) {
         state.copiedComponent = currentComponent
         message.success('已拷贝当前图层', 1)
@@ -196,9 +196,7 @@ const editor: Module<EditorProps, GlobalDataProps> = {
       }
     },
     deleteComponent(state, id) {
-      const currentComponent = state.components.find(
-        (component) => component.id === id
-      )
+      const currentComponent = store.getters.getElement(id)
       if (currentComponent) {
         state.components = state.components.filter(
           (component) => component.id !== id
@@ -206,11 +204,69 @@ const editor: Module<EditorProps, GlobalDataProps> = {
         message.success('删除当前图层成功', 1)
       }
     },
+    moveComponent(
+      state,
+      data: { direction: MoveDirection; amount: number; id: string }
+    ) {
+      const currentComponent = store.getters.getElement(data.id)
+
+      if (currentComponent) {
+        const oldTop = parseInt(currentComponent.props.top || '0')
+        const oldLeft = parseInt(currentComponent.props.left || '0')
+        const { direction, amount } = data
+        switch (direction) {
+          case 'Up': {
+            const newValue = oldTop - amount + 'px'
+            store.commit('updateComponent', {
+              key: 'top',
+              value: newValue,
+              id: data.id,
+            })
+            break
+          }
+          case 'Down': {
+            const newValue = oldTop + amount + 'px'
+            store.commit('updateComponent', {
+              key: 'top',
+              value: newValue,
+              id: data.id,
+            })
+            break
+          }
+          case 'Left': {
+            const newValue = oldLeft - amount + 'px'
+            store.commit('updateComponent', {
+              key: 'left',
+              value: newValue,
+              id: data.id,
+            })
+            break
+          }
+          case 'Right': {
+            const newValue = oldLeft + amount + 'px'
+            store.commit('updateComponent', {
+              key: 'left',
+              value: newValue,
+              id: data.id,
+            })
+            break
+          }
+
+          default:
+            break
+        }
+      }
+    },
   },
   getters: {
     getCurrentElement: (state) => {
       return state.components.find(
         (component) => component.id === state.currentElementId
+      )
+    },
+    getElement: (state) => (id: string) => {
+      return state.components.find(
+        (component) => component.id === (id || state.currentElementId)
       )
     },
   },

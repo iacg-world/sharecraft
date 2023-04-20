@@ -89,7 +89,7 @@ import PropsTable from '../components/PropsTable.vue'
 import LayerList from '../components/LayerList.vue'
 import EditGroup from '../components/EditGroup.vue'
 import { ComponentData } from '../store/editor'
-import { defaultTextTemplates } from '../defaultTemplates'
+import defaultTextTemplates from '../defaultTemplates'
 import { pickBy, forEach } from 'lodash-es'
 import initHotKeys from '../plugins/hotKeys'
 
