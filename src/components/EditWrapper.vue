@@ -1,25 +1,28 @@
 <template>
   <div
     class="edit-wrapper"
+    ref="editWrapper"
+    :styles="styles"
     @click="onItemClick(id)"
     @dblclick="onChangeEditStatus(id)"
+    @mousedown="startMove"
     :class="{ active: active && isEditing, hidden: hidden }"
   >
     <slot></slot>
-    <close-circle-two-tone
+    <!-- <close-circle-two-tone
       v-if="active && isEditing"
       @click="removeEditComponent(id)"
       :class="{
         'remove-edit_component-active': true,
         'remove-edit_component': true,
       }"
-    />
+    /> -->
   </div>
 </template>
 
 <script lang="ts">
 import { GlobalDataProps } from '@/store'
-import { defineComponent, computed, ref } from 'vue'
+import { defineComponent, computed, ref, nextTick } from 'vue'
 import { useStore } from 'vuex'
 import { pick } from 'lodash-es'
 
@@ -41,7 +44,7 @@ export default defineComponent({
       type: Object,
     },
   },
-  emits: ['set-active', 'remove-component'],
+  emits: ['set-active', 'remove-component', 'update-position'],
   setup(props, context) {
     const store = useStore<GlobalDataProps>()
     const isEditing = computed(() => store.state.editor.isEditing)
@@ -70,18 +73,49 @@ export default defineComponent({
       x: 0,
       y: 0,
     }
+    let isMoving = false
     const styles = computed(() =>
       pick(props.props, ['position', 'top', 'left', 'width', 'height'])
     )
+    const calculateMovePosition = (e: MouseEvent) => {
+      const container = document.getElementById('canvas-area') as HTMLElement
+      const left = e.clientX - gap.x - container.offsetLeft
+      const top = e.clientY - gap.y - container.offsetTop
+      return {
+        left,
+        top,
+      }
+    }
     const startMove = (e: MouseEvent) => {
       const currentElement = editWrapper.value
       if (currentElement) {
         const { left, top } = currentElement.getBoundingClientRect()
         gap.x = e.clientX - left
         gap.y = e.clientY - top
-        console.log(gap)
       }
+      const handleMove = (e: MouseEvent) => {
+        const { left, top } = calculateMovePosition(e)
+        isMoving = true
+        if (currentElement) {
+          currentElement.style.top = top + 'px'
+          currentElement.style.left = left + 'px'
+        }
+      }
+      const handleMouseUp = (e: MouseEvent) => {
+        document.removeEventListener('mousemove', handleMove)
+        if (isMoving) {
+          const { left, top } = calculateMovePosition(e)
+          context.emit('update-position', { left, top, id: props.id })
+          isMoving = false
+        }
+        nextTick(() => {
+          document.removeEventListener('mouseup', handleMouseUp)
+        })
+      }
+      document.addEventListener('mousemove', handleMove)
+      document.addEventListener('mouseup', handleMouseUp)
     }
+
     return {
       onItemClick,
       onChangeEditStatus,

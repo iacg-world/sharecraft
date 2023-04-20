@@ -55,6 +55,6 @@ button.c-text-component {
 .c-text-component {
   box-sizing: border-box;
   white-space: pre-wrap;
-  position: relative !important;
+  position: relative;
 }
 </style>

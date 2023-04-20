@@ -18,6 +18,7 @@
               <edit-wrapper
                 @setActive="setActive"
                 @removeComponent="removeComponent"
+                @update-position="updatePosition"
                 v-for="component in components"
                 :key="component.id"
                 :id="component.id"
@@ -128,6 +129,17 @@ export default defineComponent({
       console.log('page', e)
       store.commit('updatePage', e)
     }
+
+    const updatePosition = (data: {
+      left: number
+      top: number
+      id: string
+    }) => {
+      const { left, top, id } = data
+
+      store.commit('updateComponent', { key: 'left', value: left + 'px', id })
+      store.commit('updateComponent', { key: 'top', value: top + 'px', id })
+    }
     return {
       components,
       defaultTextTemplates,
@@ -140,6 +152,7 @@ export default defineComponent({
       activePanel,
       page,
       pageChange,
+      updatePosition,
     }
   },
 })

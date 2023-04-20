@@ -59,45 +59,45 @@ export const testComponents: ComponentData[] = [
       top: '10px',
     },
   },
-  {
-    id: uuidv4(),
-    name: 'c-text',
-    layerName: '图层2',
-    props: {
-      ...textDefaultProps,
-      text: 'hello2',
-      fontSize: '10px',
-      fontWeight: 'bold',
-      lineHeight: '2',
-      textAlign: 'left',
-      fontFamily: '',
-    },
-  },
-  {
-    id: uuidv4(),
-    name: 'c-text',
-    layerName: '图层3',
-    props: {
-      ...textDefaultProps,
-      text: 'hello3',
-      fontSize: '15px',
-      actionType: 'url',
-      url: 'https://www.baidu.com',
-      lineHeight: '3',
-      textAlign: 'left',
-      fontFamily: '',
-    },
-  },
-  {
-    id: uuidv4(),
-    name: 'c-image',
-    layerName: '图层4',
-    props: {
-      ...textDefaultProps,
-      src: 'https://sharecraft-backend.oss-cn-shanghai.aliyuncs.com/sharecraft-test/LxdNjP.png',
-      width: '450px',
-    },
-  },
+  // {
+  //   id: uuidv4(),
+  //   name: 'c-text',
+  //   layerName: '图层2',
+  //   props: {
+  //     ...textDefaultProps,
+  //     text: 'hello2',
+  //     fontSize: '10px',
+  //     fontWeight: 'bold',
+  //     lineHeight: '2',
+  //     textAlign: 'left',
+  //     fontFamily: '',
+  //   },
+  // },
+  // {
+  //   id: uuidv4(),
+  //   name: 'c-text',
+  //   layerName: '图层3',
+  //   props: {
+  //     ...textDefaultProps,
+  //     text: 'hello3',
+  //     fontSize: '15px',
+  //     actionType: 'url',
+  //     url: 'https://www.baidu.com',
+  //     lineHeight: '3',
+  //     textAlign: 'left',
+  //     fontFamily: '',
+  //   },
+  // },
+  // {
+  //   id: uuidv4(),
+  //   name: 'c-image',
+  //   layerName: '图层4',
+  //   props: {
+  //     ...textDefaultProps,
+  //     src: 'https://sharecraft-backend.oss-cn-shanghai.aliyuncs.com/sharecraft-test/LxdNjP.png',
+  //     width: '450px',
+  //   },
+  // },
 ]
 
 export interface PageProps {
@@ -111,8 +111,9 @@ export type AllFormProps = PageProps & AllComponentProps
 
 const pageDefaultProps = {
   backgroundColor: '#ffffff',
-  backgroundImage:
-    'url("https://sharecraft-backend.oss-cn-shanghai.aliyuncs.com/sharecraft-test/20180421210121_KddAy.jpeg")',
+  backgroundImage: '',
+  // backgroundImage:
+  //   'url("https://sharecraft-backend.oss-cn-shanghai.aliyuncs.com/sharecraft-test/20180421210121_KddAy.jpeg")',
   backgroundRepeat: 'no-repeat',
   backgroundSize: 'cover',
   height: '560px',

@@ -39,6 +39,6 @@ export default defineComponent({
 <style scoped>
 .c-image-component {
   max-width: 100%;
-  position: relative !important;
+  position: relative;
 }
 </style>
