@@ -19,9 +19,9 @@
 
 <script lang="ts">
 import { GlobalDataProps } from '@/store'
-import { computed } from '@vue/reactivity'
-import { defineComponent } from 'vue'
+import { defineComponent, computed, ref } from 'vue'
 import { useStore } from 'vuex'
+import { pick } from 'lodash-es'
 
 export default defineComponent({
   props: {
@@ -37,11 +37,15 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    props: {
+      type: Object,
+    },
   },
   emits: ['set-active', 'remove-component'],
   setup(props, context) {
     const store = useStore<GlobalDataProps>()
     const isEditing = computed(() => store.state.editor.isEditing)
+    const editWrapper = ref<null | HTMLElement>(null)
 
     const onItemClick = (id: string) => {
       if (store.state.editor.isEditing) {
@@ -61,11 +65,31 @@ export default defineComponent({
         context.emit('remove-component', id)
       }
     }
+
+    const gap = {
+      x: 0,
+      y: 0,
+    }
+    const styles = computed(() =>
+      pick(props.props, ['position', 'top', 'left', 'width', 'height'])
+    )
+    const startMove = (e: MouseEvent) => {
+      const currentElement = editWrapper.value
+      if (currentElement) {
+        const { left, top } = currentElement.getBoundingClientRect()
+        gap.x = e.clientX - left
+        gap.y = e.clientY - top
+        console.log(gap)
+      }
+    }
     return {
       onItemClick,
       onChangeEditStatus,
       removeEditComponent,
       isEditing,
+      styles,
+      editWrapper,
+      startMove,
     }
   },
 })
@@ -89,6 +113,9 @@ export default defineComponent({
 }
 .edit-wrapper.hidden {
   display: none;
+}
+.edit-wrapper > * {
+  position: static !important;
 }
 .remove-edit_component {
   position: absolute;

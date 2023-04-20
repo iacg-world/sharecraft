@@ -23,6 +23,7 @@
                 :id="component.id"
                 :active="component.id === (currentElement && currentElement.id)"
                 :hidden="component.isHidden"
+                :props="component.props"
               >
                 <component :is="component.name" v-bind="component.props" />
               </edit-wrapper>

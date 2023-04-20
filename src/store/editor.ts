@@ -43,6 +43,7 @@ export const testComponents: ComponentData[] = [
     id: uuidv4(),
     name: 'c-text',
     layerName: '图层1',
+
     props: {
       ...textDefaultProps,
       text: 'hello',
@@ -51,6 +52,11 @@ export const testComponents: ComponentData[] = [
       lineHeight: '1',
       textAlign: 'left',
       fontFamily: '',
+      width: '100px',
+      height: '100px',
+      backgroundColor: '#efefef',
+      left: '10px',
+      top: '10px',
     },
   },
   {
