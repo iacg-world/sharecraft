@@ -67,7 +67,7 @@
             </layer-list>
           </a-tab-pane>
           <a-tab-pane key="page" tab="页面设置">
-            <props-table :props="page.props"></props-table>
+            <props-table :props="page.props" @change="pageChange"></props-table>
           </a-tab-pane>
         </a-tabs>
       </a-layout-sider>
@@ -123,6 +123,10 @@ export default defineComponent({
     const handleChange = (e: any) => {
       store.commit('updateComponent', e)
     }
+    const pageChange = (e: any) => {
+      console.log('page', e)
+      store.commit('updatePage', e)
+    }
     return {
       components,
       defaultTextTemplates,
@@ -134,6 +138,7 @@ export default defineComponent({
       isEditing,
       activePanel,
       page,
+      pageChange,
     }
   },
 })

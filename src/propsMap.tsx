@@ -230,5 +230,6 @@ export const mapPropsToForms: PropsToForms = {
         return ''
       }
     },
+    afterTransform: (e: string) => (e ? `url('${e}')` : ''),
   },
 }

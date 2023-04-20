@@ -24,7 +24,7 @@ export interface ComponentData {
 }
 
 export interface PageData {
-  props: { [key: string]: any }
+  props: { [key: string]: any } & PageProps
   title: string
 }
 export interface EditorProps {
@@ -162,6 +162,9 @@ const editor: Module<EditorProps, GlobalDataProps> = {
           updatedComponent.props[key as keyof AllComponentProps] = value
         }
       }
+    },
+    updatePage(state, { key, value }) {
+      state.page.props[key as keyof PageProps] = value
     },
   },
   getters: {
