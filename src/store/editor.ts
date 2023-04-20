@@ -7,7 +7,8 @@ import {
   imageDefaultProps,
   textDefaultProps,
 } from '../defaultProps'
-
+import { message } from 'ant-design-vue'
+import { cloneDeep } from 'lodash-es'
 export interface ComponentData {
   // 这个元素的 属性，属性请详见下面
   props: Partial<AllComponentProps>
@@ -36,6 +37,8 @@ export interface EditorProps {
   // 当前编辑的是哪个元素，uuid
   currentElementId: string
   page: PageData
+  // 当前被复制的组件
+  copiedComponent?: ComponentData
 }
 
 export const testComponents: ComponentData[] = [
@@ -172,6 +175,36 @@ const editor: Module<EditorProps, GlobalDataProps> = {
     },
     updatePage(state, { key, value }) {
       state.page.props[key as keyof PageProps] = value
+    },
+
+    copyComponent(state, id) {
+      const currentComponent = state.components.find(
+        (component) => component.id === id
+      )
+      if (currentComponent) {
+        state.copiedComponent = currentComponent
+        message.success('已拷贝当前图层', 1)
+      }
+    },
+    pasteCopiedComponent(state) {
+      if (state.copiedComponent) {
+        const clone = cloneDeep(state.copiedComponent)
+        clone.id = uuidv4()
+        clone.layerName = clone.layerName + '副本'
+        state.components.push(clone)
+        message.success('已黏贴当前图层', 1)
+      }
+    },
+    deleteComponent(state, id) {
+      const currentComponent = state.components.find(
+        (component) => component.id === id
+      )
+      if (currentComponent) {
+        state.components = state.components.filter(
+          (component) => component.id !== id
+        )
+        message.success('删除当前图层成功', 1)
+      }
     },
   },
   getters: {
