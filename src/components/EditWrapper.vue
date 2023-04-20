@@ -9,6 +9,12 @@
     :class="{ active: active && isEditing, hidden: hidden }"
   >
     <slot></slot>
+    <div class="resizers">
+      <div class="resizer top-left"></div>
+      <div class="resizer top-right"></div>
+      <div class="resizer bottom-left"></div>
+      <div class="resizer bottom-right" @mousedown.stop="startResize"></div>
+    </div>
     <!-- <close-circle-two-tone
       v-if="active && isEditing"
       @click="removeEditComponent(id)"
@@ -86,6 +92,21 @@ export default defineComponent({
         top,
       }
     }
+    const startResize = (e: MouseEvent) => {
+      const currentElement = editWrapper.value
+      const handleMove = (e: MouseEvent) => {
+        if (currentElement) {
+          const { left, top } = currentElement.getBoundingClientRect()
+          currentElement.style.height = e.clientY - top + 'px'
+          currentElement.style.width = e.clientX - left + 'px'
+        }
+      }
+      const handleMouseUp = () => {
+        document.removeEventListener('mousemove', handleMove)
+      }
+      document.addEventListener('mousemove', handleMove)
+      document.addEventListener('mouseup', handleMouseUp)
+    }
     const startMove = (e: MouseEvent) => {
       const currentElement = editWrapper.value
       if (currentElement) {
@@ -124,33 +145,74 @@ export default defineComponent({
       styles,
       editWrapper,
       startMove,
+      startResize,
     }
   },
 })
 </script>
 
-<style>
+<style lang="scss">
 .edit-wrapper {
   position: relative;
   padding: 0px;
   cursor: pointer;
   border: 1px solid transparent;
   user-select: none;
+  box-sizing: content-box !important;
+
+  &:hover {
+    border: 1px dashed #ccc;
+  }
+  &.active {
+    border: 1px solid #1890ff;
+    user-select: none;
+    z-index: 1500;
+    .resizers {
+      display: block;
+    }
+    .resizers .resizer {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #fff;
+      border: 3px solid #1890ff;
+      position: absolute;
+    }
+  }
+  &.hidden {
+    display: none;
+  }
+  & > * {
+    position: static !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  .resizers {
+    display: none;
+    .resizer.top-left {
+      left: -5px;
+      top: -5px;
+      cursor: nwse-resize;
+    }
+    .resizer.top-right {
+      right: -5px;
+      top: -5px;
+      cursor: nesw-resize;
+    }
+    .resizer.bottom-left {
+      left: -5px;
+      bottom: -5px;
+      cursor: nesw-resize;
+    }
+    .resizer.bottom-right {
+      right: -5px;
+      bottom: -5px;
+      cursor: nwse-resize;
+    }
+  }
 }
-.edit-wrapper:hover {
-  border: 1px dashed #ccc;
-}
-.edit-wrapper.active {
-  border: 1px solid #1890ff;
-  user-select: none;
-  z-index: 1500;
-}
-.edit-wrapper.hidden {
-  display: none;
-}
-.edit-wrapper > * {
-  position: static !important;
-}
+
 .remove-edit_component {
   position: absolute;
   right: 0;
