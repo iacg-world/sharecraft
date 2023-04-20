@@ -16,6 +16,7 @@
     "babel-plugin-import": "^1.13.5",
     "core-js": "^3.8.3",
     "cropperjs": "^1.5.12",
+    "hotkeys-js": "^3.10.2",
     "lodash-es": "^4.17.21",
     "uuid": "^8.3.2",
     "vue": "^3.2.13",

@@ -91,6 +91,8 @@ import EditGroup from '../components/EditGroup.vue'
 import { ComponentData } from '../store/editor'
 import { defaultTextTemplates } from '../defaultTemplates'
 import { pickBy, forEach } from 'lodash-es'
+import initHotKeys from '../plugins/hotKeys'
+
 export type TabType = 'component' | 'layer' | 'page'
 export default defineComponent({
   components: {
@@ -103,6 +105,7 @@ export default defineComponent({
     EditGroup,
   },
   setup() {
+    initHotKeys()
     const store = useStore<GlobalDataProps>()
     const activePanel = ref<TabType>('component')
     const components = computed(() => store.state.editor.components)
@@ -141,7 +144,6 @@ export default defineComponent({
       forEach(updatedData, (v, key) => {
         // 循环更新
         store.commit('updateComponent', { key, value: v + 'px', id })
-        console.log(v, key)
       })
     }
     return {

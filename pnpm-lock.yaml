@@ -22,6 +22,9 @@ dependencies:
   cropperjs:
     specifier: ^1.5.12
     version: 1.5.12
+  hotkeys-js:
+    specifier: ^3.10.2
+    version: registry.npmmirror.com/hotkeys-js@3.10.2
   lodash-es:
     specifier: ^4.17.21
     version: 4.17.21
@@ -10900,6 +10903,12 @@ packages:
     name: hash-sum
     version: 1.0.2
     dev: true
+
+  registry.npmmirror.com/hotkeys-js@3.10.2:
+    resolution: {integrity: sha512-Z6vLmJTYzkbZZXlBkhrYB962Q/rZGc/WHQiyEGu9ZZVF7bAeFDjjDa31grWREuw9Ygb4zmlov2bTkPYqj0aFnQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/hotkeys-js/-/hotkeys-js-3.10.2.tgz}
+    name: hotkeys-js
+    version: 3.10.2
+    dev: false
 
   registry.npmmirror.com/ignore@4.0.6:
     resolution: {integrity: sha512-cyFDKrqc/YdcWFniJhzI42+AzS+gNwmUzOSFcRCQYwySuBBBy/KjuxWLZ/FHEH6Moq1NizMOBWyTcv8O4OZIMg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/ignore/-/ignore-4.0.6.tgz}
