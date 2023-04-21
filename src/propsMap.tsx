@@ -1,5 +1,4 @@
-import { VNode, h } from 'vue'
-import { AllComponentProps } from './defaultProps'
+import { VNode } from 'vue'
 import { AllFormProps } from '@/store/editor'
 export interface PropToForm {
   component: string

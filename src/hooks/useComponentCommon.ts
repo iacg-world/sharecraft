@@ -1,7 +1,6 @@
 import { computed } from 'vue'
 import { pick } from 'lodash-es'
 import { TextComponentProps } from '../defaultProps'
-import { defineComponent } from 'vue'
 import { useStore } from 'vuex'
 import { GlobalDataProps } from '@/store'
 

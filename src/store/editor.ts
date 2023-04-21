@@ -1,12 +1,7 @@
 import { Module } from 'vuex'
 import { v4 as uuidv4 } from 'uuid'
 import store, { GlobalDataProps } from './index'
-import {
-  TextComponentProps,
-  AllComponentProps,
-  imageDefaultProps,
-  textDefaultProps,
-} from '../defaultProps'
+import { AllComponentProps, textDefaultProps } from '../defaultProps'
 import { message } from 'ant-design-vue'
 import { cloneDeep } from 'lodash-es'
 import { insertAt } from '../helper'

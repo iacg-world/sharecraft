@@ -68,7 +68,7 @@ const templates: Module<TemplatesProps, GlobalDataProps> = {
     data: testData,
   },
   getters: {
-    getTemplateById: (state, getters, rootState) => (id: number) => {
+    getTemplateById: (state) => (id: number) => {
       return state.data.find((t) => t.id === id)
     },
   },
