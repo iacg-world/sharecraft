@@ -17,6 +17,10 @@ const useCreateContextMenu = (
   const vm = createVNode(ContextMenu, options)
   render(vm, container)
   document.body.appendChild(container)
+  return () => {
+    render(null, container)
+    document.body.removeChild(container)
+  }
 }
 
 export default useCreateContextMenu

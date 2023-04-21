@@ -17,15 +17,19 @@ const initContextMenu = () => {
     {
       shortcut: 'Ctrl+C',
       text: '复制配置',
-      action: (e) => {
-        console.log(e)
+      action: () => {
+        console.log(2)
       },
     },
   ]
-
+  let destroy: any, destroy2: any
   onMounted(() => {
-    createContextMenu(testActions)
-    createContextMenu(testActions2, 'settings-panel')
+    destroy = createContextMenu(testActions)
+    destroy2 = createContextMenu(testActions2, 'settings-panel')
+  })
+  onUnmounted(() => {
+    destroy()
+    destroy2()
   })
 }
 

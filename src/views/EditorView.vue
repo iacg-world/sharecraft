@@ -1,4 +1,5 @@
 <template>
+  <router-link to="/">Home</router-link>
   <div class="editor-container">
     <a-layout>
       <a-layout-sider width="200" style="background: #fff">
