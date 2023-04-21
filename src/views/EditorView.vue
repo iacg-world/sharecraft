@@ -144,10 +144,10 @@ export default defineComponent({
     }) => {
       const { id } = data
       const updatedData = pickBy<number>(data, (v, k) => k !== 'id')
-      forEach(updatedData, (v, key) => {
-        // 循环更新
-        store.commit('updateComponent', { key, value: v + 'px', id })
-      })
+      // 将位置变化合并为数组传递
+      const keysArr = Object.keys(updatedData)
+      const valuesArr = Object.values(updatedData).map((v) => v + 'px')
+      store.commit('updateComponent', { key: keysArr, value: valuesArr, id })
     }
     return {
       components,

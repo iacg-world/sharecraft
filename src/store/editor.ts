@@ -27,6 +27,13 @@ export interface PageData {
   title: string
 }
 
+export interface UpdateComponentData {
+  key: keyof AllComponentProps | Array<keyof AllComponentProps>
+  value: string | string[]
+  id: string
+  isRoot?: boolean
+}
+
 export interface HistoryProps {
   id: string
   componentId: string
@@ -131,6 +138,29 @@ const pageDefaultProps = {
   backgroundSize: 'cover',
   height: '560px',
 }
+const modifyHistory = (
+  state: EditorProps,
+  history: HistoryProps,
+  type: 'undo' | 'redo'
+) => {
+  const { componentId, data } = history
+  const { key, oldValue, newValue } = data
+  const newKey = key as keyof AllComponentProps | Array<keyof AllComponentProps>
+  const updatedComponent = state.components.find(
+    (component) => component.id === componentId
+  )
+  if (updatedComponent) {
+    // check if key is array
+    if (Array.isArray(newKey)) {
+      newKey.forEach((keyName, index) => {
+        updatedComponent.props[keyName] =
+          type === 'undo' ? oldValue[index] : newValue[index]
+      })
+    } else {
+      updatedComponent.props[newKey] = type === 'undo' ? oldValue : newValue
+    }
+  }
+}
 
 const editor: Module<EditorProps, GlobalDataProps> = {
   state: {
@@ -179,23 +209,31 @@ const editor: Module<EditorProps, GlobalDataProps> = {
         }
       })
     },
-    updateComponent(state, { key, value, id, isRoot }) {
+    updateComponent(state, { key, value, id, isRoot }: UpdateComponentData) {
       const updatedComponent = store.getters.getElement(id)
 
       if (updatedComponent) {
         if (isRoot) {
           // https://github.com/microsoft/TypeScript/issues/31663
-          ;(updatedComponent as any)[key] = value
+          ;(updatedComponent as any)[key as string] = value
         } else {
-          const oldValue =
-            updatedComponent.props[key as keyof AllComponentProps]
-          updatedComponent.props[key as keyof AllComponentProps] = value
+          const oldValue = Array.isArray(key)
+            ? key.map((key) => updatedComponent.props[key])
+            : updatedComponent.props[key] // 先存储当前状态
           state.histories.push({
             id: uuidv4(),
             componentId: id || state.currentElementId,
             type: 'modify',
             data: { oldValue, newValue: value, key },
           })
+          if (Array.isArray(key) && Array.isArray(value)) {
+            // 若是数组，批量更新
+            key.forEach((keyName, index) => {
+              updatedComponent.props[keyName] = value[index]
+            })
+          } else if (typeof key === 'string' && typeof value === 'string') {
+            updatedComponent.props[key] = value
+          }
         }
       }
     },
@@ -324,14 +362,7 @@ const editor: Module<EditorProps, GlobalDataProps> = {
           break
         case 'modify': {
           // 如果上一步是修改元素，还原修改元素时所记录的历史值
-          const { componentId, data } = history
-          const { key, oldValue } = data
-          const updatedComponent = state.components.find(
-            (component) => component.id === componentId
-          )
-          if (updatedComponent) {
-            updatedComponent.props[key as keyof AllComponentProps] = oldValue
-          }
+          modifyHistory(state, history, 'undo')
           break
         }
         default:
@@ -353,14 +384,7 @@ const editor: Module<EditorProps, GlobalDataProps> = {
           )
           break
         case 'modify': {
-          const { componentId, data } = history
-          const { key, newValue } = data
-          const updatedComponent = state.components.find(
-            (component) => component.id === componentId
-          )
-          if (updatedComponent) {
-            updatedComponent.props[key as keyof AllComponentProps] = newValue
-          }
+          modifyHistory(state, history, 'redo')
           break
         }
         default:
