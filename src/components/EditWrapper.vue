@@ -114,6 +114,7 @@ export default defineComponent({
       }
     }
     const startMove = (e: MouseEvent) => {
+      e.preventDefault && e.preventDefault()
       const currentElement = editWrapper.value
       if (currentElement) {
         const { left, top } = currentElement.getBoundingClientRect()
