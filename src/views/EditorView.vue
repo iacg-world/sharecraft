@@ -79,7 +79,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref } from 'vue'
+import { defineComponent, computed, ref, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { GlobalDataProps } from '../store/index'
 import CText from '../components/CText.vue'
@@ -93,7 +93,8 @@ import HistoryArea from './editor/HistoryArea.vue'
 import { ComponentData } from '../store/editor'
 import defaultTextTemplates from '../defaultTemplates'
 import { pickBy } from 'lodash-es'
-import initHotKeys from '../plugins/hotKeys'
+import initHotKeys from '@/plugins/hotKeys'
+import useCreateContextMenu from '@/hooks/useCreateContextMenu'
 
 export type TabType = 'component' | 'layer' | 'page'
 export default defineComponent({
@@ -149,6 +150,19 @@ export default defineComponent({
       const valuesArr = Object.values(updatedData).map((v) => v + 'px')
       store.commit('updateComponent', { key: keysArr, value: valuesArr, id })
     }
+
+    const testActions = [
+      {
+        shortcut: ' ctrl + z',
+        text: '撤销',
+        action: () => {
+          console.log(1)
+        },
+      },
+    ]
+    onMounted(() => {
+      useCreateContextMenu(testActions)
+    })
     return {
       components,
       defaultTextTemplates,
@@ -162,6 +176,7 @@ export default defineComponent({
       page,
       pageChange,
       updatePosition,
+      testActions,
     }
   },
 })
