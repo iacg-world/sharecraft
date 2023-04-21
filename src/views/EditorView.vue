@@ -92,7 +92,7 @@ import EditGroup from '../components/EditGroup.vue'
 import HistoryArea from './editor/HistoryArea.vue'
 import { ComponentData } from '../store/editor'
 import defaultTextTemplates from '../defaultTemplates'
-import { pickBy, forEach } from 'lodash-es'
+import { pickBy } from 'lodash-es'
 import initHotKeys from '../plugins/hotKeys'
 
 export type TabType = 'component' | 'layer' | 'page'

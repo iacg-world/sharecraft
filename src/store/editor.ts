@@ -4,7 +4,7 @@ import store, { GlobalDataProps } from './index'
 import { AllComponentProps, textDefaultProps } from '../defaultProps'
 import { message } from 'ant-design-vue'
 import { cloneDeep } from 'lodash-es'
-import { insertAt } from '../helper'
+import { debounce, insertAt } from '../helper'
 
 export type MoveDirection = 'Up' | 'Down' | 'Left' | 'Right'
 export interface ComponentData {
@@ -56,6 +56,8 @@ export interface EditorProps {
   histories: HistoryProps[]
   // 当前历史记录的操作位置
   historyIndex: number
+  // 开始更新时的缓存值
+  cachedOldValues: any
 }
 
 export const testComponents: ComponentData[] = [
@@ -138,6 +140,22 @@ const pageDefaultProps = {
   backgroundSize: 'cover',
   height: '560px',
 }
+
+const pushModifyHistory = (
+  state: EditorProps,
+  { key, value, id }: UpdateComponentData
+) => {
+  state.histories.push({
+    id: uuidv4(),
+    componentId: id || state.currentElementId,
+    type: 'modify',
+    data: { oldValue: state.cachedOldValues, newValue: value, key },
+  })
+  state.cachedOldValues = null
+}
+// 只会推入防抖时间内最后一次的新值
+const pushHistoryDebounce = debounce(pushModifyHistory)
+
 const modifyHistory = (
   state: EditorProps,
   history: HistoryProps,
@@ -174,6 +192,7 @@ const editor: Module<EditorProps, GlobalDataProps> = {
     },
     histories: [],
     historyIndex: -1,
+    cachedOldValues: null,
   },
   mutations: {
     setEditStatus(state, status) {
@@ -220,12 +239,10 @@ const editor: Module<EditorProps, GlobalDataProps> = {
           const oldValue = Array.isArray(key)
             ? key.map((key) => updatedComponent.props[key])
             : updatedComponent.props[key] // 先存储当前状态
-          state.histories.push({
-            id: uuidv4(),
-            componentId: id || state.currentElementId,
-            type: 'modify',
-            data: { oldValue, newValue: value, key },
-          })
+          if (!state.cachedOldValues) {
+            state.cachedOldValues = oldValue
+          }
+          pushHistoryDebounce(state, { key, value, id })
           if (Array.isArray(key) && Array.isArray(value)) {
             // 若是数组，批量更新
             key.forEach((keyName, index) => {

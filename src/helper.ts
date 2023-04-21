@@ -74,3 +74,14 @@ export const getParentElement = (element: HTMLElement, className: string) => {
 export const insertAt = (arr: any[], index: number, newItem: any) => {
   return [...arr.slice(0, index), newItem, ...arr.slice(index)]
 }
+
+export const debounce = (callback: (...args: any) => void, timeout = 500) => {
+  let timer = 0
+  return (...args: any) => {
+    clearTimeout(timer)
+    timer = window.setTimeout(() => {
+      timer = 0
+      callback(...args)
+    }, timeout)
+  }
+}
