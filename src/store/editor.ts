@@ -58,6 +58,8 @@ export interface EditorProps {
   historyIndex: number
   // 开始更新时的缓存值
   cachedOldValues: any
+  // 最大保存历史数
+  maxHistoryNumber: number
 }
 
 export const testComponents: ComponentData[] = [
@@ -140,12 +142,26 @@ const pageDefaultProps = {
   backgroundSize: 'cover',
   height: '560px',
 }
-
+const pushHistory = (state: EditorProps, historyRecord: HistoryProps) => {
+  if (state.historyIndex !== -1) {
+    // 有新纪录时，先删除指针后面所有记录
+    state.histories = state.histories.slice(0, state.historyIndex)
+    // 置空指针
+    state.historyIndex = -1
+  }
+  if (state.histories.length < state.maxHistoryNumber) {
+    state.histories.push(historyRecord)
+  } else {
+    // 超过最大保存历史数后先出队最早的历史记录
+    state.histories.shift()
+    state.histories.push(historyRecord)
+  }
+}
 const pushModifyHistory = (
   state: EditorProps,
   { key, value, id }: UpdateComponentData
 ) => {
-  state.histories.push({
+  pushHistory(state, {
     id: uuidv4(),
     componentId: id || state.currentElementId,
     type: 'modify',
@@ -193,6 +209,7 @@ const editor: Module<EditorProps, GlobalDataProps> = {
     histories: [],
     historyIndex: -1,
     cachedOldValues: null,
+    maxHistoryNumber: 9,
   },
   mutations: {
     setEditStatus(state, status) {
@@ -211,7 +228,7 @@ const editor: Module<EditorProps, GlobalDataProps> = {
     addComponent(state, component: ComponentData) {
       component.layerName = '图层' + (state.components.length + 1)
       state.components.push(component)
-      state.histories.push({
+      pushHistory(state, {
         id: uuidv4(),
         componentId: component.id,
         type: 'add',
@@ -272,7 +289,7 @@ const editor: Module<EditorProps, GlobalDataProps> = {
         clone.layerName = clone.layerName + '副本'
         state.components.push(clone)
         message.success('已黏贴当前图层', 1)
-        state.histories.push({
+        pushHistory(state, {
           id: uuidv4(),
           componentId: clone.id,
           type: 'add',
@@ -289,7 +306,7 @@ const editor: Module<EditorProps, GlobalDataProps> = {
         state.components = state.components.filter(
           (component) => component.id !== id
         )
-        state.histories.push({
+        pushHistory(state, {
           id: uuidv4(),
           componentId: currentComponent.id,
           type: 'delete',
