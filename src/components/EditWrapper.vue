@@ -3,6 +3,7 @@
     class="edit-wrapper"
     ref="editWrapper"
     :style="styles"
+    :data-component-id="id"
     @click="onItemClick(id)"
     @dblclick="onChangeEditStatus(id)"
     @mousedown="startMove"
