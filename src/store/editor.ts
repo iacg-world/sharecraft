@@ -17,7 +17,7 @@ export interface ComponentData {
   // id，uuid v4 生成
   id: string
   // 业务组件库名称 c-text，c-image 等等
-  name: 'c-text' | 'c-image' | 'l-shape'
+  name: 'c-text' | 'c-image' | 'c-shape'
   // 图层是否隐藏
   isHidden?: boolean
   // 图层是否锁定
@@ -41,6 +41,18 @@ export interface EditorProps {
   page: PageData
   // 当前被复制的组件
   copiedComponent?: ComponentData
+  // 当前操作的历史记录
+  histories: HistoryProps[]
+  // 当前历史记录的操作位置
+  historyIndex: number
+}
+
+export interface HistoryProps {
+  id: string
+  componentId: string
+  type: 'add' | 'delete' | 'modify'
+  data: any
+  index?: number
 }
 
 export const testComponents: ComponentData[] = [
@@ -134,6 +146,8 @@ const editor: Module<EditorProps, GlobalDataProps> = {
       props: pageDefaultProps,
       title: 'test title',
     },
+    histories: [],
+    historyIndex: -1,
   },
   mutations: {
     setEditStatus(state, status) {
@@ -152,6 +166,12 @@ const editor: Module<EditorProps, GlobalDataProps> = {
     addComponent(state, component: ComponentData) {
       component.layerName = '图层' + (state.components.length + 1)
       state.components.push(component)
+      state.histories.push({
+        id: uuidv4(),
+        componentId: component.id,
+        type: 'add',
+        data: cloneDeep(component),
+      })
     },
     setActive(state, currentId: string) {
       state.currentElementId = currentId
@@ -171,7 +191,15 @@ const editor: Module<EditorProps, GlobalDataProps> = {
           // https://github.com/microsoft/TypeScript/issues/31663
           ;(updatedComponent as any)[key] = value
         } else {
+          const oldValue =
+            updatedComponent.props[key as keyof AllComponentProps]
           updatedComponent.props[key as keyof AllComponentProps] = value
+          state.histories.push({
+            id: uuidv4(),
+            componentId: id || state.currentElementId,
+            type: 'modify',
+            data: { oldValue, newValue: value, key },
+          })
         }
       }
     },
@@ -193,14 +221,30 @@ const editor: Module<EditorProps, GlobalDataProps> = {
         clone.layerName = clone.layerName + '副本'
         state.components.push(clone)
         message.success('已黏贴当前图层', 1)
+        state.histories.push({
+          id: uuidv4(),
+          componentId: clone.id,
+          type: 'add',
+          data: cloneDeep(clone),
+        })
       }
     },
     deleteComponent(state, id) {
       const currentComponent = store.getters.getElement(id)
       if (currentComponent) {
+        const currentIndex = state.components.findIndex(
+          (component) => component.id === id
+        )
         state.components = state.components.filter(
           (component) => component.id !== id
         )
+        state.histories.push({
+          id: uuidv4(),
+          componentId: currentComponent.id,
+          type: 'delete',
+          data: currentComponent,
+          index: currentIndex,
+        })
         message.success('删除当前图层成功', 1)
       }
     },
@@ -268,6 +312,7 @@ const editor: Module<EditorProps, GlobalDataProps> = {
       return state.components.find(
         (component) => component.id === (id || state.currentElementId)
       )
+    },
     },
   },
 }
