@@ -26,6 +26,14 @@ export interface PageData {
   props: { [key: string]: any } & PageProps
   title: string
 }
+
+export interface HistoryProps {
+  id: string
+  componentId: string
+  type: 'add' | 'delete' | 'modify'
+  data: any
+  index?: number
+}
 export interface EditorProps {
   // 是否在编辑状态
   isEditing: boolean
@@ -41,14 +49,6 @@ export interface EditorProps {
   histories: HistoryProps[]
   // 当前历史记录的操作位置
   historyIndex: number
-}
-
-export interface HistoryProps {
-  id: string
-  componentId: string
-  type: 'add' | 'delete' | 'modify'
-  data: any
-  index?: number
 }
 
 export const testComponents: ComponentData[] = [
@@ -68,8 +68,8 @@ export const testComponents: ComponentData[] = [
       width: '100px',
       height: '100px',
       backgroundColor: '#efefef',
-      left: '10px',
-      top: '10px',
+      left: '100px',
+      top: '150px',
     },
   },
   // {
@@ -368,6 +368,12 @@ const editor: Module<EditorProps, GlobalDataProps> = {
       }
       state.historyIndex++
     },
+    resetEditor(state) {
+      state.components = []
+      state.currentElementId = ''
+      state.historyIndex = -1
+      state.histories = []
+    },
   },
   getters: {
     getCurrentElement: (state) => {
@@ -382,6 +388,27 @@ const editor: Module<EditorProps, GlobalDataProps> = {
     },
     getComponentsLength: (state) => {
       return state.components.length
+    },
+    checkUndoDisable: (state) => {
+      // 1 没有历史元素
+      // 2 已经是第一个元素
+      if (state.histories.length === 0 || state.historyIndex === 0) {
+        return true
+      }
+      return false
+    },
+    checkRedoDisable: (state) => {
+      // 1 没有历史元素
+      // 2 指针指向最后
+      // 3 之前从未撤销过
+      if (
+        state.histories.length === 0 ||
+        state.historyIndex === state.histories.length ||
+        state.historyIndex === -1
+      ) {
+        return true
+      }
+      return false
     },
   },
 }
