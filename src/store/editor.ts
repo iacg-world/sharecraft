@@ -9,6 +9,7 @@ import {
 } from '../defaultProps'
 import { message } from 'ant-design-vue'
 import { cloneDeep } from 'lodash-es'
+import { insertAt } from '../helper'
 
 export type MoveDirection = 'Up' | 'Down' | 'Left' | 'Right'
 export interface ComponentData {
@@ -301,6 +302,77 @@ const editor: Module<EditorProps, GlobalDataProps> = {
         }
       }
     },
+    undo(state) {
+      if (state.historyIndex === -1) {
+        // 没有操作历史，撤销最后一个元素
+        state.historyIndex = state.histories.length - 1
+      } else {
+        // 指正后移
+        state.historyIndex--
+      }
+      // get the history record
+      const history = state.histories[state.historyIndex]
+      switch (history.type) {
+        case 'add':
+          // 如果上一步是添加元素，撤销添加===删除
+          state.components = state.components.filter(
+            (component) => component.id !== history.componentId
+          )
+          break
+        case 'delete':
+          // 如果上一步是删除元素，撤销删除===添加
+          state.components = insertAt(
+            state.components,
+            history.index as number,
+            history.data
+          )
+          break
+        case 'modify': {
+          // 如果上一步是修改元素，还原修改元素时所记录的历史值
+          const { componentId, data } = history
+          const { key, oldValue } = data
+          const updatedComponent = state.components.find(
+            (component) => component.id === componentId
+          )
+          if (updatedComponent) {
+            updatedComponent.props[key as keyof AllComponentProps] = oldValue
+          }
+          break
+        }
+        default:
+          break
+      }
+    },
+    redo(state) {
+      if (state.historyIndex === -1) {
+        return
+      }
+      const history = state.histories[state.historyIndex]
+      switch (history.type) {
+        case 'add':
+          state.components.push(history.data)
+          break
+        case 'delete':
+          state.components = state.components.filter(
+            (component) => component.id !== history.componentId
+          )
+          break
+        case 'modify': {
+          const { componentId, data } = history
+          const { key, newValue } = data
+          const updatedComponent = state.components.find(
+            (component) => component.id === componentId
+          )
+          if (updatedComponent) {
+            updatedComponent.props[key as keyof AllComponentProps] = newValue
+          }
+          break
+        }
+        default:
+          break
+      }
+      state.historyIndex++
+    },
   },
   getters: {
     getCurrentElement: (state) => {
@@ -313,6 +385,8 @@ const editor: Module<EditorProps, GlobalDataProps> = {
         (component) => component.id === (id || state.currentElementId)
       )
     },
+    getComponentsLength: (state) => {
+      return state.components.length
     },
   },
 }
