@@ -37,8 +37,13 @@
             <a-button type="primary" size="large" @click="login">
               登录
             </a-button>
-            <a-button size="large" :style="{ marginLeft: '20px' }">
-              获取验证码
+            <a-button
+              size="large"
+              :style="{ marginLeft: '20px' }"
+              :disabled="codeButtonDisable"
+              @click="getCode"
+            >
+              {{ counter === 60 ? '获取验证码' : `${counter}秒后重发` }}
             </a-button>
           </a-form-item>
         </a-form>
@@ -47,10 +52,12 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, reactive, ref, Ref } from 'vue'
+import { defineComponent, reactive, ref, Ref, computed, watch } from 'vue'
 import { UserOutlined, LockOutlined } from '@ant-design/icons-vue'
 import { useForm } from 'ant-design-vue/lib/form'
 import { Rule } from 'ant-design-vue/es/form/interface'
+import axios from 'axios'
+import { message } from 'ant-design-vue'
 
 interface RuleFormInstance {
   validate: () => Promise<any>
@@ -100,6 +107,32 @@ export default defineComponent({
     const handleToLogin = () => {
       isToLogin.value = true
     }
+
+    const counter = ref(60)
+    let timer = 0
+    const codeButtonDisable = computed(() => {
+      return !/^1[3-9]\d{9}$/.test(form.cellphone.trim()) || counter.value < 60
+    })
+    const startCounter = () => {
+      counter.value--
+      timer = setInterval(() => {
+        counter.value--
+      }, 1000)
+    }
+    watch(counter, (newValue) => {
+      if (newValue === 0) {
+        clearInterval(timer)
+        counter.value = 60
+      }
+    })
+    const getCode = () => {
+      axios
+        .post('/users/genVeriCode', { phoneNumber: form.cellphone })
+        .then(() => {
+          message.success('验证码已发送，请注意查收', 5)
+          startCounter()
+        })
+    }
     return {
       form,
       rules,
@@ -107,6 +140,9 @@ export default defineComponent({
       handleToLogin,
       loginForm,
       login,
+      codeButtonDisable,
+      getCode,
+      counter,
     }
   },
 })
