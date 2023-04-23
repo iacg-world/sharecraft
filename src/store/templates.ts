@@ -1,6 +1,6 @@
 import { RespListData } from '../respTypes'
 import { Module } from 'vuex'
-import { GlobalDataProps } from './index'
+import { GlobalDataProps, actionWrapper } from './index'
 import axios from 'axios'
 export interface TemplateProps {
   id: number
@@ -75,11 +75,7 @@ const templates: Module<TemplatesProps, GlobalDataProps> = {
     },
   },
   actions: {
-    fetchTemplates(context) {
-      return axios.get('/templates').then((resp) => {
-        context.commit('fetchTemplates', resp.data)
-      })
-    },
+    fetchTemplates: actionWrapper('/templates', 'fetchTemplates'),
   },
   getters: {
     getTemplateById: (state, getters, rootState) => (id: number) => {

@@ -1,4 +1,14 @@
 <template>
+  <a-spin
+    style="
+      position: absolute;
+      z-index: 9;
+      background-color: rgba(255, 255, 255, 0.65);
+      text-align: center;
+      width: 100vw;
+    "
+    v-if="isLoading"
+  />
   <div class="login-page">
     <div :class="isToLogin ? 'to_login' : ''">
       <div class="aside">
@@ -16,7 +26,13 @@
         </div>
       </div>
       <div class="login-area">
-        <a-form layout="vertical" :model="form" :rules="rules" ref="loginForm">
+        <a-form
+          layout="vertical"
+          :model="form"
+          :rules="rules"
+          ref="loginForm"
+          :loading="isLoginLoading"
+        >
           <h2>欢迎回来</h2>
           <p class="subTitle">使用手机号码和验证码登录到分享乐</p>
           <a-form-item label="手机号码" required name="cellphone">
@@ -60,6 +76,7 @@ import axios from 'axios'
 import { message } from 'ant-design-vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
+import { GlobalDataProps } from '../store/index'
 
 interface RuleFormInstance {
   validate: () => Promise<any>
@@ -70,7 +87,9 @@ export default defineComponent({
     LockOutlined,
   },
   setup() {
-    const store = useStore()
+    const store = useStore<GlobalDataProps>()
+    const isLoading = computed(() => store.getters.isLoading)
+    const isLoginLoading = computed(() => store.getters.isOpLoading('login'))
     const router = useRouter()
     const form = reactive({
       cellphone: '',
@@ -155,12 +174,18 @@ export default defineComponent({
       codeButtonDisable,
       getCode,
       counter,
+      isLoading,
+      isLoginLoading,
     }
   },
 })
 </script>
 <style lang="scss">
 $cubicBezier: 0, 1.06, 0.58, 0.98;
+
+.login-page {
+  position: relative;
+}
 .logo-area {
   position: absolute;
   top: 30px;

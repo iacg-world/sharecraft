@@ -1,5 +1,6 @@
 <template>
   <div class="content-container">
+    <h1 v-if="isLoading">templates is Loading!</h1>
     <template-list :list="testData"></template-list>
   </div>
 </template>
@@ -16,12 +17,16 @@ export default defineComponent({
   setup() {
     const store = useStore<GlobalDataProps>()
     const testData = computed(() => store.state.templates.data)
+    const isLoading = computed(() =>
+      store.getters.isOpLoading('fetchTemplates')
+    )
 
     onMounted(() => {
       store.dispatch('fetchTemplates')
     })
     return {
       testData,
+      isLoading,
     }
   },
 })

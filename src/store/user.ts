@@ -1,5 +1,5 @@
 import { Module, ActionContext } from 'vuex'
-import { GlobalDataProps } from './index'
+import { GlobalDataProps, actionWrapper } from './index'
 import { RespData } from '@/respTypes'
 import axios, { AxiosRequestConfig } from 'axios'
 export interface UserDataProps {
@@ -20,21 +20,6 @@ export interface UserProps {
   isLogin: boolean
   token?: string
   data: UserDataProps
-}
-
-const actionWrapper = (
-  url: string,
-  commitName: string,
-  config: AxiosRequestConfig = { method: 'get' }
-) => {
-  // 返回一个原来函数
-  return async (context: ActionContext<any, any>, payload?: any) => {
-    // 写内部重复的逻辑
-    const newConfig = { ...config, data: payload }
-    const { data } = await axios(url, newConfig)
-    context.commit(commitName, data)
-    return data
-  }
 }
 
 const user: Module<UserProps, GlobalDataProps> = {
