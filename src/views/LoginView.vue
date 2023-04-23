@@ -107,10 +107,10 @@ export default defineComponent({
           veriCode: form.verifyCode,
         }
         store.dispatch('loginAndFetch', payload).then(() => {
-          message.success('登录成功 2秒后跳转首页')
+          message.success('登录成功 正在跳转首页')
           setTimeout(() => {
             router.push('/')
-          }, 2000)
+          }, 1500)
         })
       })
     }
