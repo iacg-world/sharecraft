@@ -101,11 +101,4 @@ module.exports = defineConfig({
       ]
     }
   },
-  devServer: {
-    proxy: {
-      '/api': {
-        target: 'http://150.158.18.62:7002', // 我们要代理的真实接口地址
-      },
-    },
-  },
 })

@@ -1,7 +1,7 @@
 <template>
   <c-uploader
     class="styled-uploader"
-    action="http://150.158.18.62:7002/api/utils/upload-img"
+    action="utils/upload-img"
     :showUploadList="false"
     :beforeUpload="commonUploadCheck"
     @success="
