@@ -32,9 +32,6 @@ describe('UserProfile component', () => {
   beforeAll(() => {
     jest.useFakeTimers()
     wrapper = mount(UserProfile, {
-      props: {
-        user: { isLogin: false },
-      },
       global: {
         components: globalComponents,
         provide: {
@@ -50,7 +47,7 @@ describe('UserProfile component', () => {
   it('should call message and update store when clicking login', async () => {
     await wrapper.get('div').trigger('click')
     expect(message.success).toHaveBeenCalled()
-    expect(store.state.user.userName).toBe('lc')
+    expect(store.state.user.data.nickName).toBe('lc')
   })
   it('should render username when login is true', async () => {
     await wrapper.setProps({

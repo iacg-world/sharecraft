@@ -58,6 +58,8 @@ import { useForm } from 'ant-design-vue/lib/form'
 import { Rule } from 'ant-design-vue/es/form/interface'
 import axios from 'axios'
 import { message } from 'ant-design-vue'
+import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
 
 interface RuleFormInstance {
   validate: () => Promise<any>
@@ -68,6 +70,8 @@ export default defineComponent({
     LockOutlined,
   },
   setup() {
+    const store = useStore()
+    const router = useRouter()
     const form = reactive({
       cellphone: '',
       verifyCode: '',
@@ -98,8 +102,16 @@ export default defineComponent({
     const { validate, resetFields } = useForm(form, rules)
     const login = () => {
       validate().then(() => {
-        alert('passed')
-        resetFields()
+        const payload = {
+          phoneNumber: form.cellphone,
+          veriCode: form.verifyCode,
+        }
+        store.dispatch('loginAndFetch', payload).then(() => {
+          message.success('登录成功 2秒后跳转首页')
+          setTimeout(() => {
+            router.push('/')
+          }, 2000)
+        })
       })
     }
 
