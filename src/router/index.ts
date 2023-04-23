@@ -3,6 +3,7 @@ import Home from '../views/HomeView.vue'
 import Editor from '../views/EditorView.vue'
 import TemplateDetail from '../views/TemplateDetail.vue'
 import Index from '../views/IndexView.vue'
+import Login from '../views/LoginView.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -18,6 +19,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/editor',
     name: 'editor',
     component: Editor,
+  },
+  {
+    path: '/Login',
+    name: 'Login',
+    component: Login,
   },
 ]
 const router = createRouter({

@@ -1,12 +1,7 @@
 <template>
-  <a-button
-    type="primary"
-    v-if="!user.isLogin"
-    class="user-profile-component"
-    @click="login"
-  >
-    登录
-  </a-button>
+  <router-link to="/login" v-if="!user.isLogin">
+    <a-button type="primary" class="user-profile-component"> 登录 </a-button>
+  </router-link>
   <div v-else>
     <a-dropdown-button class="user-profile-component">
       <router-link to="/setting">{{ user.userName }}</router-link>
@@ -37,10 +32,6 @@ export default defineComponent({
   setup() {
     const store = useStore()
     const router = useRouter()
-    const login = () => {
-      store.commit('login')
-      message.success('登录成功', 2)
-    }
     const logout = () => {
       store.commit('logout')
       message.success('退出登录成功，2秒后跳转到首页', 2)
@@ -49,7 +40,6 @@ export default defineComponent({
       }, 2000)
     }
     return {
-      login,
       logout,
     }
   },
