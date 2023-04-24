@@ -96,6 +96,7 @@ import defaultTextTemplates from '../defaultTemplates'
 import { pickBy } from 'lodash-es'
 import initHotKeys from '@/plugins/hotKeys'
 import initContextMenu from '../plugins/contextMenu'
+import { useRoute } from 'vue-router'
 
 export type TabType = 'component' | 'layer' | 'page'
 export default defineComponent({
@@ -112,6 +113,8 @@ export default defineComponent({
   setup() {
     initHotKeys()
     initContextMenu()
+    const route = useRoute()
+    const currentWorkId = route.params.id
     const store = useStore<GlobalDataProps>()
     const activePanel = ref<TabType>('component')
     const components = computed(() => store.state.editor.components)
@@ -152,6 +155,11 @@ export default defineComponent({
       const valuesArr = Object.values(updatedData).map((v) => v + 'px')
       store.commit('updateComponent', { key: keysArr, value: valuesArr, id })
     }
+    onMounted(() => {
+      if (currentWorkId) {
+        store.dispatch('fetchWork', { urlParams: { id: currentWorkId } })
+      }
+    })
     return {
       components,
       defaultTextTemplates,

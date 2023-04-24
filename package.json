@@ -18,6 +18,7 @@
     "cropperjs": "^1.5.12",
     "hotkeys-js": "^3.10.2",
     "lodash-es": "^4.17.21",
+    "path-to-regexp": "^6.2.1",
     "uuid": "^8.3.2",
     "vue": "^3.2.13",
     "vue-class-component": "^8.0.0-0",

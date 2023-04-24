@@ -29,7 +29,7 @@ const routes: Array<RouteRecordRaw> = [
     ],
   },
   {
-    path: '/editor',
+    path: '/editor/:id',
     name: 'editor',
     component: Editor,
     meta: { requiredLogin: true, title: '编辑我的设计' },

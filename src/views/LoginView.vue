@@ -125,7 +125,7 @@ export default defineComponent({
           phoneNumber: form.cellphone,
           veriCode: form.verifyCode,
         }
-        store.dispatch('loginAndFetch', payload).then(() => {
+        store.dispatch('loginAndFetch', { data: payload }).then(() => {
           message.success('登录成功 正在跳转首页')
           setTimeout(() => {
             router.push('/')

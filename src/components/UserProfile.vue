@@ -7,7 +7,8 @@
       <router-link to="/setting">{{ user.data.nickName }}</router-link>
       <template v-slot:overlay>
         <a-menu class="user-profile-dropdown">
-          <a-menu-item key="0" @click="logout">登出</a-menu-item>
+          <a-menu-item key="0" @click="createDesign">创建作品</a-menu-item>
+          <a-menu-item key="1" @click="logout">登出</a-menu-item>
         </a-menu>
       </template>
     </a-dropdown-button>
@@ -20,6 +21,7 @@ import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
 import { UserProps } from '../store/user'
+import axios from 'axios'
 
 export default defineComponent({
   name: 'user-profile',
@@ -39,8 +41,25 @@ export default defineComponent({
         router.push('/')
       }, 2000)
     }
+    const createDesign = async () => {
+      const payload = {
+        title: '未命名作品',
+        desc: '未命名作品',
+        coverImg:
+          'http://typescript-vue.oss-cn-beijing.aliyuncs.com/vue-marker/5f81cca3f3bf7a0e1ebaf885.png',
+      }
+      const postData = {
+        method: 'post',
+        data: payload,
+        opName: 'createDesign',
+      } as any
+      const { data } = await axios('/works', postData)
+      message.success('创建作品成功', 2)
+      router.push(`/editor/${data.data.id}`)
+    }
     return {
       logout,
+      createDesign,
     }
   },
 })

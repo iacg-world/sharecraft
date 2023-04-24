@@ -1,10 +1,11 @@
 import { Module } from 'vuex'
 import { v4 as uuidv4 } from 'uuid'
-import store, { GlobalDataProps } from './index'
+import store, { actionWrapper, GlobalDataProps } from './index'
 import { AllComponentProps, textDefaultProps } from '../defaultProps'
 import { message } from 'ant-design-vue'
 import { cloneDeep } from 'lodash-es'
 import { debounce, insertAt } from '../helper'
+import { RespWorkData } from '@/respTypes'
 
 export type MoveDirection = 'Up' | 'Down' | 'Left' | 'Right'
 export interface ComponentData {
@@ -23,8 +24,11 @@ export interface ComponentData {
 }
 
 export interface PageData {
-  props: { [key: string]: any } & PageProps
-  title: string
+  id?: string
+  props?: PageProps
+  title?: string
+  desc?: string
+  coverImg?: string
 }
 
 export interface UpdateComponentData {
@@ -272,7 +276,17 @@ const editor: Module<EditorProps, GlobalDataProps> = {
       }
     },
     updatePage(state, { key, value }) {
-      state.page.props[key as keyof PageProps] = value
+      if (state.page.props) {
+        state.page.props[key as keyof PageProps] = value
+      }
+    },
+    fetchWork(state, { data }: RespWorkData) {
+      const { content, ...rest } = data
+      state.page = { ...state.page, ...rest }
+      if (content.props) {
+        state.page.props = content.props
+      }
+      state.components = content.components
     },
 
     copyComponent(state, id) {
@@ -432,6 +446,9 @@ const editor: Module<EditorProps, GlobalDataProps> = {
       state.historyIndex = -1
       state.histories = []
     },
+  },
+  actions: {
+    fetchWork: actionWrapper('/works/:id', 'fetchWork'),
   },
   getters: {
     getCurrentElement: (state) => {
