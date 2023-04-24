@@ -6,8 +6,9 @@ import Antd from 'ant-design-vue'
 import 'ant-design-vue/dist/antd.css' // or 'ant-design-vue/dist/antd.less'
 import * as Icons from '@ant-design/icons-vue'
 import 'cropperjs/dist/cropper.css'
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { RespData } from './respTypes'
+import './assets/reset-style.scss'
 
 export type ICustomAxiosConfig = AxiosRequestConfig & {
   opName?: string
@@ -31,9 +32,10 @@ axios.interceptors.response.use(
     }
     return resp
   },
-  (e) => {
+  (e: AxiosError) => {
+    const newConfig = e.config as ICustomAxiosConfig
     store.commit('setError', { status: true, message: '服务器错误' })
-    store.commit('finishLoading')
+    store.commit('finishLoading', { opName: newConfig.opName })
     return Promise.reject(e)
   }
 )

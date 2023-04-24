@@ -1,20 +1,13 @@
 <template>
-  <a-spin
-    style="
-      position: absolute;
-      z-index: 9;
-      background-color: rgba(255, 255, 255, 0.65);
-      text-align: center;
-      width: 100vw;
-    "
-    v-if="isLoading"
-  />
   <div class="login-page">
     <div :class="isToLogin ? 'to_login' : ''">
       <div class="aside">
         <div class="aside-inner">
-          <h2>自由的分享工具</h2>
-          <span class="text-white-70">斜光, Google</span>
+          <router-link to="/">
+            <h1><a href="">Share Craft</a></h1>
+          </router-link>
+          <h2>自由创作你的分享</h2>
+          <!-- <span class="text-white-70">craft your sharing</span> -->
           <a-button
             class="to_login_button"
             type="primary"
@@ -88,7 +81,6 @@ export default defineComponent({
   },
   setup() {
     const store = useStore<GlobalDataProps>()
-    const isLoading = computed(() => store.getters.isLoading)
     const isLoginLoading = computed(() => store.getters.isOpLoading('login'))
     const router = useRouter()
     const form = reactive({
@@ -165,15 +157,6 @@ export default defineComponent({
         })
     }
 
-    const error = computed(() => store.state.global.error)
-    watch(
-      () => error.value.status,
-      (errorValue) => {
-        if (errorValue) {
-          message.error(error.value.message || '未知错误', 2)
-        }
-      }
-    )
     return {
       form,
       rules,
@@ -184,7 +167,6 @@ export default defineComponent({
       codeButtonDisable,
       getCode,
       counter,
-      isLoading,
       isLoginLoading,
     }
   },

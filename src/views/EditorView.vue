@@ -228,7 +228,7 @@ export default defineComponent({
 })
 </script>
 
-<style>
+<style lang="scss">
 .editor-container .preview-container {
   padding: 24px;
   margin: 0;
@@ -253,6 +253,12 @@ export default defineComponent({
 }
 .page-title {
   display: flex;
+
+  a {
+    color: #ffffffff;
+    font-weight: 600;
+    font-size: 20px;
+  }
 }
 .page-title .inline-edit span {
   font-weight: 500;

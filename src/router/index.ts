@@ -38,7 +38,7 @@ const routes: Array<RouteRecordRaw> = [
     path: '/Login',
     name: 'Login',
     component: Login,
-    meta: { requiredLogin: true, title: '登录到分享乐' },
+    meta: { requiredLogin: true, title: '登录到分享乐', disableLoading: true },
   },
 ]
 const router = createRouter({
