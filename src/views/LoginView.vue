@@ -164,6 +164,16 @@ export default defineComponent({
           startCounter()
         })
     }
+
+    const error = computed(() => store.state.global.error)
+    watch(
+      () => error.value.status,
+      (errorValue) => {
+        if (errorValue) {
+          message.error(error.value.message || '未知错误', 2)
+        }
+      }
+    )
     return {
       form,
       rules,
