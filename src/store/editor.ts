@@ -1,4 +1,4 @@
-import { Module } from 'vuex'
+import { Module, Mutation } from 'vuex'
 import { v4 as uuidv4 } from 'uuid'
 import store, { actionWrapper, GlobalDataProps } from './index'
 import { AllComponentProps, textDefaultProps } from '../defaultProps'
@@ -64,6 +64,8 @@ export interface EditorProps {
   cachedOldValues: any
   // 最大保存历史数
   maxHistoryNumber: number
+  // 是否有修改
+  isDirty: boolean
 }
 
 export const testComponents: ComponentData[] = [
@@ -200,6 +202,13 @@ const modifyHistory = (
   }
 }
 
+// 脏数据标记
+const setDirtyWrapper = (callback: Mutation<EditorProps>) => {
+  return (state: EditorProps, payload: any) => {
+    state.isDirty = true
+    callback(state, payload)
+  }
+}
 const editor: Module<EditorProps, GlobalDataProps> = {
   state: {
     isEditing: false,
@@ -214,6 +223,7 @@ const editor: Module<EditorProps, GlobalDataProps> = {
     historyIndex: -1,
     cachedOldValues: null,
     maxHistoryNumber: 9,
+    isDirty: false,
   },
   mutations: {
     setEditStatus(state, status) {
@@ -229,7 +239,7 @@ const editor: Module<EditorProps, GlobalDataProps> = {
       state.clickTimeout = setTimeout(event, delay)
     },
     // 给画布添加组件渲染
-    addComponent(state, component: ComponentData) {
+    addComponent: setDirtyWrapper((state, component: ComponentData) => {
       component.layerName = '图层' + (state.components.length + 1)
       state.components.push(component)
       pushHistory(state, {
@@ -238,7 +248,7 @@ const editor: Module<EditorProps, GlobalDataProps> = {
         type: 'add',
         data: cloneDeep(component),
       })
-    },
+    }),
     setActive(state, currentId: string) {
       state.currentElementId = currentId
     },
@@ -249,33 +259,35 @@ const editor: Module<EditorProps, GlobalDataProps> = {
         }
       })
     },
-    updateComponent(state, { key, value, id, isRoot }: UpdateComponentData) {
-      const updatedComponent = store.getters.getElement(id)
+    updateComponent: setDirtyWrapper(
+      (state, { key, value, id, isRoot }: UpdateComponentData) => {
+        const updatedComponent = store.getters.getElement(id)
 
-      if (updatedComponent) {
-        if (isRoot) {
-          // https://github.com/microsoft/TypeScript/issues/31663
-          ;(updatedComponent as any)[key as string] = value
-        } else {
-          const oldValue = Array.isArray(key)
-            ? key.map((key) => updatedComponent.props[key])
-            : updatedComponent.props[key] // 先存储当前状态
-          if (!state.cachedOldValues) {
-            state.cachedOldValues = oldValue
-          }
-          pushHistoryDebounce(state, { key, value, id })
-          if (Array.isArray(key) && Array.isArray(value)) {
-            // 若是数组，批量更新
-            key.forEach((keyName, index) => {
-              updatedComponent.props[keyName] = value[index]
-            })
-          } else if (typeof key === 'string' && typeof value === 'string') {
-            updatedComponent.props[key] = value
+        if (updatedComponent) {
+          if (isRoot) {
+            // https://github.com/microsoft/TypeScript/issues/31663
+            ;(updatedComponent as any)[key as string] = value
+          } else {
+            const oldValue = Array.isArray(key)
+              ? key.map((key) => updatedComponent.props[key])
+              : updatedComponent.props[key] // 先存储当前状态
+            if (!state.cachedOldValues) {
+              state.cachedOldValues = oldValue
+            }
+            pushHistoryDebounce(state, { key, value, id })
+            if (Array.isArray(key) && Array.isArray(value)) {
+              // 若是数组，批量更新
+              key.forEach((keyName, index) => {
+                updatedComponent.props[keyName] = value[index]
+              })
+            } else if (typeof key === 'string' && typeof value === 'string') {
+              updatedComponent.props[key] = value
+            }
           }
         }
       }
-    },
-    updatePage(state, { key, value, isRoot }) {
+    ),
+    updatePage: setDirtyWrapper((state, { key, value, isRoot }) => {
       if (isRoot) {
         state.page[key as keyof PageData] = value
       } else {
@@ -283,15 +295,7 @@ const editor: Module<EditorProps, GlobalDataProps> = {
           state.page.props[key as keyof PageProps] = value
         }
       }
-    },
-    fetchWork(state, { data }: RespWorkData) {
-      const { content, ...rest } = data
-      state.page = { ...state.page, ...rest }
-      if (content.props) {
-        state.page.props = content.props
-      }
-      state.components = content.components
-    },
+    }),
 
     copyComponent(state, id) {
       const currentComponent = store.getters.getElement(id)
@@ -300,7 +304,7 @@ const editor: Module<EditorProps, GlobalDataProps> = {
         message.success('已拷贝当前图层', 1)
       }
     },
-    pasteCopiedComponent(state) {
+    pasteCopiedComponent: setDirtyWrapper((state) => {
       if (state.copiedComponent) {
         const clone = cloneDeep(state.copiedComponent)
         clone.id = uuidv4()
@@ -314,8 +318,8 @@ const editor: Module<EditorProps, GlobalDataProps> = {
           data: cloneDeep(clone),
         })
       }
-    },
-    deleteComponent(state, id) {
+    }),
+    deleteComponent: setDirtyWrapper((state, id) => {
       const currentComponent = store.getters.getElement(id)
       if (currentComponent) {
         const currentIndex = state.components.findIndex(
@@ -333,7 +337,7 @@ const editor: Module<EditorProps, GlobalDataProps> = {
         })
         message.success('删除当前图层成功', 1)
       }
-    },
+    }),
     moveComponent(
       state,
       data: { direction: MoveDirection; amount: number; id: string }
@@ -449,6 +453,17 @@ const editor: Module<EditorProps, GlobalDataProps> = {
       state.currentElementId = ''
       state.historyIndex = -1
       state.histories = []
+    },
+    fetchWork(state, { data }: RespWorkData) {
+      const { content, ...rest } = data
+      state.page = { ...state.page, ...rest }
+      if (content.props) {
+        state.page.props = content.props
+      }
+      state.components = content.components
+    },
+    saveWork(state) {
+      state.isDirty = false
     },
   },
   actions: {

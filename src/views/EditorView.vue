@@ -111,7 +111,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref, onMounted } from 'vue'
+import { defineComponent, computed, ref, onMounted, onUnmounted } from 'vue'
 import { useStore } from 'vuex'
 import { GlobalDataProps } from '../store/index'
 import CText from '../components/CText.vue'
@@ -214,11 +214,26 @@ export default defineComponent({
         urlParams: { id: currentWorkId },
       })
     }
+
+    // 脏数据检查
+    const isDirty = computed(() => store.state.editor.isDirty)
+    let timer = 0
+    onMounted(() => {
+      timer = setInterval(() => {
+        if (isDirty.value) {
+          saveWork()
+        }
+      }, 1000 * 5)
+    })
+    onUnmounted(() => {
+      clearInterval(timer)
+    })
     onMounted(() => {
       if (currentWorkId) {
         store.dispatch('fetchWork', { urlParams: { id: currentWorkId } })
       }
     })
+
     return {
       components,
       defaultTextTemplates,
