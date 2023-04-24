@@ -127,9 +127,10 @@ import defaultTextTemplates from '../defaultTemplates'
 import { pickBy } from 'lodash-es'
 import initHotKeys from '@/plugins/hotKeys'
 import initContextMenu from '../plugins/contextMenu'
-import { useRoute } from 'vue-router'
+import { onBeforeRouteLeave, useRoute } from 'vue-router'
 import InlineEdit from '../components/InlineEdit.vue'
 import UserProfile from '../components/UserProfile.vue'
+import { Modal } from 'ant-design-vue'
 
 export type TabType = 'component' | 'layer' | 'page'
 export default defineComponent({
@@ -227,6 +228,25 @@ export default defineComponent({
     })
     onUnmounted(() => {
       clearInterval(timer)
+    })
+    onBeforeRouteLeave((to, from, next) => {
+      if (isDirty.value) {
+        Modal.confirm({
+          title: '作品还未保存，是否保存？',
+          okText: '保存',
+          okType: 'primary',
+          cancelText: '不保存',
+          onOk: async () => {
+            await saveWork()
+            next()
+          },
+          onCancel: () => {
+            next()
+          },
+        })
+      } else {
+        next()
+      }
     })
     onMounted(() => {
       if (currentWorkId) {
