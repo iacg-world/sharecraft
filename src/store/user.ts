@@ -26,12 +26,14 @@ const user: Module<UserProps, GlobalDataProps> = {
   state: {
     isLogin: false,
     data: {},
+    token: localStorage.getItem('token') || '',
   },
   mutations: {
     login(state, rawData: RespData<{ token: string }>) {
       const { token } = rawData.data
       state.token = token
       axios.defaults.headers.common.Authorization = `Bearer ${token}`
+      localStorage.setItem('token', token)
     },
     fetchCurrentUser(state, rawData: RespData<UserDataProps>) {
       state.isLogin = true
@@ -39,6 +41,9 @@ const user: Module<UserProps, GlobalDataProps> = {
     },
     logout(state) {
       state.isLogin = false
+      state.token = ''
+      localStorage.removeItem('token')
+      delete axios.defaults.headers.common.Authorization
     },
   },
   actions: {
