@@ -111,7 +111,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref, onMounted, onUnmounted } from 'vue'
+import { defineComponent, computed, ref, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { GlobalDataProps } from '../store/index'
 import CText from '../components/CText.vue'
@@ -127,10 +127,10 @@ import defaultTextTemplates from '../defaultTemplates'
 import { pickBy } from 'lodash-es'
 import initHotKeys from '@/plugins/hotKeys'
 import initContextMenu from '../plugins/contextMenu'
-import { onBeforeRouteLeave, useRoute } from 'vue-router'
+import { useRoute } from 'vue-router'
 import InlineEdit from '../components/InlineEdit.vue'
 import UserProfile from '../components/UserProfile.vue'
-import { Modal } from 'ant-design-vue'
+import useSaveWork from '@/hooks/useSaveWork'
 
 export type TabType = 'component' | 'layer' | 'page'
 export default defineComponent({
@@ -153,7 +153,6 @@ export default defineComponent({
     const currentWorkId = route.params.id
     const store = useStore<GlobalDataProps>()
     const activePanel = ref<TabType>('component')
-    const saveIsLoading = computed(() => store.getters.isOpLoading('saveWork'))
     const components = computed(() => store.state.editor.components)
     const isEditing = computed(() => store.state.editor.isEditing)
     const currentElement = computed<ComponentData | null>(
@@ -200,54 +199,7 @@ export default defineComponent({
       const valuesArr = Object.values(updatedData).map((v) => v + 'px')
       store.commit('updateComponent', { key: keysArr, value: valuesArr, id })
     }
-
-    const saveWork = () => {
-      const { title, props } = page.value
-      const payload = {
-        title,
-        content: {
-          components: components.value,
-          props,
-        },
-      }
-      store.dispatch('saveWork', {
-        data: payload,
-        urlParams: { id: currentWorkId },
-      })
-    }
-
-    // 脏数据检查
-    const isDirty = computed(() => store.state.editor.isDirty)
-    let timer = 0
-    onMounted(() => {
-      timer = setInterval(() => {
-        if (isDirty.value) {
-          saveWork()
-        }
-      }, 1000 * 5)
-    })
-    onUnmounted(() => {
-      clearInterval(timer)
-    })
-    onBeforeRouteLeave((to, from, next) => {
-      if (isDirty.value) {
-        Modal.confirm({
-          title: '作品还未保存，是否保存？',
-          okText: '保存',
-          okType: 'primary',
-          cancelText: '不保存',
-          onOk: async () => {
-            await saveWork()
-            next()
-          },
-          onCancel: () => {
-            next()
-          },
-        })
-      } else {
-        next()
-      }
-    })
+    const { saveWork, saveIsLoading } = useSaveWork()
     onMounted(() => {
       if (currentWorkId) {
         store.dispatch('fetchWork', { urlParams: { id: currentWorkId } })
