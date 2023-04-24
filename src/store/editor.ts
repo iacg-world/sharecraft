@@ -275,9 +275,13 @@ const editor: Module<EditorProps, GlobalDataProps> = {
         }
       }
     },
-    updatePage(state, { key, value }) {
-      if (state.page.props) {
-        state.page.props[key as keyof PageProps] = value
+    updatePage(state, { key, value, isRoot }) {
+      if (isRoot) {
+        state.page[key as keyof PageData] = value
+      } else {
+        if (state.page.props) {
+          state.page.props[key as keyof PageProps] = value
+        }
       }
     },
     fetchWork(state, { data }: RespWorkData) {
@@ -449,6 +453,7 @@ const editor: Module<EditorProps, GlobalDataProps> = {
   },
   actions: {
     fetchWork: actionWrapper('/works/:id', 'fetchWork'),
+    saveWork: actionWrapper('/works/:id', 'saveWork', { method: 'patch' }),
   },
   getters: {
     getCurrentElement: (state) => {

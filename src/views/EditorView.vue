@@ -2,6 +2,37 @@
   <router-link to="/">Home</router-link>
   <div class="editor-container">
     <a-layout>
+      <a-layout-header class="header">
+        <div class="page-title">
+          <router-link to="/">
+            <img alt="分享乐" src="../assets/logo.png" class="logo-img" />
+          </router-link>
+          <inline-edit :value="page.title" @change="titleChange" />
+        </div>
+        <a-menu
+          :selectable="false"
+          theme="dark"
+          mode="horizontal"
+          :style="{ lineHeight: '64px' }"
+        >
+          <a-menu-item key="1">
+            <a-button type="primary">预览和设置</a-button>
+          </a-menu-item>
+          <a-menu-item key="2">
+            <a-button type="primary" @click="saveWork" :loading="saveIsLoading"
+              >保存</a-button
+            >
+          </a-menu-item>
+          <a-menu-item key="3">
+            <a-button type="primary">发布</a-button>
+          </a-menu-item>
+          <a-menu-item key="4">
+            <user-profile :user="userInfo"></user-profile>
+          </a-menu-item>
+        </a-menu>
+      </a-layout-header>
+    </a-layout>
+    <a-layout>
       <a-layout-sider width="200" style="background: #fff">
         <div class="sidebar-container">
           组件列表
@@ -97,6 +128,8 @@ import { pickBy } from 'lodash-es'
 import initHotKeys from '@/plugins/hotKeys'
 import initContextMenu from '../plugins/contextMenu'
 import { useRoute } from 'vue-router'
+import InlineEdit from '../components/InlineEdit.vue'
+import UserProfile from '../components/UserProfile.vue'
 
 export type TabType = 'component' | 'layer' | 'page'
 export default defineComponent({
@@ -109,6 +142,8 @@ export default defineComponent({
     LayerList,
     EditGroup,
     HistoryArea,
+    InlineEdit,
+    UserProfile,
   },
   setup() {
     initHotKeys()
@@ -117,12 +152,14 @@ export default defineComponent({
     const currentWorkId = route.params.id
     const store = useStore<GlobalDataProps>()
     const activePanel = ref<TabType>('component')
+    const saveIsLoading = computed(() => store.getters.isOpLoading('saveWork'))
     const components = computed(() => store.state.editor.components)
     const isEditing = computed(() => store.state.editor.isEditing)
     const currentElement = computed<ComponentData | null>(
       () => store.getters.getCurrentElement
     )
     const page = computed(() => store.state.editor.page)
+    const userInfo = computed(() => store.state.user)
 
     const addItem = (component: any) => {
       console.log('addItem: ', component)
@@ -142,6 +179,13 @@ export default defineComponent({
       console.log('page', e)
       store.commit('updatePage', e)
     }
+    const titleChange = (newTitle: string) => {
+      store.commit('updatePage', {
+        key: 'title',
+        value: newTitle,
+        isRoot: true,
+      })
+    }
 
     const updatePosition = (data: {
       left: number
@@ -154,6 +198,21 @@ export default defineComponent({
       const keysArr = Object.keys(updatedData)
       const valuesArr = Object.values(updatedData).map((v) => v + 'px')
       store.commit('updateComponent', { key: keysArr, value: valuesArr, id })
+    }
+
+    const saveWork = () => {
+      const { title, props } = page.value
+      const payload = {
+        title,
+        content: {
+          components: components.value,
+          props,
+        },
+      }
+      store.dispatch('saveWork', {
+        data: payload,
+        urlParams: { id: currentWorkId },
+      })
     }
     onMounted(() => {
       if (currentWorkId) {
@@ -173,6 +232,10 @@ export default defineComponent({
       page,
       pageChange,
       updatePosition,
+      titleChange,
+      userInfo,
+      saveWork,
+      saveIsLoading,
     }
   },
 })
@@ -200,5 +263,18 @@ export default defineComponent({
   position: fixed;
   margin-top: 50px;
   max-height: 80vh;
+}
+.page-title {
+  display: flex;
+}
+.page-title .inline-edit span {
+  font-weight: 500;
+  margin-left: 10px;
+  font-size: 16px;
+}
+
+.logo-img {
+  width: 18px;
+  height: 18px;
 }
 </style>
