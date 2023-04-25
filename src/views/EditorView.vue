@@ -24,7 +24,9 @@
             >
           </a-menu-item>
           <a-menu-item key="3">
-            <a-button type="primary" @click="publish">发布</a-button>
+            <a-button type="primary" @click="publish" :loading="isPublishing"
+              >发布</a-button
+            >
           </a-menu-item>
           <a-menu-item key="4">
             <user-profile :user="userInfo"></user-profile>
@@ -100,7 +102,7 @@
           <a-tab-pane key="layer" tab="图层设置">
             <layer-list
               :list="components"
-              :selectedId="currentElement && currentElement.id"
+              :selectedId="(currentElement && currentElement.id) || ''"
               @change="handleChange"
               @select="setActive"
             >
@@ -136,7 +138,7 @@ import { useRoute } from 'vue-router'
 import InlineEdit from '../components/InlineEdit.vue'
 import UserProfile from '../components/UserProfile.vue'
 import useSaveWork from '@/hooks/useSaveWork'
-import html2canvas from 'html2canvas'
+import { takeScreenshotAndUpload } from '@/helper'
 
 export type TabType = 'component' | 'layer' | 'page'
 export default defineComponent({
@@ -212,20 +214,32 @@ export default defineComponent({
       }
     })
     const canvasFix = ref(false)
+    const isPublishing = ref(false)
     const publish = async () => {
+      isPublishing.value = true
       store.commit('setActive', '')
       const el = document.getElementById('canvas-area') as HTMLElement
       canvasFix.value = true
-      await nextTick()
-      html2canvas(el, { width: 375, useCORS: true, scale: 1 }).then(
-        (canvas) => {
-          const image = document.getElementById(
-            'test-image'
-          ) as HTMLImageElement
-          image.src = canvas.toDataURL()
-          canvasFix.value = false
+      try {
+        const resp = await takeScreenshotAndUpload(el)
+        if (resp) {
+          store.commit('updatePage', {
+            key: 'coverImg',
+            value: resp.data.urls[0],
+            isRoot: true,
+          })
+          await saveWork()
+          await store.dispatch('publishWork', {
+            urlParams: { id: currentWorkId },
+          })
+          console.log(resp.data.urls)
         }
-      )
+      } catch (e) {
+        console.error(e)
+      } finally {
+        canvasFix.value = false
+        isPublishing.value = false
+      }
     }
 
     return {
@@ -247,6 +261,7 @@ export default defineComponent({
       saveIsLoading,
       publish,
       canvasFix,
+      isPublishing,
     }
   },
 })

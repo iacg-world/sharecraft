@@ -6,6 +6,7 @@ import { message } from 'ant-design-vue'
 import { cloneDeep } from 'lodash-es'
 import { debounce, insertAt } from '../helper'
 import { RespWorkData } from '@/respTypes'
+import { CSSProperties } from 'vue'
 
 export type MoveDirection = 'Up' | 'Down' | 'Left' | 'Right'
 export interface ComponentData {
@@ -24,8 +25,8 @@ export interface ComponentData {
 }
 
 export interface PageData {
-  id?: string
-  props?: PageProps
+  id: string
+  props: PageProps
   title?: string
   desc?: string
   coverImg?: string
@@ -130,7 +131,7 @@ export const testComponents: ComponentData[] = [
   // },
 ]
 
-export interface PageProps {
+export interface PageProps extends CSSProperties {
   backgroundColor: string
   backgroundImage: string
   backgroundRepeat: string
@@ -216,6 +217,7 @@ const editor: Module<EditorProps, GlobalDataProps> = {
     components: testComponents,
     currentElementId: '',
     page: {
+      id: 'test-id',
       props: pageDefaultProps,
       title: 'test title',
     },
@@ -469,6 +471,9 @@ const editor: Module<EditorProps, GlobalDataProps> = {
   actions: {
     fetchWork: actionWrapper('/works/:id', 'fetchWork'),
     saveWork: actionWrapper('/works/:id', 'saveWork', { method: 'patch' }),
+    publishWork: actionWrapper('/works/publish/:id', 'publishWork', {
+      method: 'post',
+    }),
   },
   getters: {
     getCurrentElement: (state) => {

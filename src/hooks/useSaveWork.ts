@@ -14,9 +14,10 @@ function useSaveWork() {
   const isDirty = computed(() => store.state.editor.isDirty)
   // 保存函数
   const saveWork = () => {
-    const { title, props } = page.value
+    const { title, props, coverImg } = page.value
     const payload = {
       title,
+      coverImg,
       content: {
         components: components.value,
         props,

@@ -1,4 +1,7 @@
 import { message } from 'ant-design-vue'
+import axios from 'axios'
+import html2canvas from 'html2canvas'
+import { RespUploadData } from './respTypes'
 interface CheckCondition {
   format?: string[]
   // 使用多少 M 为单位
@@ -88,4 +91,35 @@ export const debounce = (callback: (...args: any) => void, timeout = 500) => {
 
 export function isMobile(mobile: string) {
   return /^1[3-9]\d{9}$/.test(mobile)
+}
+
+export async function uploadFile<R = any>(
+  file: Blob,
+  url = '/utils/upload-img',
+  fileName = 'screenshot.png'
+) {
+  const newFile = file instanceof File ? file : new File([file], fileName)
+  const formData = new FormData()
+  formData.append(newFile.name, newFile)
+  const { data } = await axios.post<R>(url, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  })
+  return data
+}
+function getCanvasBlob(canvas: HTMLCanvasElement) {
+  return new Promise<Blob | null>((resolve) => {
+    canvas.toBlob((blob) => {
+      resolve(blob)
+    })
+  })
+}
+export async function takeScreenshotAndUpload(ele: HTMLElement) {
+  const canvas = await html2canvas(ele, { width: 375, useCORS: true, scale: 1 })
+  const canvasBlob = await getCanvasBlob(canvas)
+  if (canvasBlob) {
+    const data = await uploadFile<RespUploadData>(canvasBlob)
+    return data
+  }
 }
