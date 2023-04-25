@@ -26,7 +26,7 @@ axios.interceptors.response.use(
     const newConfig = config as ICustomAxiosConfig
     store.commit('finishLoading', { opName: newConfig.opName })
     const { errno, message } = data
-    if (errno !== 0) {
+    if (errno && errno !== 0) {
       store.commit('setError', { status: true, message })
       return Promise.reject(data)
     }
@@ -42,7 +42,6 @@ axios.interceptors.response.use(
 
 const app = createApp(App)
 const baseBackendURL = process.env.VUE_APP_BASE_URL
-console.log(process.env)
 
 axios.defaults.baseURL = `${baseBackendURL}/api/`
 app.use(store).use(router).use(Antd).mount('#app')

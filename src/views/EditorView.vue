@@ -24,7 +24,7 @@
             >
           </a-menu-item>
           <a-menu-item key="3">
-            <a-button type="primary">发布</a-button>
+            <a-button type="primary" @click="publish">发布</a-button>
           </a-menu-item>
           <a-menu-item key="4">
             <user-profile :user="userInfo"></user-profile>
@@ -40,13 +40,18 @@
             :list="defaultTextTemplates"
             @onItemClick="addItem"
           />
+          <img id="test-image" :style="{ width: '300px' }" />
         </div>
       </a-layout-sider>
       <a-layout style="padding: 0 24px 24px">
         <a-layout-content class="preview-container">
           <p>画布区域</p>
           <history-area></history-area>
-          <div class="preview-list" id="canvas-area">
+          <div
+            class="preview-list"
+            id="canvas-area"
+            :class="{ 'canvas-fix': canvasFix }"
+          >
             <div class="body-container" :style="page.props">
               <edit-wrapper
                 @setActive="setActive"
@@ -111,7 +116,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref, onMounted } from 'vue'
+import { defineComponent, computed, ref, onMounted, nextTick } from 'vue'
 import { useStore } from 'vuex'
 import { GlobalDataProps } from '../store/index'
 import CText from '../components/CText.vue'
@@ -131,6 +136,7 @@ import { useRoute } from 'vue-router'
 import InlineEdit from '../components/InlineEdit.vue'
 import UserProfile from '../components/UserProfile.vue'
 import useSaveWork from '@/hooks/useSaveWork'
+import html2canvas from 'html2canvas'
 
 export type TabType = 'component' | 'layer' | 'page'
 export default defineComponent({
@@ -205,6 +211,22 @@ export default defineComponent({
         store.dispatch('fetchWork', { urlParams: { id: currentWorkId } })
       }
     })
+    const canvasFix = ref(false)
+    const publish = async () => {
+      store.commit('setActive', '')
+      const el = document.getElementById('canvas-area') as HTMLElement
+      canvasFix.value = true
+      await nextTick()
+      html2canvas(el, { width: 375, useCORS: true, scale: 1 }).then(
+        (canvas) => {
+          const image = document.getElementById(
+            'test-image'
+          ) as HTMLImageElement
+          image.src = canvas.toDataURL()
+          canvasFix.value = false
+        }
+      )
+    }
 
     return {
       components,
@@ -223,6 +245,8 @@ export default defineComponent({
       userInfo,
       saveWork,
       saveIsLoading,
+      publish,
+      canvasFix,
     }
   },
 })
@@ -269,5 +293,12 @@ export default defineComponent({
 .logo-img {
   width: 18px;
   height: 18px;
+}
+.preview-list.canvas-fix .edit-wrapper > * {
+  box-shadow: none !important;
+}
+.preview-list.canvas-fix {
+  position: absolute;
+  max-height: none;
 }
 </style>

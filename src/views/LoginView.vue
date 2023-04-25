@@ -28,7 +28,7 @@
         >
           <h2>欢迎回来</h2>
           <p class="subTitle">使用手机号码和验证码登录到分享乐</p>
-          <a-form-item label="手机号码" required name="cellphone">
+          <a-form-item label="手机号码" required name="cellphone" validateFirst>
             <a-input placeholder="手机号码" v-model:value="form.cellphone">
               <template v-slot:prefix
                 ><UserOutlined style="color: rgba(0, 0, 0, 0.25)"

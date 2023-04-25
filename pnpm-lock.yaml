@@ -25,6 +25,9 @@ dependencies:
   hotkeys-js:
     specifier: ^3.10.2
     version: registry.npmmirror.com/hotkeys-js@3.10.2
+  html2canvas:
+    specifier: ^1.4.1
+    version: registry.npmmirror.com/html2canvas@1.4.1
   lodash-es:
     specifier: ^4.17.21
     version: 4.17.21
@@ -10138,6 +10141,13 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
+  registry.npmmirror.com/base64-arraybuffer@1.0.2:
+    resolution: {integrity: sha512-I3yl4r9QB5ZRY3XuJVEPfc2XhZO6YweFPI+UovAzn+8/hb3oJ6lnysaFcjVpkCPfVWFUDvoZ8kmVDP7WyRtYtQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/base64-arraybuffer/-/base64-arraybuffer-1.0.2.tgz}
+    name: base64-arraybuffer
+    version: 1.0.2
+    engines: {node: '>= 0.6.0'}
+    dev: false
+
   registry.npmmirror.com/big.js@5.2.2:
     resolution: {integrity: sha512-vyL2OymJxmarO8gxMr0mhChsO9QGwhynfuu4+MHTAW6czfq9humCB7rKpUjDd9YUiDPU4mzpyupFSvOClAwbmQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/big.js/-/big.js-5.2.2.tgz}
     name: big.js
@@ -10403,6 +10413,14 @@ packages:
     name: core-js
     version: 3.24.1
     requiresBuild: true
+    dev: false
+
+  registry.npmmirror.com/css-line-break@2.1.0:
+    resolution: {integrity: sha512-FHcKFCZcAha3LwfVBhCQbW2nCNbkZXn7KVUJcsT5/P8YmfsVja0FMPJr0B903j/E69HUphKiV9iQArX8SDYA4w==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/css-line-break/-/css-line-break-2.1.0.tgz}
+    name: css-line-break
+    version: 2.1.0
+    dependencies:
+      utrie: registry.npmmirror.com/utrie@1.0.2
     dev: false
 
   registry.npmmirror.com/cssesc@3.0.0:
@@ -10897,6 +10915,16 @@ packages:
     resolution: {integrity: sha512-Z6vLmJTYzkbZZXlBkhrYB962Q/rZGc/WHQiyEGu9ZZVF7bAeFDjjDa31grWREuw9Ygb4zmlov2bTkPYqj0aFnQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/hotkeys-js/-/hotkeys-js-3.10.2.tgz}
     name: hotkeys-js
     version: 3.10.2
+    dev: false
+
+  registry.npmmirror.com/html2canvas@1.4.1:
+    resolution: {integrity: sha512-fPU6BHNpsyIhr8yyMpTLLxAbkaK8ArIBcmZIRiBLiDhjeqvXolaEmDGmELFuX9I4xDcaKKcJl+TKZLqruBbmWA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/html2canvas/-/html2canvas-1.4.1.tgz}
+    name: html2canvas
+    version: 1.4.1
+    engines: {node: '>=8.0.0'}
+    dependencies:
+      css-line-break: registry.npmmirror.com/css-line-break@2.1.0
+      text-segmentation: registry.npmmirror.com/text-segmentation@1.0.3
     dev: false
 
   registry.npmmirror.com/ignore@4.0.6:
@@ -11405,6 +11433,14 @@ packages:
       source-map-support: registry.npmmirror.com/source-map-support@0.5.21
     dev: true
 
+  registry.npmmirror.com/text-segmentation@1.0.3:
+    resolution: {integrity: sha512-iOiPUo/BGnZ6+54OsWxZidGCsdU8YbE4PSpdPinp7DeMtUJNJBoJ/ouUSTJjHkh1KntHaltHl/gDs2FC4i5+Nw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/text-segmentation/-/text-segmentation-1.0.3.tgz}
+    name: text-segmentation
+    version: 1.0.3
+    dependencies:
+      utrie: registry.npmmirror.com/utrie@1.0.2
+    dev: false
+
   registry.npmmirror.com/to-fast-properties@2.0.0:
     resolution: {integrity: sha512-/OaKK0xYrs3DmxRYqL/yDc+FxFUVYhDlXMhRmv3z915w2HF1tnN1omB354j8VUGO/hbRzyD6Y3sA7v7GS/ceog==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/to-fast-properties/-/to-fast-properties-2.0.0.tgz}
     name: to-fast-properties
@@ -11481,6 +11517,14 @@ packages:
     name: util-deprecate
     version: 1.0.2
     dev: true
+
+  registry.npmmirror.com/utrie@1.0.2:
+    resolution: {integrity: sha512-1MLa5ouZiOmQzUbjbu9VmjLzn1QLXBhwpUa7kdLUQK+KQ5KA9I1vk5U4YHe/X2Ch7PYnJfWuWT+VbuxbGwljhw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/utrie/-/utrie-1.0.2.tgz}
+    name: utrie
+    version: 1.0.2
+    dependencies:
+      base64-arraybuffer: registry.npmmirror.com/base64-arraybuffer@1.0.2
+    dev: false
 
   registry.npmmirror.com/vue-hot-reload-api@2.3.4:
     resolution: {integrity: sha512-BXq3jwIagosjgNVae6tkHzzIk6a8MHFtzAdwhnV5VlvPTFxDCvIttgSiHWjdGoTJvXtmRu5HacExfdarRcFhog==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vue-hot-reload-api/-/vue-hot-reload-api-2.3.4.tgz}

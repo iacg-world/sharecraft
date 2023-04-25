@@ -17,6 +17,7 @@
     "core-js": "^3.8.3",
     "cropperjs": "^1.5.12",
     "hotkeys-js": "^3.10.2",
+    "html2canvas": "^1.4.1",
     "lodash-es": "^4.17.21",
     "path-to-regexp": "^6.2.1",
     "uuid": "^8.3.2",
