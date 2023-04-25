@@ -30,6 +30,7 @@ export interface PageData {
   title?: string
   desc?: string
   coverImg?: string
+  uuid?: string
 }
 
 export interface UpdateComponentData {
@@ -248,7 +249,7 @@ const editor: Module<EditorProps, GlobalDataProps> = {
     },
     setClickTimeout(state, event, delay = 300) {
       clearTimeout(state.clickTimeout)
-      state.clickTimeout = setTimeout(event, delay)
+      state.clickTimeout = window.setTimeout(event, delay)
     },
     // 给画布添加组件渲染
     addComponent: setDirtyWrapper((state, component: ComponentData) => {
@@ -481,7 +482,7 @@ const editor: Module<EditorProps, GlobalDataProps> = {
       state.channels = data.list
     },
     createChannel(state, { data }: RespData<ChannelProps>) {
-      state.channels.push(data)
+      state.channels = [...state.channels, data]
     },
   },
   actions: {

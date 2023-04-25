@@ -32,7 +32,7 @@ function useSaveWork(disableSideEffects = false) {
     // 自动保存
     let timer = 0
     onMounted(() => {
-      timer = setInterval(() => {
+      timer = window.setInterval(() => {
         if (isDirty.value) {
           saveWork()
         }

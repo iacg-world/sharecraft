@@ -42,6 +42,7 @@ axios.interceptors.response.use(
 
 const app = createApp(App)
 const baseBackendURL = process.env.VUE_APP_BASE_URL
+export const baseH5URL = process.env.VUE_APP_BASE_H5_URL
 
 axios.defaults.baseURL = `${baseBackendURL}/api/`
 app.use(store).use(router).use(Antd).mount('#app')

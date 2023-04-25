@@ -26,13 +26,19 @@
               class="channel-item"
             >
               <a-col :span="6">
-                <div class="barcode-container"></div>
+                <canvas
+                  class="barcode-container"
+                  :id="`channel-barcode-${channel.id}`"
+                />
               </a-col>
               <a-col :span="18" class="left-gap">
                 <h4>{{ channel.name }}</h4>
                 <a-row>
                   <a-col :span="18">
-                    <a-input :value="channel.id" :readonly="true" />
+                    <a-input
+                      :value="generateChannelURL(channel.id)"
+                      :readonly="true"
+                    />
                   </a-col>
                   <a-col :span="6">
                     <a-button class="copy-button">复制</a-button>
@@ -76,11 +82,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed } from 'vue'
+import { defineComponent, reactive, computed, onMounted, watch } from 'vue'
 import { useForm } from 'ant-design-vue/lib/form'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 import { GlobalDataProps } from '@/store/index'
+import { baseH5URL } from '@/main'
+import QRCode from 'qrcode'
+import { generateQRCode } from '@/helper'
+import { last } from 'lodash-es'
 
 export default defineComponent({
   emits: ['panel-close', 'publish-success'],
@@ -99,6 +109,8 @@ export default defineComponent({
       ],
     })
     const { validate } = useForm(form, rules)
+    const generateChannelURL = (id: number) =>
+      `${baseH5URL}/p/${page.value.id}-${page.value.uuid}?channel=${id}`
     const createChannel = async () => {
       const payload = {
         name: form.channelName,
@@ -116,6 +128,36 @@ export default defineComponent({
     const deleteChannel = (id: number) => {
       store.dispatch('deleteChannel', { urlParams: { id } })
     }
+
+    onMounted(() => {
+      channels.value.forEach(async (channel) => {
+        try {
+          await generateQRCode(
+            `channel-barcode-${channel.id}`,
+            generateChannelURL(channel.id)
+          )
+        } catch (e) {
+          console.error(e)
+        }
+      })
+    })
+    watch(
+      channels,
+      async (newChannels, oldChannels) => {
+        if (newChannels.length > oldChannels.length) {
+          const createdChannel = last(newChannels)
+          if (createdChannel) {
+            await generateQRCode(
+              `channel-barcode-${createdChannel.id}`,
+              generateChannelURL(createdChannel.id)
+            )
+          }
+        }
+      },
+      {
+        flush: 'post',
+      }
+    )
     return {
       page,
       channels,
@@ -124,6 +166,7 @@ export default defineComponent({
       rules,
       deleteDisabled,
       deleteChannel,
+      generateChannelURL,
     }
   },
 })
