@@ -138,7 +138,7 @@ import { useRoute } from 'vue-router'
 import InlineEdit from '../components/InlineEdit.vue'
 import UserProfile from '../components/UserProfile.vue'
 import useSaveWork from '@/hooks/useSaveWork'
-import { takeScreenshotAndUpload } from '@/helper'
+import usePublishWork from '@/hooks/usePublishWork'
 
 export type TabType = 'component' | 'layer' | 'page'
 export default defineComponent({
@@ -158,7 +158,7 @@ export default defineComponent({
     initHotKeys()
     initContextMenu()
     const route = useRoute()
-    const currentWorkId = route.params.id
+    const currentWorkId = route.params.id as string
     const store = useStore<GlobalDataProps>()
     const activePanel = ref<TabType>('component')
     const components = computed(() => store.state.editor.components)
@@ -214,31 +214,17 @@ export default defineComponent({
       }
     })
     const canvasFix = ref(false)
-    const isPublishing = ref(false)
+    const { publishWork, isPublishing } = usePublishWork()
     const publish = async () => {
-      isPublishing.value = true
       store.commit('setActive', '')
       const el = document.getElementById('canvas-area') as HTMLElement
       canvasFix.value = true
       try {
-        const resp = await takeScreenshotAndUpload(el)
-        if (resp) {
-          store.commit('updatePage', {
-            key: 'coverImg',
-            value: resp.data.urls[0],
-            isRoot: true,
-          })
-          await saveWork()
-          await store.dispatch('publishWork', {
-            urlParams: { id: currentWorkId },
-          })
-          console.log(resp.data.urls)
-        }
+        publishWork(el)
       } catch (e) {
         console.error(e)
       } finally {
         canvasFix.value = false
-        isPublishing.value = false
       }
     }
 

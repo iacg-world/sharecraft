@@ -5,7 +5,7 @@ import { AllComponentProps, textDefaultProps } from '../defaultProps'
 import { message } from 'ant-design-vue'
 import { cloneDeep } from 'lodash-es'
 import { debounce, insertAt } from '../helper'
-import { RespWorkData } from '@/respTypes'
+import { RespData, RespListData, RespWorkData } from '@/respTypes'
 import { CSSProperties } from 'vue'
 
 export type MoveDirection = 'Up' | 'Down' | 'Left' | 'Right'
@@ -46,6 +46,13 @@ export interface HistoryProps {
   data: any
   index?: number
 }
+
+export interface ChannelProps {
+  id: number
+  name: string
+  workId: number
+  status: number
+}
 export interface EditorProps {
   // 是否在编辑状态
   isEditing: boolean
@@ -67,6 +74,8 @@ export interface EditorProps {
   maxHistoryNumber: number
   // 是否有修改
   isDirty: boolean
+  // 当前 work 的 channels
+  channels: ChannelProps[]
 }
 
 export const testComponents: ComponentData[] = [
@@ -226,6 +235,7 @@ const editor: Module<EditorProps, GlobalDataProps> = {
     cachedOldValues: null,
     maxHistoryNumber: 9,
     isDirty: false,
+    channels: [],
   },
   mutations: {
     setEditStatus(state, status) {
@@ -467,11 +477,24 @@ const editor: Module<EditorProps, GlobalDataProps> = {
     saveWork(state) {
       state.isDirty = false
     },
+    fetchChannels(state, { data }: RespListData<ChannelProps>) {
+      state.channels = data.list
+    },
+    createChannel(state, { data }: RespData<ChannelProps>) {
+      state.channels.push(data)
+    },
   },
   actions: {
     fetchWork: actionWrapper('/works/:id', 'fetchWork'),
     saveWork: actionWrapper('/works/:id', 'saveWork', { method: 'patch' }),
     publishWork: actionWrapper('/works/publish/:id', 'publishWork', {
+      method: 'post',
+    }),
+    fetchChannels: actionWrapper(
+      '/channel/getWorkChannels/:id',
+      'fetchChannels'
+    ),
+    createChannel: actionWrapper('/channel/', 'createChannel', {
       method: 'post',
     }),
   },

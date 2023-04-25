@@ -4,7 +4,7 @@ import { useRoute, onBeforeRouteLeave } from 'vue-router'
 import { Modal } from 'ant-design-vue'
 import { GlobalDataProps } from '../store/index'
 
-function useSaveWork() {
+function useSaveWork(disableSideEffects = false) {
   const route = useRoute()
   const currentWorkId = route.params.id
   const store = useStore<GlobalDataProps>()
@@ -28,37 +28,39 @@ function useSaveWork() {
       urlParams: { id: currentWorkId },
     })
   }
-  // 自动保存
-  let timer = 0
-  onMounted(() => {
-    timer = setInterval(() => {
+  if (!disableSideEffects) {
+    // 自动保存
+    let timer = 0
+    onMounted(() => {
+      timer = setInterval(() => {
+        if (isDirty.value) {
+          saveWork()
+        }
+      }, 1000 * 25)
+    })
+    onUnmounted(() => {
+      clearInterval(timer)
+    })
+    onBeforeRouteLeave((to, from, next) => {
       if (isDirty.value) {
-        saveWork()
+        Modal.confirm({
+          title: '作品还未保存，是否保存？',
+          okText: '保存',
+          okType: 'primary',
+          cancelText: '不保存',
+          onOk: async () => {
+            await saveWork()
+            next()
+          },
+          onCancel: () => {
+            next()
+          },
+        })
+      } else {
+        next()
       }
-    }, 1000 * 25)
-  })
-  onUnmounted(() => {
-    clearInterval(timer)
-  })
-  onBeforeRouteLeave((to, from, next) => {
-    if (isDirty.value) {
-      Modal.confirm({
-        title: '作品还未保存，是否保存？',
-        okText: '保存',
-        okType: 'primary',
-        cancelText: '不保存',
-        onOk: async () => {
-          await saveWork()
-          next()
-        },
-        onCancel: () => {
-          next()
-        },
-      })
-    } else {
-      next()
-    }
-  })
+    })
+  }
   return {
     saveWork,
     saveIsLoading,
