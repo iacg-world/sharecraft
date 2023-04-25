@@ -1,6 +1,14 @@
 <template>
   <router-link to="/">Home</router-link>
   <div class="editor-container">
+    <a-modal
+      title="发布成功"
+      v-model:visible="showPublishForm"
+      width="700px"
+      :footer="null"
+    >
+      <publish-form />
+    </a-modal>
     <a-layout>
       <a-layout-header class="header">
         <div class="page-title">
@@ -139,6 +147,7 @@ import InlineEdit from '../components/InlineEdit.vue'
 import UserProfile from '../components/UserProfile.vue'
 import useSaveWork from '@/hooks/useSaveWork'
 import usePublishWork from '@/hooks/usePublishWork'
+import PublishForm from './PublishForm.vue'
 
 export type TabType = 'component' | 'layer' | 'page'
 export default defineComponent({
@@ -153,6 +162,7 @@ export default defineComponent({
     HistoryArea,
     InlineEdit,
     UserProfile,
+    PublishForm,
   },
   setup() {
     initHotKeys()
@@ -214,13 +224,16 @@ export default defineComponent({
       }
     })
     const canvasFix = ref(false)
+    const showPublishForm = ref(false)
+
     const { publishWork, isPublishing } = usePublishWork()
     const publish = async () => {
       store.commit('setActive', '')
       const el = document.getElementById('canvas-area') as HTMLElement
       canvasFix.value = true
       try {
-        publishWork(el)
+        await publishWork(el)
+        showPublishForm.value = true
       } catch (e) {
         console.error(e)
       } finally {
@@ -248,12 +261,22 @@ export default defineComponent({
       publish,
       canvasFix,
       isPublishing,
+      showPublishForm,
     }
   },
 })
 </script>
 
 <style lang="scss">
+.editor-container {
+  .header {
+    display: flex;
+    .ant-menu {
+      flex: 1;
+      justify-content: flex-end;
+    }
+  }
+}
 .editor-container .preview-container {
   padding: 24px;
   margin: 0;
