@@ -31,6 +31,7 @@ export interface PageData {
   desc?: string
   coverImg?: string
   uuid?: string
+  setting?: { [key: string]: any }
 }
 
 export interface UpdateComponentData {
@@ -300,9 +301,14 @@ const editor: Module<EditorProps, GlobalDataProps> = {
         }
       }
     ),
-    updatePage: setDirtyWrapper((state, { key, value, isRoot }) => {
+    updatePage: setDirtyWrapper((state, { key, value, isRoot, isSetting }) => {
       if (isRoot) {
         state.page[key as keyof PageData] = value
+      } else if (isSetting) {
+        state.page.setting = {
+          ...state.page.setting,
+          [key]: value,
+        }
       } else {
         if (state.page.props) {
           state.page.props[key as keyof PageProps] = value

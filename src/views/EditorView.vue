@@ -9,6 +9,10 @@
     >
       <publish-form />
     </a-modal>
+    <preview-form
+      v-model:visible="showPreviewForm"
+      v-if="showPreviewForm"
+    ></preview-form>
     <a-layout>
       <a-layout-header class="header">
         <div class="page-title">
@@ -24,7 +28,7 @@
           :style="{ lineHeight: '64px' }"
         >
           <a-menu-item key="1">
-            <a-button type="primary">预览和设置</a-button>
+            <a-button type="primary" @click="preview">预览和设置</a-button>
           </a-menu-item>
           <a-menu-item key="2">
             <a-button type="primary" @click="saveWork" :loading="saveIsLoading"
@@ -148,6 +152,7 @@ import UserProfile from '../components/UserProfile.vue'
 import useSaveWork from '@/hooks/useSaveWork'
 import usePublishWork from '@/hooks/usePublishWork'
 import PublishForm from './PublishForm.vue'
+import PreviewForm from './editor/PreviewForm.vue'
 
 export type TabType = 'component' | 'layer' | 'page'
 export default defineComponent({
@@ -163,6 +168,7 @@ export default defineComponent({
     InlineEdit,
     UserProfile,
     PublishForm,
+    PreviewForm,
   },
   setup() {
     initHotKeys()
@@ -241,6 +247,11 @@ export default defineComponent({
       }
     }
 
+    const showPreviewForm = ref(false)
+    const preview = async () => {
+      await saveWork()
+      showPreviewForm.value = true
+    }
     return {
       components,
       defaultTextTemplates,
@@ -262,6 +273,8 @@ export default defineComponent({
       canvasFix,
       isPublishing,
       showPublishForm,
+      preview,
+      showPreviewForm,
     }
   },
 })

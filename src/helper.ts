@@ -130,3 +130,6 @@ export function generateQRCode(id: string, url: string) {
   console.log(ele)
   return QRCode.toCanvas(ele, url, { width: 100 })
 }
+export function timeout(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}

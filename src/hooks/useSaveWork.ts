@@ -14,13 +14,15 @@ function useSaveWork(disableSideEffects = false) {
   const isDirty = computed(() => store.state.editor.isDirty)
   // 保存函数
   const saveWork = () => {
-    const { title, props, coverImg } = page.value
+    const { title, props, coverImg, desc, setting } = page.value
     const payload = {
       title,
       coverImg,
+      desc,
       content: {
         components: components.value,
         props,
+        setting,
       },
     }
     store.dispatch('saveWork', {
