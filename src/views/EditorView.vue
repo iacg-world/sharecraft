@@ -130,7 +130,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref, onMounted, nextTick } from 'vue'
+import { defineComponent, computed, ref, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { GlobalDataProps } from '../store/index'
 import CText from '../components/CText.vue'

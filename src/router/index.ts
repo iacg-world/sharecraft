@@ -5,6 +5,7 @@ import Editor from '../views/EditorView.vue'
 import TemplateDetail from '../views/TemplateDetail.vue'
 import Index from '../views/IndexView.vue'
 import Login from '../views/LoginView.vue'
+import Works from '../views/WorksView.vue'
 import store from '@/store'
 import axios from 'axios'
 
@@ -26,6 +27,12 @@ const routes: Array<RouteRecordRaw> = [
         component: TemplateDetail,
         meta: { title: '模板详情' },
       },
+      {
+        path: 'works',
+        name: 'works',
+        component: Works,
+        meta: { title: '我的作品', requiredLogin: true },
+      },
     ],
   },
   {
@@ -46,7 +53,7 @@ const router = createRouter({
   routes,
 })
 
-router.beforeEach(async (to, from) => {
+router.beforeEach(async (to) => {
   const { user } = store.state
   const { token, isLogin } = user
   const { redirectAlreadyLogin, requiredLogin, title } = to.meta

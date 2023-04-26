@@ -79,7 +79,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive, watch, onMounted } from 'vue'
+import { defineComponent, computed, reactive, onMounted } from 'vue'
 import { useForm } from 'ant-design-vue/lib/form'
 import { GlobalDataProps } from '@/store/index'
 import { baseH5URL } from '@/main'

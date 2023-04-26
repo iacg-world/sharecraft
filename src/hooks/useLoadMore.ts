@@ -12,22 +12,22 @@ const useLoadMore = (
   params: LoadParams = { pageIndex: 0, pageSize: 8 }
 ) => {
   const store = useStore()
-  // 变化的参数
   const pageIndex = ref(params.pageIndex)
-  // 请求的参数，根据变化的参数进行更新
   const requestParams = computed(() => {
     return {
       ...params,
-      pageIndex: pageIndex.value + 1,
+      pageIndex: pageIndex.value,
     }
   })
   const loadMorePage = () => {
-    store
-      .dispatch(actionName, { searchParams: requestParams.value })
-      .then(() => {
-        pageIndex.value++
-      })
+    pageIndex.value++
+    store.dispatch(actionName, { searchParams: requestParams.value })
   }
+  const loadPrevPage = () => {
+    pageIndex.value--
+    store.dispatch(actionName, { searchParams: requestParams.value })
+  }
+  const isFirstPage = computed(() => pageIndex.value === 0)
   const isLastPage = computed(() => {
     return Math.ceil(total.value / params.pageSize) === pageIndex.value + 1
   })
@@ -35,6 +35,8 @@ const useLoadMore = (
     loadMorePage,
     isLastPage,
     pageIndex,
+    loadPrevPage,
+    isFirstPage,
   }
 }
 export default useLoadMore
