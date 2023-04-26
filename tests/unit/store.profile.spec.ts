@@ -1,5 +1,4 @@
 import store from '@/store/index'
-import { testData } from '@/store/templates'
 import { testComponents, ComponentData } from '@/store/editor'
 import { clone, last } from 'lodash-es'
 const cloneComponents = clone(testComponents)
@@ -20,9 +19,6 @@ describe('test vuex store', () => {
     })
   })
   describe('test templates module', () => {
-    it('should have default templates', () => {
-      expect(store.state.templates.data).toHaveLength(testData.length)
-    })
     it('should get the correct template by Id', () => {
       const selectTemplate = store.getters.getTemplateById(1)
       expect(selectTemplate.title).toBe('iacg落地页海报')

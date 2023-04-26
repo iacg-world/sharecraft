@@ -23,6 +23,10 @@
               </template>
             </a-card-meta>
           </a-card>
+          <div class="tag-list">
+            <a-tag color="red" v-if="item.isHot"> HOT </a-tag>
+            <a-tag color="green" v-if="item.isNew"> NEW </a-tag>
+          </div>
         </router-link>
       </a-col>
     </a-row>
@@ -117,5 +121,10 @@ export default defineComponent({
 }
 .barcode-container img {
   border-radius: 0;
+}
+.tag-list {
+  position: absolute;
+  top: -4px;
+  left: 6px;
 }
 </style>

@@ -25,13 +25,25 @@ export interface ComponentData {
 }
 
 export interface PageData {
-  id: string
-  props: PageProps
+  id?: number
+  props?: PageProps
   title?: string
   desc?: string
   coverImg?: string
   uuid?: string
   setting?: { [key: string]: any }
+  isTemplate?: boolean
+  isHot?: boolean
+  isNew?: boolean
+  author?: string
+  copiedCount?: number
+  status?: string
+  user?: {
+    gender: string
+    nickName: string
+    picture: string
+    userName: string
+  }
 }
 
 export interface UpdateComponentData {
@@ -228,7 +240,7 @@ const editor: Module<EditorProps, GlobalDataProps> = {
     components: testComponents,
     currentElementId: '',
     page: {
-      id: 'test-id',
+      id: 1,
       props: pageDefaultProps,
       title: 'test title',
     },

@@ -133,3 +133,9 @@ export function generateQRCode(id: string, url: string) {
 export function timeout(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
+
+export const objToQueryString = (queryObj: { [key: string]: any }) => {
+  return Object.keys(queryObj)
+    .map((key) => `${key}=${queryObj[key]}`)
+    .join('&')
+}
