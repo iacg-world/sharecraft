@@ -8,8 +8,11 @@
     >
       <c-text v-bind="item"></c-text>
     </div>
+    <StyledUploader
+      class="component-item"
+      @success="onImageUploaded"
+    ></StyledUploader>
   </div>
-  <StyledUploader @success="onImageUploaded"></StyledUploader>
 </template>
 
 <script lang="ts">

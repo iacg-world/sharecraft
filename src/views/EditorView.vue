@@ -86,7 +86,7 @@
       </a-layout>
       <a-layout-sider
         v-show="isEditing"
-        width="300"
+        width="320"
         style="background: #fff"
         class="settings-panel"
       >

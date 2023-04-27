@@ -18,6 +18,7 @@ import {
   Slider,
   Radio,
   Select,
+  Collapse,
 } from 'ant-design-vue'
 import { App } from 'vue'
 const components = [
@@ -52,6 +53,8 @@ const components = [
   Radio.Button,
   Select,
   Select.Option,
+  Collapse,
+  Collapse.Panel,
 ]
 const install = (app: App) => {
   components.forEach((component) => {
