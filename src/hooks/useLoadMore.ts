@@ -1,4 +1,4 @@
-import { ref, computed, ComputedRef } from 'vue'
+import { computed, ComputedRef, reactive, toRef } from 'vue'
 import { useStore } from 'vuex'
 interface LoadParams {
   pageIndex: number
@@ -12,31 +12,34 @@ const useLoadMore = (
   params: LoadParams = { pageIndex: 0, pageSize: 8 }
 ) => {
   const store = useStore()
-  const pageIndex = ref(params.pageIndex)
-  const requestParams = computed(() => {
-    return {
-      ...params,
-      pageIndex: pageIndex.value,
-    }
-  })
+  const requestParams = reactive(params)
   const loadMorePage = () => {
-    pageIndex.value++
-    store.dispatch(actionName, { searchParams: requestParams.value })
+    requestParams.pageIndex++
+    store.dispatch(actionName, { searchParams: requestParams })
+  }
+  const goToPage = (index: number) => {
+    requestParams.pageIndex = index
+    store.dispatch(actionName, { searchParams: requestParams })
   }
   const loadPrevPage = () => {
-    pageIndex.value--
-    store.dispatch(actionName, { searchParams: requestParams.value })
+    requestParams.pageIndex--
+    store.dispatch(actionName, { searchParams: requestParams })
   }
-  const isFirstPage = computed(() => pageIndex.value === 0)
+  const isFirstPage = computed(() => requestParams.pageIndex === 0)
+  const totalPage = computed(() => Math.ceil(total.value / params.pageSize))
   const isLastPage = computed(() => {
-    return Math.ceil(total.value / params.pageSize) === pageIndex.value + 1
+    return totalPage.value === requestParams.pageIndex + 1
   })
+  const pageIndex = toRef(requestParams, 'pageIndex')
   return {
     loadMorePage,
     isLastPage,
     pageIndex,
     loadPrevPage,
     isFirstPage,
+    requestParams,
+    goToPage,
+    totalPage,
   }
 }
 export default useLoadMore
