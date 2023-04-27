@@ -1,4 +1,4 @@
-import { RespListData } from '../respTypes'
+import { RespListData, RespData } from '../respTypes'
 import { Module } from 'vuex'
 import { GlobalDataProps, actionWrapper } from './index'
 import { PageData } from './editor'
@@ -30,10 +30,14 @@ const templates: Module<TemplatesProps, GlobalDataProps> = {
       state.works = list
       state.totalWorks = count
     },
+    fetchTemplate(state, rawData: RespData<TemplateProps>) {
+      state.data = [rawData.data]
+    },
   },
   actions: {
     fetchTemplates: actionWrapper('/templates', 'fetchTemplates'),
     fetchWorks: actionWrapper('/works', 'fetchWorks'),
+    fetchTemplate: actionWrapper('/templates/:id', 'fetchTemplate'),
   },
   getters: {
     getTemplateById: (state) => (id: number) => {

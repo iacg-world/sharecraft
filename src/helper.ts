@@ -3,6 +3,8 @@ import axios from 'axios'
 import html2canvas from 'html2canvas'
 import { RespUploadData } from './respTypes'
 import QRCode from 'qrcode'
+import { saveAs } from 'file-saver'
+
 interface CheckCondition {
   format?: string[]
   // 使用多少 M 为单位
@@ -125,10 +127,10 @@ export async function takeScreenshotAndUpload(ele: HTMLElement) {
   }
 }
 
-export function generateQRCode(id: string, url: string) {
+export function generateQRCode(id: string, url: string, width = 100) {
   const ele = document.getElementById(id) as HTMLCanvasElement
   console.log(ele)
-  return QRCode.toCanvas(ele, url, { width: 100 })
+  return QRCode.toCanvas(ele, url, { width })
 }
 export function timeout(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms))
@@ -138,4 +140,40 @@ export const objToQueryString = (queryObj: { [key: string]: any }) => {
   return Object.keys(queryObj)
     .map((key) => `${key}=${queryObj[key]}`)
     .join('&')
+}
+
+export const downloadFile = (src: string, fileName = 'default.png') => {
+  // 创建链接
+  const link = document.createElement('a')
+  link.download = fileName
+  link.rel = 'noopener'
+  if (link.origin !== location.origin) {
+    axios
+      .get(src, { responseType: 'blob' })
+      .then((data) => {
+        link.href = URL.createObjectURL(data.data)
+        setTimeout(() => {
+          link.dispatchEvent(new MouseEvent('click'))
+        })
+        setTimeout(() => {
+          URL.revokeObjectURL(link.href)
+        }, 10000)
+      })
+      .catch((e) => {
+        console.error(e)
+        link.target = '_blank'
+        link.href = src
+        link.dispatchEvent(new MouseEvent('click'))
+      })
+  } else {
+    // 设置链接属性
+    link.href = src
+    // 触发事件
+    link.dispatchEvent(new MouseEvent('click'))
+  }
+}
+
+export const downloadImage = (url: string) => {
+  const fileName = url.substring(url.lastIndexOf('/') + 1)
+  saveAs(url, fileName)
 }
