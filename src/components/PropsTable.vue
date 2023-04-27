@@ -33,7 +33,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, PropType, VNode } from 'vue'
-import { reduce } from 'lodash'
+import { reduce } from 'lodash-es'
 import { mapPropsToForms } from '../propsMap'
 import { AllComponentProps } from '@/defaultProps'
 import RenderVnode from './RenderVnode'

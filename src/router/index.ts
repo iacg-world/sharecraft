@@ -38,13 +38,15 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/editor/:id',
     name: 'editor',
-    component: Editor,
+    component: () =>
+      import(/* webpackChunkName: "EditorView" */ '@/views/EditorView.vue'),
     meta: { requiredLogin: true, title: '编辑我的设计' },
   },
   {
     path: '/Login',
     name: 'Login',
-    component: Login,
+    component: () =>
+      import(/* webpackChunkName: "LoginView" */ '@/views/LoginView.vue'),
     meta: { requiredLogin: true, title: '登录到分享乐', disableLoading: true },
   },
 ]

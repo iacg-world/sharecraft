@@ -3,6 +3,9 @@ const { defineConfig } = require('@vue/cli-service')
 const isStaging = !!process.env.VUE_APP_STAGINE
 const NODE_ENV = process.env.NODE_ENV
 const isProduction = NODE_ENV === 'production'
+const webpack = require('webpack')
+const CompressionWebpackPlugin = require('compression-webpack-plugin')
+
 module.exports = defineConfig({
   publicPath:
     isProduction && !isStaging
@@ -33,6 +36,11 @@ module.exports = defineConfig({
         ]
       })
     }
+    config.plugin('html').tap((args) => {
+      args[0].title = '分享乐'
+      args[0].desc = '一键生成 H5 海报进行分享'
+      return args
+    })
   },
   configureWebpack: (config) => {
     config.entry = './src/main.ts'
@@ -99,6 +107,41 @@ module.exports = defineConfig({
           treeShaking: true,
         }),
       ]
+    }
+    config.plugins.push(
+      new webpack.IgnorePlugin({
+        resourceRegExp: /^\.\/locale$/,
+        contextRegExp: /moment$/,
+      })
+    )
+    config.optimization.splitChunks = {
+      maxInitialRequests: Infinity,
+      minSize: 300 * 1024,
+      chunks: 'all',
+      cacheGroups: {
+        antVendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name(module) {
+            // get the name.
+            // node_modules/packageName/sub/path
+            // or node_modules/packageName
+            const packageName = module.context.match(
+              /[\\/]node_modules[\\/]\.pnpm[\\/](.*?)([\\/]|$)/
+            )[1]
+            return `pnpm.${packageName.replace('@', '')}`
+          },
+        },
+      },
+    }
+
+    if (isProduction) {
+      config.plugins.push(
+        new CompressionWebpackPlugin({
+          algorithm: 'gzip',
+          test: /\.js$|\.html$|\.json$|\.css/,
+          threshold: 1024 * 10,
+        })
+      )
     }
   },
 })
