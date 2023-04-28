@@ -1,5 +1,5 @@
 <template>
-  <div class="inline-edit" @click.stop="handleClick" ref="wrapper">
+  <div class="inline-edit" @dblclick.stop="handleClick" ref="wrapper">
     <input
       v-model="innerValue"
       v-if="isEditing"
@@ -40,6 +40,7 @@ export default defineComponent({
     const isOutside = useClickOutside(wrapper)
     let cachedOldValue = ''
     const isEditing = ref(false)
+
     const handleClick = () => {
       isEditing.value = true
     }

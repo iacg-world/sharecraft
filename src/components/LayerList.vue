@@ -19,7 +19,7 @@
               handleChange(element.id, 'isHidden', !element.isHidden)
             "
           >
-            <template v-slot:icon v-if="element.isHidden"
+            <template v-slot:icon v-if="!element.isHidden"
               ><EyeOutlined />
             </template>
             <template v-slot:icon v-else><EyeInvisibleOutlined /> </template>
@@ -32,21 +32,33 @@
               handleChange(element.id, 'isLocked', !element.isLocked)
             "
           >
-            <template v-slot:icon v-if="element.isLocked"
-              ><UnlockOutlined />
+            <template v-slot:icon v-if="!element.isLocked"
+              ><UnlockOutlined style="color: green" />
             </template>
             <template v-slot:icon v-else><LockOutlined /> </template>
           </a-button>
         </a-tooltip>
-        <inline-edit
-          class="edit-area"
-          :value="element.layerName"
-          @change="
-            (value) => {
-              handleChange(element.id, 'layerName', value)
-            }
-          "
-        ></inline-edit>
+        <a-tooltip title="删除图层">
+          <a-button
+            shape="circle"
+            type="danger"
+            @click.stop="removeLayer(element.id)"
+          >
+            <template v-slot:icon><DeleteOutlined /> </template
+          ></a-button>
+        </a-tooltip>
+        <a-tooltip title="双击修改">
+          <inline-edit
+            class="edit-area"
+            :value="element.layerName"
+            @change="
+              (value) => {
+                handleChange(element.id, 'layerName', value)
+              }
+            "
+          ></inline-edit>
+        </a-tooltip>
+
         <a-tooltip title="拖动排序">
           <a-button shape="circle" class="handle">
             <template v-slot:icon><DragOutlined /> </template
@@ -65,6 +77,7 @@ import {
   LockOutlined,
   UnlockOutlined,
   DragOutlined,
+  DeleteOutlined,
 } from '@ant-design/icons-vue'
 import { ComponentData } from '../store/editor'
 import InlineEdit from '../components/InlineEdit.vue'
@@ -88,6 +101,7 @@ export default defineComponent({
     InlineEdit,
     draggable,
     DragOutlined,
+    DeleteOutlined,
   },
   setup(props, context) {
     const handleClick = (id: string) => {
@@ -102,9 +116,13 @@ export default defineComponent({
       }
       context.emit('change', data)
     }
+    const removeLayer = (id: string) => {
+      context.emit('drop', id)
+    }
     return {
       handleChange,
       handleClick,
+      removeLayer,
     }
   },
 })

@@ -19,6 +19,8 @@ import {
   Radio,
   Select,
   Collapse,
+  Tooltip,
+  Empty,
 } from 'ant-design-vue'
 import { App } from 'vue'
 const components = [
@@ -55,6 +57,8 @@ const components = [
   Select.Option,
   Collapse,
   Collapse.Panel,
+  Tooltip,
+  Empty,
 ]
 const install = (app: App) => {
   components.forEach((component) => {

@@ -3,8 +3,8 @@ import { v4 as uuidv4 } from 'uuid'
 import store, { actionWrapper, GlobalDataProps } from './index'
 import { AllComponentProps, textDefaultProps } from '../defaultProps'
 import { message } from 'ant-design-vue'
-import { cloneDeep } from 'lodash-es'
-import { debounce, insertAt } from '../helper'
+import { cloneDeep, debounce } from 'lodash-es'
+import { insertAt } from '../helper'
 import { RespData, RespListData, RespWorkData } from '@/respTypes'
 import { CSSProperties } from 'vue'
 
@@ -200,7 +200,7 @@ const pushModifyHistory = (
   state.cachedOldValues = null
 }
 // 只会推入防抖时间内最后一次的新值
-const pushHistoryDebounce = debounce(pushModifyHistory)
+const pushHistoryDebounce = debounce(pushModifyHistory, 350)
 
 const modifyHistory = (
   state: EditorProps,
@@ -233,6 +233,7 @@ const setDirtyWrapper = (callback: Mutation<EditorProps>) => {
     callback(state, payload)
   }
 }
+
 const editor: Module<EditorProps, GlobalDataProps> = {
   state: {
     isEditing: false,

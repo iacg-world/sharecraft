@@ -116,6 +116,7 @@
               :list="components"
               :selectedId="(currentElement && currentElement.id) || ''"
               @change="handleChange"
+              @drop="removeComponent"
               @select="setActive"
             >
             </layer-list>
