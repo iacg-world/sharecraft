@@ -1,6 +1,6 @@
 <template>
   <div class="edit-groups">
-    <a-collapse v-model:activeKey="currentKey">
+    <a-collapse v-model:activeKey="currentKey" accordion>
       <a-collapse-panel
         v-for="(item, index) in editGroups"
         :key="`item-${index}`"
