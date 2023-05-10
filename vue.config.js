@@ -119,17 +119,21 @@ module.exports = defineConfig({
       minSize: 300 * 1024,
       chunks: 'all',
       cacheGroups: {
-        antVendor: {
+        vendors: {
+          name: 'chunk-vendors',
+          chunks: 'initial',
           test: /[\\/]node_modules[\\/]/,
-          name(module) {
-            // get the name.
-            // node_modules/packageName/sub/path
-            // or node_modules/packageName
-            const packageName = module.context.match(
-              /[\\/]node_modules[\\/]\.pnpm[\\/](.*?)([\\/]|$)/
-            )[1]
-            return `pnpm.${packageName.replace('@', '')}`
-          },
+          maxSize: 800 * 1024,
+          minSize: 500 * 1024,
+          priority: -15,
+        },
+        antVendor: {
+          name: 'chunk-ant-design-vue',
+          test: /[\\/]node_modules[\\/]ant-design-vue/,
+          maxSize: 800 * 1024,
+          minSize: 500 * 1024,
+          priority: -10,
+          reuseExistingChunk: true,
         },
       },
     }
