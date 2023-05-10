@@ -1,0 +1,13 @@
+version: "3"
+services:
+  sharecraft:
+    build: .
+    image: duplicatech:1.0.1
+    ports:
+      - "8080:8080"
+    container_name: "sharecraft"
+    networks:
+      - app_net
+networks:
+  app_net:
+

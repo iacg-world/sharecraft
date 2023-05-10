@@ -6,7 +6,9 @@
     "serve": "vue-cli-service serve --mode development",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit --watch",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "release": "release-it"
+
   },
   "dependencies": {
     "@ant-design/icons-vue": "^6.1.0",
@@ -58,6 +60,7 @@
     "flush-promises": "^1.0.2",
     "jest": "^27.0.5",
     "prettier": "^2.4.1",
+    "release-it": "^15.10.3",
     "rgb-hex": "^4.0.0",
     "sass": "^1.52.1",
     "sass-loader": "^13.0.0",
