@@ -7,10 +7,7 @@ const webpack = require('webpack')
 const CompressionWebpackPlugin = require('compression-webpack-plugin')
 
 module.exports = defineConfig({
-  publicPath:
-    isProduction && !isStaging
-      ? 'https://sharecraft-backend.oss-cn-shanghai.aliyuncs.com/'
-      : '/',
+  publicPath: isProduction && !isStaging ? './' : '/',
   transpileDependencies: true,
   chainWebpack: (config) => {
     const jsRule = config.module.rule('js')
