@@ -32,19 +32,19 @@ jobs:
       # 使用标记的 tag 进行 push
       - name: Push Image to ACR
         run: docker push registry.cn-hangzhou.aliyuncs.com/supercll/craft-fe:${{github.ref_name}}
-      # 查找 docker-compose-online 文件 并且完成版本替换
+      # 查找 docker-compose 文件 并且完成版本替换
       - name: Find and Replace
         uses: jacobtomlinson/gha-find-replace@v2
         with:
           find: '{{tag}}'
           replace: ${{github.ref_name}}
-          include: 'docker-compose-online.yml'
-      - run: cat docker-compose-online.yml
-      # 拷贝必须文件到一个文件夹，包括 .env, docker-compose-online.yml, mongo-entrypoint
+          include: 'docker-compose.yml'
+      - run: cat docker-compose.yml
+      # 拷贝必须文件到一个文件夹，包括 .env, docker-compose.yml, mongo-entrypoint
       - name: 'copy necessary files in to one folder'
         run: |
           mkdir sharecraft
-          cp .env docker-compose-online.yml sharecraft
+          cp .env docker-compose.yml sharecraft
           ls -a sharecraft
       # 通过 scp 拷贝必须文件到服务器
       - name: 'copy sharecraft-backend folder via scp'
@@ -71,8 +71,8 @@ jobs:
             docker login --username=${{secrets.ACR_USERNAME}} --password=${{secrets.ACR_PASSWORD}} registry.cn-hangzhou.aliyuncs.com
             cd ~/project/sharecraft/
             docker pull registry.cn-hangzhou.aliyuncs.com/supercll/craft-fe:${{github.ref_name}}
-            docker-compose -f docker-compose-online.yml down
+            docker-compose -f docker-compose.yml down
             sudo rm -rf .docker-volumes
-            docker-compose -f docker-compose-online.yml up -d
+            docker-compose -f docker-compose.yml up -d
             rm -rf .env
             docker logout registry.cn-hangzhou.aliyuncs.com
