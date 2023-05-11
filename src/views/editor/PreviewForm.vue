@@ -105,7 +105,7 @@ export default defineComponent({
     const pageState = computed(() => store.state.editor.page)
     const previewURL = computed(
       () =>
-        `${baseH5URL}/api/pages/preview/${pageState.value.id}-${pageState.value.uuid}`
+        `${baseH5URL}/api/pages/${pageState.value.id}-${pageState.value.uuid}`
     )
     const { title, desc, setting } = pageState.value
     const { saveWork, saveIsLoading } = useSaveWork(true)
