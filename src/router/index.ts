@@ -50,8 +50,9 @@ const routes: Array<RouteRecordRaw> = [
     meta: { requiredLogin: true, title: '登录到分享乐', disableLoading: true },
   },
 ]
+
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHistory(),
   routes,
 })
 
