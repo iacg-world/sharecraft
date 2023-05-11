@@ -9,6 +9,8 @@ import 'cropperjs/dist/cropper.css'
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { RespData } from './respTypes'
 import './assets/reset-style.scss'
+const NODE_ENV = process.env.NODE_ENV
+const isProduction = NODE_ENV === 'production'
 
 export type ICustomAxiosConfig = AxiosRequestConfig & {
   opName?: string
@@ -41,8 +43,8 @@ axios.interceptors.response.use(
 )
 
 const app = createApp(App)
-const baseBackendURL = process.env.VUE_APP_BASE_URL
-export const baseH5URL = process.env.VUE_APP_BASE_H5_URL
+const baseBackendURL = isProduction ? '' : process.env.VUE_APP_BASE_URL
+export const baseH5URL = isProduction ? '' : process.env.VUE_APP_BASE_H5_URL
 
 axios.defaults.baseURL = `${baseBackendURL}/api/`
 app.use(store).use(router).use(Antd).mount('#app')

@@ -73,6 +73,6 @@ jobs:
             docker pull registry.cn-hangzhou.aliyuncs.com/supercll/craft-fe:${{github.ref_name}}
             docker-compose -f docker-compose.yml down
             sudo rm -rf .docker-volumes
-            docker-compose -f docker-compose.yml up -d
+            docker-compose -f docker-compose.yml -p sharecraft_project up -d
             rm -rf .env
             docker logout registry.cn-hangzhou.aliyuncs.com
