@@ -3,7 +3,8 @@ RUN mkdir -p /usr/src/sharecraft
 WORKDIR /usr/src/sharecraft
 COPY package.json pnpm-lock.yaml /usr/src/sharecraft/
 RUN npm i pnpm -g
-RUN pnpm install && pnpm run build
+RUN pnpm install
+RUN pnpm run build
 
 FROM nginx
 RUN mkdir -p /usr/src/sharecraft
