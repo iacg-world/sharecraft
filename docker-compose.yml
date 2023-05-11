@@ -1,5 +1,8 @@
 version: "3"
 services:
+  sharecraft-backend:
+    image: sharecraft-backend
+    container_name: sharecraft-backend
   sharecraft:
     depends_on:
       - sharecraft-backend
