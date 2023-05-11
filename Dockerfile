@@ -7,6 +7,7 @@ RUN pnpm install --registry=https://registry.npm.taobao.org
 RUN pnpm run build
 
 FROM nginx
-RUN mkdir -p /usr/src/sharecraft
-COPY --from=0 /usr/src/sharecraft/dist /usr/src/sharecraft
+RUN mkdir -p /usr/src/app
+COPY --from=0 /usr/src/sharecraft/dist /usr/src/app
 COPY ./nginx.conf /etc/nginx/nginx.conf
+EXPOSE 80
