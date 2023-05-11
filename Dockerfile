@@ -10,4 +10,3 @@ FROM nginx
 RUN mkdir -p /usr/src/sharecraft
 COPY --from=0 /usr/src/sharecraft/dist /usr/src/sharecraft/dist
 ADD ./nginx.conf /etc/nginx/nginx.conf
-EXPOSE 8080

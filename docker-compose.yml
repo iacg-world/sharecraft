@@ -1,13 +1,14 @@
 version: "3"
 services:
   sharecraft:
-    build: .
-    image: duplicatech:1.0.1
+    depends_on:
+      - sharecraft-backend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: sharecraft
+    container_name: "sharecraft"
     ports:
       - "8080:8080"
-    container_name: "sharecraft"
-    networks:
-      - app_net
-networks:
-  app_net:
-
+    env_file:
+      - .env

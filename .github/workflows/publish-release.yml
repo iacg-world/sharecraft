@@ -47,7 +47,7 @@ jobs:
           cp .env docker-compose.yml sharecraft
           ls -a sharecraft
       # 通过 scp 拷贝必须文件到服务器
-      - name: 'copy sharecraft-backend folder via scp'
+      - name: 'copy sharecraft folder via scp'
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.HOST }}
