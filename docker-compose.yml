@@ -1,10 +1,7 @@
 version: "3"
 services:
   sharecraft:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: sharecraft
+    image: registry.cn-hangzhou.aliyuncs.com/supercll/craft-fe:{{tag}}
     container_name: "sharecraft"
     ports:
       - "8080:8080"
