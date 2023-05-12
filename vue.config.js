@@ -1,10 +1,12 @@
-const { ESBuildMinifyPlugin } = require('esbuild-loader')
 const { defineConfig } = require('@vue/cli-service')
 const isStaging = !!process.env.VUE_APP_STAGINE
 const NODE_ENV = process.env.NODE_ENV
 const isProduction = NODE_ENV === 'production'
-const webpack = require('webpack')
 const CompressionWebpackPlugin = require('compression-webpack-plugin')
+const SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
+const { IgnorePlugin } = require('webpack')
+const mode = process.VUE_CLI_SERVICE.mode
 
 module.exports = defineConfig({
   publicPath: isProduction && !isStaging ? '/' : '/',
@@ -19,11 +21,18 @@ module.exports = defineConfig({
       .loader('esbuild-loader')
       .options({
         loader: 'ts', // 如果使用了 ts, 或者 vue 的 class 装饰器，则需要加上这个 option 配置， 否则会报错： ERROR: Unexpected "@"
-        target: 'es2015',
+        target: 'esnext',
+        ...(isProduction && {
+          minify: true,
+          minifyWhitespace: true,
+          minifyIdentifiers: true,
+          minifySyntax: true,
+          treeShaking: true,
+        }),
         tsconfigRaw: require('./tsconfig.json'),
       })
 
-    if (NODE_ENV === 'production') {
+    if (isProduction) {
       config.plugin('html').tap((args) => {
         return [
           {
@@ -33,6 +42,18 @@ module.exports = defineConfig({
         ]
       })
     }
+    // 用cdn方式引入
+    config.plugins.delete('prefetch')
+    config.plugins.delete('preload')
+    config.externals({
+      vue: 'Vue',
+      'vue-router': 'VueRouter',
+      vuex: 'Vuex',
+      axios: 'axios',
+      vuedraggable: 'vuedraggable',
+      cropperjs: 'Cropper',
+      html2canvas: 'html2canvas',
+    })
     config.plugin('html').tap((args) => {
       args[0].title = '分享乐'
       args[0].desc = '一键生成 H5 海报进行分享'
@@ -64,78 +85,46 @@ module.exports = defineConfig({
       // 指定缓存的版本
       version: '1.0',
     }
-
-    config.optimization.splitChunks = {
-      minSize: 20 * 1024,
-      cacheGroups: {
-        defaultVendors: {
-          chunks: 'initial',
-          test: /[\\/]node_modules[\\/]/,
-          name: 'chunk-vendors',
-          minChunks: 2,
-          maxSize: 50 * 1024,
-          priority: -10,
-        },
-        common: {
-          chunks: 'initial',
-          name: 'common',
-          minChunks: 1,
-          maxSize: 50 * 1024,
-          priority: 10,
-        },
-      },
-    }
-
-    if (NODE_ENV === 'production') {
-      // config.plugins = config.plugins.concat([compressionPlugin])
-
-      // 长效缓存
-      config.optimization.moduleIds = 'named'
-      config.optimization.chunkIds = 'named'
-      config.optimization.minimizer = [
-        new ESBuildMinifyPlugin({
-          minify: true,
-          minifyWhitespace: true,
-          minifyIdentifiers: true,
-          minifySyntax: true,
-          css: true,
-          target: 'es2015',
-          exclude: /[\\/]node_modules[\\/]/,
-          treeShaking: true,
-        }),
-      ]
-    }
     config.plugins.push(
-      new webpack.IgnorePlugin({
+      new IgnorePlugin({
         resourceRegExp: /^\.\/locale$/,
-        contextRegExp: /moment$/,
+        contextRegExp: /dayjs$/,
       })
     )
     config.optimization.splitChunks = {
       maxInitialRequests: Infinity,
-      minSize: 300 * 1024,
-      chunks: 'all',
       cacheGroups: {
         vendors: {
           name: 'chunk-vendors',
           chunks: 'initial',
           test: /[\\/]node_modules[\\/]/,
-          maxSize: 800 * 1024,
-          minSize: 500 * 1024,
+          maxSize: 500 * 1024,
+          minSize: 300 * 1024,
           priority: -15,
         },
         antVendor: {
-          name: 'chunk-ant-design-vue',
+          name: 'chunk-antd',
           test: /[\\/]node_modules[\\/]ant-design-vue/,
-          maxSize: 800 * 1024,
-          minSize: 500 * 1024,
+          maxSize: 500 * 1024,
+          minSize: 300 * 1024,
           priority: -10,
+          reuseExistingChunk: true,
+        },
+        antIconVendor: {
+          name: 'chunk-ant-icon',
+          test: /[\\/]node_modules[\\/]@ant-design/,
+          maxSize: 500 * 1024,
+          minSize: 300 * 1024,
+          priority: -5,
           reuseExistingChunk: true,
         },
       },
     }
 
     if (isProduction) {
+      // 长效缓存
+      config.optimization.moduleIds = 'named'
+      config.optimization.chunkIds = 'named'
       config.plugins.push(
         new CompressionWebpackPlugin({
           algorithm: 'gzip',
@@ -143,6 +132,21 @@ module.exports = defineConfig({
           threshold: 1024 * 10,
         })
       )
+    }
+
+    // config.resolve.alias = {
+    //   ...config.resolve.alias,
+    //   '@ant-design/icons/lib/dist$': resolve('./src/antd/icons.js'),
+    // }
+
+    if (mode === 'analyze') {
+      config.plugins = config.plugins.concat([
+        new BundleAnalyzerPlugin({
+          // 生成静态文件
+          analyzerMode: 'static',
+        }),
+        new SpeedMeasurePlugin(),
+      ])
     }
   },
 })

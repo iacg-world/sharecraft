@@ -4,9 +4,14 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+    <link rel="icon" href="<%= BASE_URL %>logo.png">
     <title><%= htmlWebpackPlugin.options.title %></title>
     <meta name="description" content="<%= htmlWebpackPlugin.options.desc %>">
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.3.1/dist/vue.global.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue-router@4.2.0/dist/vue-router.global.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuex@4.1.0/dist/vuex.global.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@0.27.2/dist/axios.min.js" defer></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
   </head>
   <body>
     <noscript>
@@ -15,4 +20,8 @@
     <div id="app"></div>
     <!-- built files will be auto injected -->
   </body>
+  <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.5.13/dist/cropper.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/vuedraggable@4.1.0/dist/vuedraggable.umd.min.js" defer></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.5.13/dist/cropper.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/ant-design-vue@3.2.20/dist/antd.min.css" rel="stylesheet">
 </html>

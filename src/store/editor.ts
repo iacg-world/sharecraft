@@ -324,7 +324,7 @@ const editor: Module<EditorProps, GlobalDataProps> = {
         }
       } else {
         if (state.page.props) {
-          state.page.props[key as keyof PageProps] = value
+          state.page.props[key] = value
         }
       }
     }),
@@ -488,10 +488,11 @@ const editor: Module<EditorProps, GlobalDataProps> = {
     },
     fetchWork(state, { data }: RespWorkData) {
       const { content, ...rest } = data
-      state.page = { ...state.page, ...rest }
-      if (content.props) {
-        state.page.props = content.props
+      if (!content) {
+        return
       }
+      state.page = { ...state.page, ...rest }
+      state.page.props = content.props
       state.components = content.components
     },
     saveWork(state) {

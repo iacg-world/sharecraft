@@ -2,10 +2,10 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import Antd from 'ant-design-vue'
-import 'ant-design-vue/dist/antd.css' // or 'ant-design-vue/dist/antd.less'
-import * as Icons from '@ant-design/icons-vue'
-import 'cropperjs/dist/cropper.css'
+import Antd from './build/configAnt'
+// import 'ant-design-vue/dist/antd.css' // or 'ant-design-vue/dist/antd.less'
+// import * as Icons from '@ant-design/icons-vue'
+// import 'cropperjs/dist/cropper.css'
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { RespData } from './respTypes'
 import './assets/reset-style.scss'
@@ -48,8 +48,8 @@ export const baseH5URL = isProduction ? '' : process.env.VUE_APP_BASE_H5_URL
 
 axios.defaults.baseURL = `${baseBackendURL}/api/`
 app.use(store).use(router).use(Antd).mount('#app')
-const icons: any = Icons
-for (const i in icons) {
-  // 全局注册一下组件
-  app.component(i, icons[i])
-}
+// const icons: any = Icons
+// for (const i in icons) {
+//   // 全局注册一下组件
+//   app.component(i, icons[i])
+// }
