@@ -57,6 +57,9 @@ const user: Module<UserProps, GlobalDataProps> = {
     login: actionWrapper('/users/loginByPhoneNumber', 'login', {
       method: 'post',
     }),
+    loginByEmail: actionWrapper('/users/loginByEmail', 'login', {
+      method: 'post',
+    }),
     fetchCurrentUser({ commit }) {
       return axios.get('/users/getUserInfo').then((rawData) => {
         commit('fetchCurrentUser', rawData.data)
@@ -64,6 +67,11 @@ const user: Module<UserProps, GlobalDataProps> = {
     },
     loginAndFetch({ dispatch }, loginData) {
       return dispatch('login', loginData).then(() => {
+        return dispatch('fetchCurrentUser')
+      })
+    },
+    loginByEmailAndFetch({ dispatch }, loginData) {
+      return dispatch('loginByEmail', loginData).then(() => {
         return dispatch('fetchCurrentUser')
       })
     },
