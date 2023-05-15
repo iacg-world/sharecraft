@@ -19,7 +19,7 @@ function usePublishWork() {
       if (resp) {
         store.commit('updatePage', {
           key: 'coverImg',
-          value: resp.data.urls[0],
+          value: resp.data.url || (resp.data.urls ? resp.data.urls[0] : ''),
           isRoot: true,
         })
         await saveWork()

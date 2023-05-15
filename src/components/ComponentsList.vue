@@ -57,7 +57,9 @@ export default defineComponent({
         },
       }
       message.success('上传成功')
-      componentData.props.src = resp.data.urls[0]
+      componentData.props.src =
+        resp.data.url || (resp.data.urls ? resp.data.urls[0] : '')
+
       getImageDimensions(file).then(({ width }) => {
         const maxWidth = 373
         componentData.props.width = (width > maxWidth ? maxWidth : width) + 'px'

@@ -134,7 +134,9 @@ export default defineComponent({
       }
     })
     const updateAvatar = (rawData: { resp: RespUploadData; file: File }) => {
-      const url = rawData.resp.data.urls[0]
+      const url =
+        rawData.resp.data.url ||
+        (rawData.resp.data.urls ? rawData.resp.data.urls[0] : '')
       form.uploaded = {
         data: { url },
       }
