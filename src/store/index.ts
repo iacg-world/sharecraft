@@ -17,6 +17,7 @@ export interface ActionPayload {
   urlParams?: { [key: string]: any }
   data?: any
   searchParams?: { [key: string]: any }
+  props?: object
 }
 export function actionWrapper(
   url: string,
@@ -27,13 +28,12 @@ export function actionWrapper(
     context: ActionContext<any, any>,
     payload: ActionPayload = {}
   ) => {
-    const { urlParams, data, searchParams } = payload
+    const { urlParams, data, searchParams, props } = payload
     const newConfig = { ...config, data, opName: commitName }
     let newURL = url
     if (urlParams) {
       const toPath = compile(url, { encode: encodeURIComponent })
       newURL = toPath(urlParams)
-      console.log(newURL)
     }
     if (searchParams) {
       const search = new URLSearchParams()
@@ -43,7 +43,8 @@ export function actionWrapper(
       newURL += '?' + search.toString()
     }
     const resp = await axios(newURL, newConfig)
-    context.commit(commitName, resp.data)
+
+    context.commit(commitName, { ...resp.data, ...props })
     return resp.data
   }
 }

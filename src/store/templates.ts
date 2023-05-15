@@ -19,14 +19,17 @@ const templates: Module<TemplatesProps, GlobalDataProps> = {
     totalWorks: 0,
   },
   mutations: {
-    fetchTemplates(state, rawData: RespListData<TemplateProps>) {
+    fetchTemplates(
+      state,
+      rawData: RespListData<TemplateProps> & { isFirstPage: boolean }
+    ) {
       const { count, list } = rawData.data
-      state.data = [...state.data, ...list]
+
+      state.data = rawData.isFirstPage ? list : [...state.data, ...list]
       state.totalTemplates = count
     },
     fetchWorks(state, rawData: RespListData<TemplateProps>) {
       const { count, list } = rawData.data
-      console.log(list)
       state.works = list
       state.totalWorks = count
     },

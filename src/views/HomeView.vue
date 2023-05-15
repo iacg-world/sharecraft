@@ -33,13 +33,20 @@ export default defineComponent({
     const isLoading = computed(() =>
       store.getters.isOpLoading('fetchTemplates')
     )
-    const { loadMorePage, isLastPage } = useLoadMore('fetchTemplates', total, {
-      pageIndex: 0,
-      pageSize: 4,
-    })
+    const { loadMorePage, isLastPage, isFirstPage } = useLoadMore(
+      'fetchTemplates',
+      total,
+      {
+        pageIndex: 0,
+        pageSize: 4,
+      }
+    )
     onMounted(() => {
       store.dispatch('fetchTemplates', {
         searchParams: { pageIndex: 0, pageSize: 4 },
+        props: {
+          isFirstPage,
+        },
       })
     })
     return {
