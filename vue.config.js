@@ -11,6 +11,7 @@ const mode = process.VUE_CLI_SERVICE.mode
 module.exports = defineConfig({
   publicPath: isProduction && !isStaging ? '/' : '/',
   transpileDependencies: true,
+  productionSourceMap: false,
   chainWebpack: (config) => {
     const jsRule = config.module.rule('js')
     // // 清理自带的 babel-loader
@@ -93,6 +94,9 @@ module.exports = defineConfig({
     )
     config.optimization.splitChunks = {
       maxInitialRequests: Infinity,
+      chunks: 'all',
+      maxSize: 500 * 1024,
+      minSize: 300 * 1024,
       cacheGroups: {
         vendors: {
           name: 'chunk-vendors',
