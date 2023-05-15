@@ -19,7 +19,7 @@
 import { defineComponent } from 'vue'
 import { v4 as uuidv4 } from 'uuid'
 import { message } from 'ant-design-vue'
-import CText from '../components/CText.vue'
+import { CText } from 'iacg-block'
 import StyledUploader from '../components/StyledUploader.vue'
 import { ComponentData } from '../store/editor'
 import { imageDefaultProps, TextComponentProps } from '../defaultProps'

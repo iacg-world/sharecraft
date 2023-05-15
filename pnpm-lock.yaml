@@ -34,6 +34,9 @@ dependencies:
   html2canvas:
     specifier: ^1.4.1
     version: registry.npmmirror.com/html2canvas@1.4.1
+  iacg-block:
+    specifier: ^1.0.3
+    version: registry.npmmirror.com/iacg-block@1.0.3(vue@3.3.1)
   lodash-es:
     specifier: ^4.17.21
     version: 4.17.21
@@ -5682,7 +5685,7 @@ packages:
     dependencies:
       big.js: registry.npmmirror.com/big.js@5.2.2
       emojis-list: registry.npmmirror.com/emojis-list@3.0.0
-      json5: registry.npmmirror.com/json5@2.2.1
+      json5: registry.npmmirror.com/json5@2.2.3
     dev: true
 
   /lodash-es@4.17.21:
@@ -5840,7 +5843,7 @@ packages:
     resolution: {integrity: sha512-FP+p8RB8OWpF3YZBCrP5gtADmtXApB5AMLn+vdyA+PyxCjrCs00mjyUozssO33cwDeT3wNGdLxJ5M//YqtHAJw==}
     hasBin: true
     dependencies:
-      minimist: registry.npmmirror.com/minimist@1.2.6
+      minimist: registry.npmmirror.com/minimist@1.2.8
     dev: true
 
   /module-alias@2.2.2:
@@ -11137,6 +11140,19 @@ packages:
     engines: {node: '>=14.18.0'}
     dev: true
 
+  registry.npmmirror.com/iacg-block@1.0.3(vue@3.3.1):
+    resolution: {integrity: sha512-Qp/s27Ud11ac2xWjOVivUwNdHiMoT2TehgzUj+Slh7YCk6ZWPkZNrSkWcS0vev5A20D39Pd5wB/lXZ9Nqo60dA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/iacg-block/-/iacg-block-1.0.3.tgz}
+    id: registry.npmmirror.com/iacg-block/1.0.3
+    name: iacg-block
+    version: 1.0.3
+    peerDependencies:
+      vue: ^3.2.36
+    dependencies:
+      core-js: registry.npmmirror.com/core-js@3.24.1
+      lodash-es: registry.npmmirror.com/lodash-es@4.17.21
+      vue: registry.npmmirror.com/vue@3.3.1
+    dev: false
+
   registry.npmmirror.com/iconv-lite@0.4.24:
     resolution: {integrity: sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/iconv-lite/-/iconv-lite-0.4.24.tgz}
     name: iconv-lite
@@ -11771,15 +11787,7 @@ packages:
     version: 1.0.2
     hasBin: true
     dependencies:
-      minimist: registry.npmmirror.com/minimist@1.2.6
-    dev: true
-
-  registry.npmmirror.com/json5@2.2.1:
-    resolution: {integrity: sha512-1hqLFMSrGHRHxav9q9gNjJ5EXznIxGVO09xQRrwplcS8qs28pZ8s8hupZAmqDwZUmVZ2Qb2jnyPOWcDH8m8dlA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/json5/-/json5-2.2.1.tgz}
-    name: json5
-    version: 2.2.1
-    engines: {node: '>=6'}
-    hasBin: true
+      minimist: registry.npmmirror.com/minimist@1.2.8
     dev: true
 
   registry.npmmirror.com/json5@2.2.3:
@@ -11876,6 +11884,12 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       p-locate: registry.npmmirror.com/p-locate@4.1.0
+
+  registry.npmmirror.com/lodash-es@4.17.21:
+    resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/lodash-es/-/lodash-es-4.17.21.tgz}
+    name: lodash-es
+    version: 4.17.21
+    dev: false
 
   registry.npmmirror.com/lodash.capitalize@4.2.1:
     resolution: {integrity: sha512-kZzYOKspf8XVX5AvmQF94gQW0lejFVgb80G85bU4ZWzoJ6C03PQg3coYAUpSTpQWelrZELd3XWgHzw4Ck5kaIw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/lodash.capitalize/-/lodash.capitalize-4.2.1.tgz}
@@ -12067,12 +12081,6 @@ packages:
     version: 3.1.2
     dependencies:
       brace-expansion: registry.npmmirror.com/brace-expansion@1.1.11
-    dev: true
-
-  registry.npmmirror.com/minimist@1.2.6:
-    resolution: {integrity: sha512-Jsjnk4bw3YJqYzbdyBiNsPWHPfO++UGG749Cxs6peCu5Xg4nrena6OVxOYxrQTqww0Jmwt+Ref8rggumkTLz9Q==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/minimist/-/minimist-1.2.6.tgz}
-    name: minimist
-    version: 1.2.6
     dev: true
 
   registry.npmmirror.com/minimist@1.2.8:
