@@ -28,7 +28,7 @@ const global: Module<GlobalStatus, GlobalDataProps> = {
       setTimeout(() => {
         state.requestNumber--
         delete state.opNames[opName]
-      }, 1000)
+      }, 300)
     },
     setError(state, e) {
       state.error = e

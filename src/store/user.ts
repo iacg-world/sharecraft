@@ -1,5 +1,5 @@
 import { Module, ActionContext } from 'vuex'
-import { GlobalDataProps, actionWrapper } from './index'
+import store, { GlobalDataProps, actionWrapper } from './index'
 import { RespData } from '@/respTypes'
 import axios, { AxiosRequestConfig } from 'axios'
 export interface UserDataProps {
@@ -45,6 +45,9 @@ const user: Module<UserProps, GlobalDataProps> = {
       localStorage.removeItem('token')
       delete axios.defaults.headers.common.Authorization
     },
+    signUpByEmail() {
+      // no content
+    },
   },
   actions: {
     // login({ commit }, payload) {
@@ -58,6 +61,9 @@ const user: Module<UserProps, GlobalDataProps> = {
       method: 'post',
     }),
     loginByEmail: actionWrapper('/users/loginByEmail', 'login', {
+      method: 'post',
+    }),
+    signUpByEmail: actionWrapper('/users/create', 'signUpByEmail', {
       method: 'post',
     }),
     fetchCurrentUser({ commit }) {
@@ -74,6 +80,16 @@ const user: Module<UserProps, GlobalDataProps> = {
       return dispatch('loginByEmail', loginData).then(() => {
         return dispatch('fetchCurrentUser')
       })
+    },
+    signUpAndLoginByEmail({ dispatch }, loginData) {
+      const delayLogin = () =>
+        new Promise((resolve) => {
+          setTimeout(() => {
+            resolve(dispatch('loginByEmailAndFetch', loginData))
+          }, 500)
+        })
+      const promiseArr = [dispatch('signUpByEmail', loginData), delayLogin()]
+      return Promise.all(promiseArr)
     },
   },
 }

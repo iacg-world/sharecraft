@@ -103,11 +103,46 @@
                   /></template>
                 </a-input>
               </a-form-item>
+              <a-form-item v-show="notSignUp" label="确认密码" name="rePasswd">
+                <a-input
+                  placeholder="确认密码"
+                  type="password"
+                  v-model:value="emailForm.rePasswd"
+                >
+                  <template v-slot:prefix
+                    ><LockOutlined style="color: rgba(0, 0, 0, 0.25)"
+                  /></template>
+                </a-input>
+              </a-form-item>
               <a-form-item>
-                <a-button type="primary" size="large" @click="loginByEmail">
+                <a-button
+                  v-if="notSignUp"
+                  type="primary"
+                  size="large"
+                  @click="signUp"
+                  :loading="isLoginLoading"
+                >
+                  一键注册登录
+                </a-button>
+                <a-button
+                  v-else
+                  type="primary"
+                  size="large"
+                  @click="loginByEmail"
+                >
                   登录
                 </a-button>
                 <a-button
+                  v-if="notSignUp"
+                  type="link"
+                  size="small"
+                  @click="notSignUp = false"
+                  style="float: right"
+                >
+                  已经注册？直接登录
+                </a-button>
+                <a-button
+                  v-else
                   type="link"
                   size="small"
                   @click="changeLoginType"
@@ -226,20 +261,58 @@ const emailFormRef = ref<RuleFormInstance>()
 const emailForm = reactive({
   email: '',
   passwd: '',
+  rePasswd: '',
 })
-const emailRules = {
+
+const notSignUp = ref(false)
+const validateRePasswd = async (_rule: Rule, value: string) => {
+  console.log(value, emailForm.passwd)
+
+  if (!notSignUp.value) {
+    return Promise.resolve()
+  }
+
+  if (!value) {
+    return Promise.reject('请再次输入密码')
+  } else if (value !== emailForm.passwd) {
+    return Promise.reject('两次密码不一致~')
+  } else {
+    return Promise.resolve()
+  }
+}
+const emailRules = reactive<Record<string, Rule[]>>({
   email: [{ required: true, message: '邮箱不能为空', trigger: 'blur' }],
   passwd: [{ required: true, message: '密码不能为空', trigger: 'blur' }],
-}
+  rePasswd: [{ validator: validateRePasswd, trigger: 'change' }],
+})
 const { validate: validateEmail, resetFields: resetFieldsEmail } = useForm(
   emailForm,
-  rules
+  emailRules
 )
+
+const signUp = () => {
+  validateEmail().then((val) => {
+    console.log(val)
+
+    const payload = {
+      username: emailForm.email,
+      password: emailForm.passwd,
+    }
+    store.dispatch('signUpAndLoginByEmail', { data: payload }).then((val) => {
+      console.log(val)
+
+      message.success('注册成功 正在跳转首页')
+      setTimeout(() => {
+        router.push('/')
+      }, 1500)
+    })
+  })
+}
 
 const loginByEmail = () => {
   validateEmail().then((val) => {
     console.log(val)
-
+    store.state.user
     const payload = {
       username: emailForm.email,
       password: emailForm.passwd,
@@ -256,7 +329,8 @@ const loginByEmail = () => {
       })
       .catch((reason) => {
         if (reason.errno === 101003) {
-          console.log('进入注册流程')
+          // console.log('进入注册流程')
+          notSignUp.value = true
         }
       })
   })
