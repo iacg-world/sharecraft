@@ -8,10 +8,7 @@
       <a-col :span="16" class="right-col">
         <a-row>
           <a-col :span="6">
-            <img
-              src="https://sharecraft-backend.oss-cn-shanghai.aliyuncs.com/sharecraft-test/20180421210121_KddAy.jpeg"
-              :alt="page.title"
-            />
+            <img :src="page.coverImg" :alt="page.title" />
           </a-col>
           <a-col :span="18" class="left-gap">
             <h4>{{ page.title }}</h4>
@@ -19,7 +16,7 @@
           </a-col>
         </a-row>
         <a-tabs type="card" :style="{ marginTop: '20px' }">
-          <a-tab-pane key="channels" tab="发布为作品">
+          <a-tab-pane key="channels" tab="渠道管理">
             <a-row
               v-for="channel in channels"
               :key="channel.id"
@@ -79,7 +76,11 @@
               </a-form-item>
             </a-form>
           </a-tab-pane>
-          <a-tab-pane key="template" tab="发布为模版"> </a-tab-pane>
+          <a-tab-pane key="template" tab="发布为模版">
+            <a-button type="primary" @click="publishTemplate">
+              一键发布模板
+            </a-button>
+          </a-tab-pane>
         </a-tabs>
       </a-col>
     </a-row>
@@ -169,6 +170,13 @@ export default defineComponent({
         flush: 'post',
       }
     )
+
+    const publishTemplate = async () => {
+      const urlParams = { id: currentWorkId }
+
+      await store.dispatch('publishTemplate', { urlParams })
+      message.success('模板发布成功', 1)
+    }
     return {
       page,
       channels,
@@ -178,6 +186,7 @@ export default defineComponent({
       deleteDisabled,
       deleteChannel,
       generateChannelURL,
+      publishTemplate,
     }
   },
 })

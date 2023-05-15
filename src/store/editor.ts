@@ -511,6 +511,13 @@ const editor: Module<EditorProps, GlobalDataProps> = {
     publishWork: actionWrapper('/works/publish/:id', 'publishWork', {
       method: 'post',
     }),
+    publishTemplate: actionWrapper(
+      '/works/publish-template/:id',
+      'publishWork',
+      {
+        method: 'post',
+      }
+    ),
     fetchChannels: actionWrapper(
       '/channel/getWorkChannels/:id',
       'fetchChannels'
