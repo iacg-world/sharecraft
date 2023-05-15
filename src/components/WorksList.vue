@@ -34,7 +34,7 @@
                   <a-menu-item>
                     <a
                       href="javascript:;"
-                      @click.prevent="deleteClicked(item.id)"
+                      @click.prevent="deleteClicked(item.id, item.isTemplate)"
                       ><DeleteOutlined /> 删除</a
                     >
                   </a-menu-item>
@@ -92,14 +92,14 @@ export default defineComponent({
     },
   },
   setup(props, context) {
-    const deleteClicked = (id: number) => {
+    const deleteClicked = (id: number, isTemplate: boolean) => {
       Modal.confirm({
         title: '确定要删除该作品吗？',
         okText: '删除',
         okType: 'danger',
         cancelText: '取消',
         onOk: () => {
-          context.emit('on-delete', id)
+          context.emit('on-delete', id, isTemplate ? 1 : 0)
         },
       })
     }

@@ -201,7 +201,6 @@ export default defineComponent({
       store.commit('updateComponent', e)
     }
     const pageChange = (e: any) => {
-      console.log('page', e)
       store.commit('updatePage', e)
     }
     const titleChange = (newTitle: string) => {

@@ -238,7 +238,7 @@ const editor: Module<EditorProps, GlobalDataProps> = {
   state: {
     isEditing: false,
     clickTimeout: 0,
-    components: testComponents,
+    components: [],
     currentElementId: '',
     page: {
       id: 1,
@@ -512,7 +512,7 @@ const editor: Module<EditorProps, GlobalDataProps> = {
       method: 'post',
     }),
     publishTemplate: actionWrapper(
-      '/works/publish-template/:id',
+      '/works/publish-template/:id/:isPublic',
       'publishWork',
       {
         method: 'post',

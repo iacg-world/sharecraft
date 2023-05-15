@@ -51,14 +51,11 @@ export default defineComponent({
         coverImg:
           'https://sharecraft-backend.oss-cn-shanghai.aliyuncs.com/sharecraft-test/20180421210121_KddAy.jpeg',
       }
-      const postData = {
-        method: 'post',
+      const { data } = await store.dispatch('createWork', {
         data: payload,
-        opName: 'createDesign',
-      } as any
-      const { data } = await axios('/works', postData)
+      })
       message.success('创建作品成功', 2)
-      router.push(`/editor/${data.data.id}`)
+      router.push(`/editor/${data.id}`)
     }
     return {
       logout,

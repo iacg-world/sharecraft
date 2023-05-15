@@ -18,9 +18,9 @@
           <canvas id="barcode-container"></canvas>
         </div>
         <div class="use-button">
-          <router-link to="/editor">
-            <a-button type="primary" size="large"> 使用模版 </a-button>
-          </router-link>
+          <a-button type="primary" size="large" @click="copyWork">
+            使用模版
+          </a-button>
           <a-button size="large" @click="download"> 下载图片海报 </a-button>
         </div>
       </a-col>
@@ -55,10 +55,15 @@ export default defineComponent({
     const download = () => {
       downloadImage(template.value.coverImg)
     }
+
+    const copyWork = () => {
+      store.dispatch('copyWorkAndJump', currentId)
+    }
     return {
       route,
       template,
       download,
+      copyWork,
     }
   },
 })

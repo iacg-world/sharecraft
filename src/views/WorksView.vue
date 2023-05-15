@@ -81,6 +81,7 @@ import { useRouter } from 'vue-router'
 import { GlobalDataProps } from '../store/index'
 import WorksList from '../components/WorksList.vue'
 import useLoadMore from '../hooks/useLoadMore'
+import { message } from 'ant-design-vue'
 export default defineComponent({
   components: {
     WorksList,
@@ -109,13 +110,13 @@ export default defineComponent({
       goToPage,
       totalPage,
     } = useLoadMore('fetchWorks', total, searchParams.value)
-    const onDelete = (id: number) => {
-      store.dispatch('deleteWork', id)
+    const onDelete = async (id: number, isTemplate: number) => {
+      await store.dispatch('deleteWorkAndFetch', { id, isTemplate })
+      message.success('删除成功')
     }
-    const onCopy = (id: number) => {
-      store.dispatch('copyWork', id).then(({ data }) => {
-        router.push(`/editor/${data.id}`)
-      })
+    const onCopy = async (id: number) => {
+      await store.dispatch('copyWorkAndJump', id)
+      message.success('复制成功')
     }
     const changeCategory = (key: any) => {
       isTemplate.value = key

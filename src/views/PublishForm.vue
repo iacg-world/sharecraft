@@ -76,7 +76,17 @@
               </a-form-item>
             </a-form>
           </a-tab-pane>
+
           <a-tab-pane key="template" tab="发布为模版">
+            <a-form>
+              <a-form-item label="Resources">
+                <a-radio-group v-model:value="isPublic">
+                  <a-radio :value="0">发布为个人模板</a-radio>
+                  <a-radio :value="1">发布为公开模板</a-radio>
+                </a-radio-group>
+              </a-form-item>
+            </a-form>
+
             <a-button type="primary" @click="publishTemplate">
               一键发布模板
             </a-button>
@@ -87,8 +97,8 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, reactive, computed, onMounted, watch } from 'vue'
+<script lang="ts" setup>
+import { reactive, computed, onMounted, watch, ref } from 'vue'
 import { useForm } from 'ant-design-vue/lib/form'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
@@ -99,97 +109,80 @@ import { last } from 'lodash-es'
 import { message } from 'ant-design-vue'
 import ClipboardJS from 'clipboard'
 
-export default defineComponent({
-  emits: ['panel-close', 'publish-success'],
-  setup() {
-    const store = useStore<GlobalDataProps>()
-    const route = useRoute()
-    const currentWorkId = route.params.id as string
-    const page = computed(() => store.state.editor.page)
-    const channels = computed(() => store.state.editor.channels)
-    const form = reactive({
-      channelName: '',
-    })
-    const rules = reactive({
-      channelName: [
-        { required: true, message: '标题不能为空', trigger: 'blur' },
-      ],
-    })
-    const { validate } = useForm(form, rules)
-    const generateChannelURL = (id: number) =>
-      `${baseH5URL}/api/pages/${page.value.id}-${page.value.uuid}?channel=${id}`
-    const createChannel = async () => {
-      const payload = {
-        name: form.channelName,
-        workId: parseInt(currentWorkId),
-      }
-      try {
-        await validate()
-        await store.dispatch('createChannel', { data: payload })
-        form.channelName = ''
-      } catch (e) {
-        console.error(e)
-      }
-    }
-    const deleteDisabled = computed(() => channels.value.length === 1)
-    const deleteChannel = (id: number) => {
-      store.dispatch('deleteChannel', { urlParams: { id } })
-    }
+const store = useStore<GlobalDataProps>()
+const route = useRoute()
+const currentWorkId = route.params.id as string
+const page = computed(() => store.state.editor.page)
+const channels = computed(() => store.state.editor.channels)
+const form = reactive({
+  channelName: '',
+})
+const rules = reactive({
+  channelName: [{ required: true, message: '标题不能为空', trigger: 'blur' }],
+})
+const { validate } = useForm(form, rules)
+const generateChannelURL = (id: number) =>
+  `${baseH5URL}/api/pages/${page.value.id}-${page.value.uuid}?channel=${id}`
+const createChannel = async () => {
+  const payload = {
+    name: form.channelName,
+    workId: parseInt(currentWorkId),
+  }
+  try {
+    await validate()
+    await store.dispatch('createChannel', { data: payload })
+    form.channelName = ''
+  } catch (e) {
+    console.error(e)
+  }
+}
+const deleteDisabled = computed(() => channels.value.length === 1)
+const deleteChannel = (id: number) => {
+  store.dispatch('deleteChannel', { urlParams: { id } })
+}
 
-    onMounted(() => {
-      const clipboard = new ClipboardJS('.copy-button')
-      clipboard.on('success', (e) => {
-        message.success('复制成功', 1)
-        e.clearSelection()
-      })
-      channels.value.forEach(async (channel) => {
-        try {
-          await generateQRCode(
-            `channel-barcode-${channel.id}`,
-            generateChannelURL(channel.id)
-          )
-        } catch (e) {
-          console.error(e)
-        }
-      })
-    })
-    watch(
-      channels,
-      async (newChannels, oldChannels) => {
-        if (newChannels.length > oldChannels.length) {
-          const createdChannel = last(newChannels)
-          if (createdChannel) {
-            await generateQRCode(
-              `channel-barcode-${createdChannel.id}`,
-              generateChannelURL(createdChannel.id)
-            )
-          }
-        }
-      },
-      {
-        flush: 'post',
-      }
-    )
-
-    const publishTemplate = async () => {
-      const urlParams = { id: currentWorkId }
-
-      await store.dispatch('publishTemplate', { urlParams })
-      message.success('模板发布成功', 1)
+onMounted(() => {
+  const clipboard = new ClipboardJS('.copy-button')
+  clipboard.on('success', (e) => {
+    message.success('复制成功', 1)
+    e.clearSelection()
+  })
+  channels.value.forEach(async (channel) => {
+    try {
+      await generateQRCode(
+        `channel-barcode-${channel.id}`,
+        generateChannelURL(channel.id)
+      )
+    } catch (e) {
+      console.error(e)
     }
-    return {
-      page,
-      channels,
-      createChannel,
-      form,
-      rules,
-      deleteDisabled,
-      deleteChannel,
-      generateChannelURL,
-      publishTemplate,
+  })
+})
+watch(
+  channels,
+  async (newChannels, oldChannels) => {
+    if (newChannels.length > oldChannels.length) {
+      const createdChannel = last(newChannels)
+      if (createdChannel) {
+        await generateQRCode(
+          `channel-barcode-${createdChannel.id}`,
+          generateChannelURL(createdChannel.id)
+        )
+      }
     }
   },
-})
+  {
+    flush: 'post',
+  }
+)
+
+const isPublic = ref(0)
+const publishTemplate = async () => {
+  const urlParams = { id: currentWorkId, isPublic: isPublic.value }
+
+  await store.dispatch('publishTemplate', { urlParams })
+  message.success('模板发布成功', 1)
+}
 </script>
 
 <style>

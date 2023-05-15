@@ -21,7 +21,6 @@ axios.interceptors.request.use((config) => {
   const newConfig = config as ICustomAxiosConfig
   store.commit('setError', { status: false, message: '' })
   store.commit('startLoading', { opName: newConfig.opName })
-  console.log(config)
 
   return config
 })
