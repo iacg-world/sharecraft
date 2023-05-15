@@ -35,10 +35,15 @@ export default defineComponent({
   },
 })
 </script>
-<style>
+<style lang="scss">
 .app-container .global-spinner {
   position: fixed;
-  top: 10px;
-  right: 50%;
+  width: 100vw;
+  top: 5px;
+  color: #fff;
+  z-index: 99;
+  .ant-spin-dot-item {
+    background-color: #fff;
+  }
 }
 </style>

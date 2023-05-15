@@ -11,7 +11,7 @@
         <router-view></router-view>
       </a-layout-content>
     </a-layout>
-    <a-layout-footer> © IACG（iacg.com）版权所有 | </a-layout-footer>
+    <a-layout-footer> © lc404 (sharecraft.lc404.com) 版权所有 </a-layout-footer>
   </div>
 </template>
 
@@ -39,11 +39,5 @@ export default defineComponent({
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-.page-title {
-  a {
-    color: purple;
-  }
-  font-size: 20px;
 }
 </style>

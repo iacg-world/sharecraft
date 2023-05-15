@@ -1,5 +1,4 @@
 <template>
-  <router-link to="/">Home</router-link>
   <div class="editor-container">
     <a-modal
       title="发布成功"
@@ -17,7 +16,7 @@
       <a-layout-header class="header">
         <div class="page-title">
           <router-link to="/">
-            <img alt="分享乐" src="../assets/logo.png" class="logo-img" />
+            <home-two-tone style="font-size: 26px" />
           </router-link>
           <inline-edit :value="page.title" @change="titleChange" />
         </div>
@@ -153,6 +152,7 @@ import useSaveWork from '@/hooks/useSaveWork'
 import usePublishWork from '@/hooks/usePublishWork'
 import PublishForm from './PublishForm.vue'
 import PreviewForm from './editor/PreviewForm.vue'
+import { HomeTwoTone } from '@ant-design/icons-vue'
 
 export type TabType = 'component' | 'layer' | 'page'
 export default defineComponent({
@@ -169,6 +169,7 @@ export default defineComponent({
     UserProfile,
     PublishForm,
     PreviewForm,
+    HomeTwoTone,
   },
   setup() {
     initHotKeys()
@@ -319,6 +320,9 @@ export default defineComponent({
     color: #ffffffff;
     font-weight: 600;
     font-size: 20px;
+    vertical-align: bottom;
+    display: flex;
+    align-items: center;
   }
 }
 .page-title .inline-edit span {
