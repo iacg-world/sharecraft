@@ -23,18 +23,23 @@
       :list="works"
       @on-delete="onDelete"
       @on-copy="onCopy"
+      @on-publish="publishTemplate"
       :loading="isLoading"
     >
     </works-list>
-    <a-row type="flex" justify="space-between" align="middle">
+    <a-row type="flex" justify="end" align="middle">
       <ul class="ant-pagination">
         <li
           class="ant-pagination-prev"
           :class="{ 'ant-pagination-disabled': isFirstPage }"
         >
-          <a class="ant-pagination-item-link" @click.prevent="loadPrevPage">
-            上一页
-          </a>
+          <a-button
+            size="normal"
+            @click="loadPrevPage"
+            v-if="!isFirstPage"
+            :loading="isLoading"
+            >上一页</a-button
+          >
         </li>
         <li
           v-for="item in totalPage"
@@ -48,28 +53,15 @@
           class="ant-pagination-next"
           :class="{ 'ant-pagination-disabled': isLastPage }"
         >
-          <a class="ant-pagination-item-link" @click.prevent="loadMorePage">
-            下一页
-          </a>
+          <a-button
+            size="normal"
+            @click="loadMorePage"
+            v-if="!isLastPage"
+            :loading="isLoading"
+            >下一页</a-button
+          >
         </li>
       </ul>
-      <h2>{{ pageIndex }}</h2>
-      <a-button
-        type="primary"
-        size="large"
-        @click="loadPrevPage"
-        v-if="!isFirstPage"
-        :loading="isLoading"
-        >上一页</a-button
-      >
-      <a-button
-        type="primary"
-        size="large"
-        @click="loadMorePage"
-        v-if="!isLastPage"
-        :loading="isLoading"
-        >下一页</a-button
-      >
     </a-row>
   </div>
 </template>
@@ -127,6 +119,17 @@ export default defineComponent({
       })
     }
 
+    const publishTemplate = async (id: number, isPublic: 0 | 1) => {
+      const urlParams = { id, isPublic }
+
+      await store.dispatch('publishTemplate', { urlParams })
+      message.success('模板发布成功', 1)
+      store.dispatch('fetchWorks', { searchParams: searchParams.value })
+    }
+
+    const onChange = (val: any) => {
+      console.log(val)
+    }
     return {
       works,
       onDelete,
@@ -141,6 +144,8 @@ export default defineComponent({
       pageIndex,
       goToPage,
       totalPage,
+      publishTemplate,
+      onChange,
     }
   },
 })

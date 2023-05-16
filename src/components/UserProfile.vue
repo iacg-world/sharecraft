@@ -2,9 +2,14 @@
   <router-link to="/login" v-if="!user.isLogin">
     <a-button type="primary" class="user-profile-component"> 登录 </a-button>
   </router-link>
-  <div v-else>
-    <a-dropdown-button class="user-profile-component">
-      <router-link to="/setting">{{ user.data.nickName }}</router-link>
+  <div v-else class="home_menu">
+    <a-button v-if="$route.path === '/'"
+      ><router-link to="/works">我的作品</router-link></a-button
+    >
+    <a-dropdown-button class="user-profile-component user-profile-container">
+      <router-link to="/setting">{{
+        user.data.nickName || user.data.username
+      }}</router-link>
       <template v-slot:overlay>
         <a-menu class="user-profile-dropdown">
           <a-menu-item key="0" @click="createDesign">创建作品</a-menu-item>
@@ -24,7 +29,6 @@ import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
 import { UserProps } from '../store/user'
-import axios from 'axios'
 
 export default defineComponent({
   name: 'user-profile',
@@ -64,7 +68,17 @@ export default defineComponent({
   },
 })
 </script>
-<style>
+<style lang="scss">
+.home_menu {
+  display: flex;
+  min-width: 200px;
+  height: 100%;
+  align-items: center;
+
+  .user-profile-container {
+    margin-left: 50px !important;
+  }
+}
 .user-profile-dropdown {
   border-radius: 2px !important;
 }

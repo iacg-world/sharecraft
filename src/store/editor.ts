@@ -33,6 +33,7 @@ export interface PageData {
   uuid?: string
   setting?: { [key: string]: any }
   isTemplate?: boolean
+  isPublic?: boolean
   isHot?: boolean
   isNew?: boolean
   author?: string

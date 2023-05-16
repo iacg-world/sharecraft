@@ -26,7 +26,21 @@
               <EllipsisOutlined key="ellipsis" />
               <template v-slot:overlay>
                 <a-menu class="overlay-dropdown">
-                  <a-menu-item>
+                  <a-menu-item v-if="item.isTemplate && item.isPublic">
+                    <a
+                      href="javascript:;"
+                      @click.prevent="publishClicked(item.id, 0)"
+                      ><LockOutlined /> 设置为个人模板</a
+                    >
+                  </a-menu-item>
+                  <a-menu-item v-else-if="item.isTemplate && !item.isPublic">
+                    <a
+                      href="javascript:;"
+                      @click.prevent="publishClicked(item.id, 1)"
+                      ><ShareAltOutlined /> 设置为公开模板</a
+                    >
+                  </a-menu-item>
+                  <a-menu-item v-if="item.isPublic">
                     <a href="javascript:;" @click.prevent="copyClicked(item.id)"
                       ><CopyOutlined /> 复制</a
                     >
@@ -64,18 +78,23 @@ import {
   CopyOutlined,
   DeleteOutlined,
   DownloadOutlined,
+  ShareAltOutlined,
+  LockOutlined,
 } from '@ant-design/icons-vue'
 import { TemplateProps } from '../store/templates'
-import { Modal } from 'ant-design-vue'
+import { message, Modal } from 'ant-design-vue'
+import { useStore } from 'vuex'
 export default defineComponent({
   name: 'works-list',
-  emits: ['on-copy', 'on-delete'],
+  emits: ['on-copy', 'on-delete', 'on-publish'],
   components: {
     EditOutlined,
     EllipsisOutlined,
     CopyOutlined,
     DeleteOutlined,
     DownloadOutlined,
+    ShareAltOutlined,
+    LockOutlined,
   },
   props: {
     list: {
@@ -107,9 +126,14 @@ export default defineComponent({
       context.emit('on-copy', id)
     }
 
+    const publishClicked = (id: number, isPublic: 0 | 1) => {
+      context.emit('on-publish', id, isPublic)
+    }
+
     return {
       deleteClicked,
       copyClicked,
+      publishClicked,
     }
   },
 })
