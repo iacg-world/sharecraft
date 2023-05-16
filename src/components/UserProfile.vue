@@ -20,6 +20,13 @@
         </a-menu>
       </template>
     </a-dropdown-button>
+
+    <a
+      style="color: white; font-size: 20px; margin-left: 10px"
+      href="https://github.com/iacg-world/sharecraft"
+      target="_blank"
+      ><GithubFilled
+    /></a>
   </div>
 </template>
 
@@ -29,6 +36,7 @@ import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
 import { UserProps } from '../store/user'
+import { GithubFilled } from '@ant-design/icons-vue'
 
 export default defineComponent({
   name: 'user-profile',
@@ -66,6 +74,7 @@ export default defineComponent({
       createDesign,
     }
   },
+  components: { GithubFilled },
 })
 </script>
 <style lang="scss">

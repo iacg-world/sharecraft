@@ -77,7 +77,7 @@
             </a-form>
           </a-tab-pane>
 
-          <a-tab-pane key="template" tab="发布为模版">
+          <a-tab-pane key="template" tab="发布为模板">
             <a-form>
               <a-form-item label="Resources">
                 <a-radio-group v-model:value="isPublic">

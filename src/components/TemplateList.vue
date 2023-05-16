@@ -11,7 +11,7 @@
                 v-else
               />
               <div class="hover-item">
-                <a-button size="large" type="primary">使用该模版创建</a-button>
+                <a-button size="large" type="primary">查看模板</a-button>
               </div>
             </template>
             <a-card-meta :title="item.title">
