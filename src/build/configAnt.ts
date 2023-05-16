@@ -22,7 +22,7 @@ import {
   Tooltip,
   Empty,
   RadioGroup,
-} from 'ant-design-vue'
+} from 'ant-design-vue/es'
 import { App } from 'vue'
 const components = [
   Avatar,

@@ -37,7 +37,7 @@ const defaultColors = [
   '#722ed1',
   '#8c8c8c',
   '#000000',
-  '',
+  'transparent',
 ]
 export default defineComponent({
   props: {

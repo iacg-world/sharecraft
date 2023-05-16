@@ -170,7 +170,7 @@ const pageDefaultProps = {
   // backgroundImage:
   //   'url("https://sharecraft-backend.oss-cn-shanghai.aliyuncs.com/sharecraft-test/20180421210121_KddAy.jpeg")',
   backgroundRepeat: 'no-repeat',
-  backgroundSize: 'cover',
+  backgroundSize: 'contain',
   height: '560px',
 }
 const pushHistory = (state: EditorProps, historyRecord: HistoryProps) => {
