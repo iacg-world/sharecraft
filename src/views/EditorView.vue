@@ -77,7 +77,11 @@
                 :hidden="component.isHidden"
                 :props="component.props"
               >
-                <component :is="component.name" v-bind="component.props" />
+                <component
+                  :is="component.name"
+                  v-bind="component.props"
+                  :isEditing="isEditing"
+                />
               </edit-wrapper>
             </div>
           </div>
