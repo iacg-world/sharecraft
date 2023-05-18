@@ -122,7 +122,7 @@ const rules = reactive({
 })
 const { validate } = useForm(form, rules)
 const generateChannelURL = (id: number) =>
-  `${baseH5URL}/api/p/${page.value.id}-${page.value.uuid}?channel=${id}`
+  `${baseH5URL}/p/${page.value.id}-${page.value.uuid}?channel=${id}`
 const createChannel = async () => {
   const payload = {
     name: form.channelName,
