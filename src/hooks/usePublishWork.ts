@@ -15,6 +15,7 @@ function usePublishWork() {
 
   const publishWork = async (el: HTMLElement) => {
     try {
+      isPublishing.value = true
       const resp = await takeScreenshotAndUpload(el)
       if (resp) {
         store.commit('updatePage', {
