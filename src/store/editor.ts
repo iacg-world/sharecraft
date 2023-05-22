@@ -237,7 +237,7 @@ const setDirtyWrapper = (callback: Mutation<EditorProps>) => {
 
 const editor: Module<EditorProps, GlobalDataProps> = {
   state: {
-    isEditing: false,
+    isEditing: true,
     clickTimeout: 0,
     components: [],
     currentElementId: '',

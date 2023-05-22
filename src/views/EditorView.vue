@@ -20,29 +20,18 @@
           </router-link>
           <inline-edit :value="page.title" @change="titleChange" />
         </div>
-        <a-menu
-          :selectable="false"
-          theme="dark"
-          mode="horizontal"
-          :style="{ lineHeight: '64px' }"
-        >
-          <a-menu-item key="1">
+        <div class="action_warp">
+          <div class="action_buttons">
             <a-button type="primary" @click="preview">预览和设置</a-button>
-          </a-menu-item>
-          <a-menu-item key="2">
             <a-button type="primary" @click="saveWork" :loading="saveIsLoading"
               >保存</a-button
             >
-          </a-menu-item>
-          <a-menu-item key="3">
             <a-button type="primary" @click="publish" :loading="isPublishing"
               >发布</a-button
             >
-          </a-menu-item>
-          <a-menu-item key="4">
-            <user-profile :user="userInfo"></user-profile>
-          </a-menu-item>
-        </a-menu>
+          </div>
+          <user-profile :user="userInfo"></user-profile>
+        </div>
       </a-layout-header>
     </a-layout>
     <a-layout>
@@ -289,28 +278,36 @@ export default defineComponent({
       justify-content: flex-end;
     }
   }
-}
-.editor-container .preview-container {
-  padding: 24px;
-  margin: 0;
-  min-height: 85vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-}
-.editor-container .preview-list {
-  padding: 0;
-  margin: 0;
-  min-width: 375px;
-  min-height: 200px;
-  border: 1px solid #efefef;
-  background: #fff;
-  overflow-x: hidden;
-  overflow-y: auto;
-  position: fixed;
-  margin-top: 50px;
-  max-height: 80vh;
+  .preview-container {
+    padding: 24px;
+    margin: 0;
+    min-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+  }
+  .preview-list {
+    padding: 0;
+    margin: 0;
+    min-width: 375px;
+    min-height: 200px;
+    border: 1px solid #efefef;
+    background: #fff;
+    overflow-x: hidden;
+    overflow-y: auto;
+    position: fixed;
+    margin-top: 50px;
+    max-height: 80vh;
+  }
+  .action_warp {
+    display: flex;
+  }
+  .action_buttons {
+    button {
+      margin: 0 5px;
+    }
+  }
 }
 .page-title {
   display: flex;
@@ -323,11 +320,11 @@ export default defineComponent({
     display: flex;
     align-items: center;
   }
-}
-.page-title .inline-edit span {
-  font-weight: 500;
-  margin-left: 10px;
-  font-size: 16px;
+  .inline-edit span {
+    font-weight: 500;
+    margin-left: 10px;
+    font-size: 16px;
+  }
 }
 
 .logo-img {
