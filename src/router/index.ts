@@ -29,7 +29,10 @@ const routes: Array<RouteRecordRaw> = [
         path: 'works',
         name: 'works',
         component: Works,
-        meta: { title: '我的作品', requiredLogin: true },
+        meta: {
+          title: '我的作品',
+          requiredLogin: true,
+        },
       },
     ],
   },
@@ -61,6 +64,8 @@ router.beforeEach(async (to) => {
   if (title) {
     document.title = title as string
   }
+  const pageMeta = document.getElementById('iacg-page-id')
+  pageMeta?.setAttribute('iacg-page-id', to.fullPath)
   if (!isLogin) {
     if (token) {
       axios.defaults.headers.common.Authorization = `Bearer ${token}`
