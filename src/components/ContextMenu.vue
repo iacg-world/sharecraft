@@ -30,7 +30,7 @@ export default defineComponent({
       default: 'edit-wrapper',
     },
   },
-  setup(props, context) {
+  setup(props) {
     const menuRef = ref<HTMLElement | null>(null)
     const componentId = ref('')
     const triggerContextMenu = (e: MouseEvent) => {

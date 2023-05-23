@@ -1,6 +1,6 @@
 import { computed, defineComponent, PropType, VNode } from 'vue'
 import { reduce } from 'lodash-es'
-import { PropsToForms, mapPropsToForms } from '../propsMap'
+import { mapPropsToForms } from '../propsMap'
 import { TextComponentProps } from '../defaultProps'
 import { Input, InputNumber, Slider, Radio, Select } from 'ant-design-vue'
 import ColorPicker from './ColorPicker.vue'

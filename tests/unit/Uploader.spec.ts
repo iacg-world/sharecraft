@@ -6,7 +6,6 @@ jest.mock('axios')
 const mockedAxios = axios as jest.Mocked<typeof axios>
 let wrapper: VueWrapper<any>
 const testFile = new File(['xyz'], 'test.png', { type: 'image/png' })
-const testFile2 = new File(['xyz'], 'test2.png', { type: 'image/png' })
 const mockComponent = {
   template: '<div><slot></slot></div>',
 }
@@ -131,7 +130,7 @@ describe('Uploader Component', () => {
   })
   it('检查promise', async () => {
     mockedAxios.post.mockResolvedValueOnce({ data: { url: 'dummy.url' } })
-    const failedPromise = (file: File) => {
+    const failedPromise = () => {
       return Promise.reject('wrong type')
     }
     const successPromise = (file: File) => {

@@ -82,8 +82,7 @@ import {
   LockOutlined,
 } from '@ant-design/icons-vue'
 import { TemplateProps } from '../store/templates'
-import { message, Modal } from 'ant-design-vue'
-import { useStore } from 'vuex'
+import { Modal } from 'ant-design-vue'
 export default defineComponent({
   name: 'works-list',
   emits: ['on-copy', 'on-delete', 'on-publish'],

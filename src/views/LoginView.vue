@@ -159,7 +159,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { defineComponent, reactive, ref, Ref, computed, watch } from 'vue'
+import { defineComponent, reactive, ref, computed, watch } from 'vue'
 import { UserOutlined, LockOutlined } from '@ant-design/icons-vue'
 import { useForm } from 'ant-design-vue/lib/form'
 import { Rule } from 'ant-design-vue/es/form/interface'
@@ -208,7 +208,7 @@ const rules = reactive({
   ],
   verifyCode: [{ required: true, message: '验证码不能为空', trigger: 'blur' }],
 })
-const { validate, resetFields } = useForm(form, rules)
+const { validate } = useForm(form, rules)
 const login = () => {
   validate().then(() => {
     const payload = {
@@ -285,10 +285,7 @@ const emailRules = reactive<Record<string, Rule[]>>({
   passwd: [{ required: true, message: '密码不能为空', trigger: 'blur' }],
   rePasswd: [{ validator: validateRePasswd, trigger: 'change' }],
 })
-const { validate: validateEmail, resetFields: resetFieldsEmail } = useForm(
-  emailForm,
-  emailRules
-)
+const { validate: validateEmail } = useForm(emailForm, emailRules)
 
 const signUp = () => {
   validateEmail().then((val) => {

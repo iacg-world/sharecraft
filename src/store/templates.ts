@@ -37,7 +37,7 @@ const templates: Module<TemplatesProps, GlobalDataProps> = {
     fetchTemplate(state, rawData: RespData<TemplateProps>) {
       state.data = [rawData.data]
     },
-    deleteWork(state, rawData: RespData<any>) {
+    deleteWork() {
       // no content
     },
   },

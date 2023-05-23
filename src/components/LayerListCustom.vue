@@ -98,7 +98,6 @@ export default defineComponent({
     }
     const onDragEnter = (e: DragEvent, index: number) => {
       if (index !== dragData.currentIndex) {
-        console.log('enter', index, dragData.currentIndex)
         arrayMoveMutable(props.list, dragData.currentIndex, index)
         dragData.currentIndex = index
         end = index
@@ -111,7 +110,6 @@ export default defineComponent({
       )
       if (currentEle && currentEle.dataset.index) {
         const moveIndex = parseInt(currentEle.dataset.index)
-        console.log(moveIndex)
         arrayMoveImmutable(props.list, dragData.currentIndex, moveIndex)
       }
       dragData.currentDragging = ''

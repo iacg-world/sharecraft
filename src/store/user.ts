@@ -1,7 +1,7 @@
-import { Module, ActionContext } from 'vuex'
-import store, { GlobalDataProps, actionWrapper } from './index'
+import { Module } from 'vuex'
+import { GlobalDataProps, actionWrapper } from './index'
 import { RespData } from '@/respTypes'
-import axios, { AxiosRequestConfig } from 'axios'
+import axios from 'axios'
 export interface UserDataProps {
   username?: string
   id?: string
