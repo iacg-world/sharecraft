@@ -29,7 +29,7 @@
 </template>
 
 <script lang="ts">
-import { baseH5URL } from '@/main'
+import { baseH5URL } from '@/axios'
 import { defineComponent, computed, onMounted, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'

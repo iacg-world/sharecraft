@@ -82,7 +82,7 @@
 import { defineComponent, computed, reactive, onMounted } from 'vue'
 import { useForm } from 'ant-design-vue/lib/form'
 import { GlobalDataProps } from '@/store/index'
-import { baseH5URL } from '@/main'
+import { baseH5URL } from '@/axios'
 import { useStore } from 'vuex'
 import { forEach } from 'lodash-es'
 import useSaveWork from '@/hooks/useSaveWork'
