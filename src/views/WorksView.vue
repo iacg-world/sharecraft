@@ -16,7 +16,9 @@
       <template v-slot:description>
         <span> 还没有任何作品 </span>
       </template>
-      <a-button type="primary" size="large"> 创建你的第一个设计 🎉 </a-button>
+      <a-button type="primary" size="large" @click="createDesign">
+        创建你的第一个设计 🎉
+      </a-button>
     </a-empty>
 
     <works-list
@@ -126,7 +128,18 @@ export default defineComponent({
       message.success('模板发布成功', 1)
       store.dispatch('fetchWorks', { searchParams: searchParams.value })
     }
-
+    const createDesign = async () => {
+      const payload = {
+        title: '未命名作品',
+        desc: '未命名作品',
+        coverImg: '',
+      }
+      const { data } = await store.dispatch('createWork', {
+        data: payload,
+      })
+      message.success('创建作品成功', 2)
+      router.push(`/editor/${data.id}`)
+    }
     const onChange = (val: any) => {
       console.log(val)
     }
@@ -146,6 +159,7 @@ export default defineComponent({
       totalPage,
       publishTemplate,
       onChange,
+      createDesign,
     }
   },
 })

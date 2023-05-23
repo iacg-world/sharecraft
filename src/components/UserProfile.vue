@@ -60,8 +60,7 @@ export default defineComponent({
       const payload = {
         title: '未命名作品',
         desc: '未命名作品',
-        coverImg:
-          'https://sharecraft-backend.oss-cn-shanghai.aliyuncs.com/sharecraft-test/20180421210121_KddAy.jpeg',
+        coverImg: '',
       }
       const { data } = await store.dispatch('createWork', {
         data: payload,
