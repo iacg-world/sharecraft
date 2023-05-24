@@ -51,7 +51,7 @@ module.exports = defineConfig({
       'vue-router': 'VueRouter',
       vuex: 'Vuex',
       axios: 'axios',
-      vuedraggable: 'vuedraggable',
+      // vuedraggable: 'vuedraggable',
       cropperjs: 'Cropper',
       html2canvas: 'html2canvas',
       'ant-design-vue': 'antd',
