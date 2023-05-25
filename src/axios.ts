@@ -3,7 +3,7 @@ import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
 import store from './store'
 const NODE_ENV = process.env.NODE_ENV
 const isProduction = NODE_ENV === 'production'
-const baseBackendURL = isProduction ? '' : process.env.VUE_APP_BASE_URL
+const baseBackendURL = process.env.VUE_APP_BASE_URL
 export const baseH5URL = process.env.VUE_APP_BASE_H5_URL
 
 export type ICustomAxiosConfig = AxiosRequestConfig & {

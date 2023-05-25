@@ -18,6 +18,7 @@ jobs:
           touch .env
           echo ALC_ACCESS_KEY=${{ secrets.ALC_ACCESS_KEY }} >> .env
           echo ALC_SECRET_KEY=${{ secrets.ALC_SECRET_KEY }} >> .env
+          echo VUE_APP_BASE_URL=${{ secrets.VUE_APP_BASE_URL }} >> .env
           echo VUE_APP_BASE_H5_URL=${{ secrets.VUE_APP_BASE_H5_URL }} >> .env
       # 使用阿里云ACR 完成 docker login
       - name: Login to Aliyun Container Registry (ACR)
