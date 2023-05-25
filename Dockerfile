@@ -10,5 +10,6 @@ FROM nginx
 RUN mkdir -p /app
 COPY --from=0 /usr/src/sharecraft/dist /app
 COPY ./nginx.conf /etc/nginx/nginx.conf
-COPY /etc/nginx/cert/sharecraft.lc404.cn_nginx /etc/nginx/cert/sharecraft.lc404.cn_nginx
+WORKDIR /
+COPY ./etc/nginx/cert/sharecraft.lc404.cn_nginx /etc/nginx/cert/sharecraft.lc404.cn_nginx
 EXPOSE 80
