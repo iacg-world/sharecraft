@@ -11,7 +11,12 @@
         <router-view></router-view>
       </a-layout-content>
     </a-layout>
-    <a-layout-footer> © lc404 (sharecraft.lc404.com) 版权所有 </a-layout-footer>
+    <a-layout-footer>
+      © lc404 (sharecraft.lc404.com) 版权所有
+      <a href="https://beian.miit.gov.cn/" target="_blank"
+        >蜀ICP备2023012528号</a
+      ></a-layout-footer
+    >
   </div>
 </template>
 
