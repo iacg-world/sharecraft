@@ -6,7 +6,7 @@ RUN npm i pnpm -g --registry=https://registry.npm.taobao.org
 RUN pnpm install --registry=https://registry.npm.taobao.org
 RUN pnpm run build
 
-FROM nginx
+FROM nginx:latest
 RUN mkdir -p /app
 COPY --from=0 /usr/src/sharecraft/dist /app
 COPY ./nginx.conf /etc/nginx/nginx.conf
