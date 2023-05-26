@@ -54,7 +54,7 @@ module.exports = defineConfig({
       // vuedraggable: 'vuedraggable',
       cropperjs: 'Cropper',
       html2canvas: 'html2canvas',
-      'ant-design-vue': 'antd',
+      // 'ant-design-vue': 'antd',
     })
     config.plugin('html').tap((args) => {
       args[0].title = '分享乐'
@@ -96,30 +96,30 @@ module.exports = defineConfig({
     config.optimization.splitChunks = {
       maxInitialRequests: Infinity,
       chunks: 'all',
-      maxSize: 500 * 1024,
-      minSize: 300 * 1024,
+      maxSize: 300 * 1024,
+      minSize: 100 * 1024,
       cacheGroups: {
         vendors: {
           name: 'chunk-vendors',
           chunks: 'initial',
           test: /[\\/]node_modules[\\/]/,
-          maxSize: 500 * 1024,
-          minSize: 300 * 1024,
+          maxSize: 300 * 1024,
+          minSize: 100 * 1024,
           priority: -15,
         },
-        // antVendor: {
-        //   name: 'chunk-antd',
-        //   test: /[\\/]node_modules[\\/]ant-design-vue/,
-        //   maxSize: 500 * 1024,
-        //   minSize: 300 * 1024,
-        //   priority: -10,
-        //   reuseExistingChunk: true,
-        // },
+        antVendor: {
+          name: 'chunk-antd',
+          test: /[\\/]node_modules[\\/]ant-design-vue/,
+          maxSize: 300 * 1024,
+          minSize: 100 * 1024,
+          priority: -10,
+          reuseExistingChunk: true,
+        },
         antIconVendor: {
           name: 'chunk-ant-icon',
           test: /[\\/]node_modules[\\/]@ant-design/,
-          maxSize: 500 * 1024,
-          minSize: 300 * 1024,
+          maxSize: 300 * 1024,
+          minSize: 100 * 1024,
           priority: -5,
           reuseExistingChunk: true,
         },

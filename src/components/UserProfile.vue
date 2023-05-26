@@ -43,7 +43,7 @@
 </template>
 
 <script lang="ts" setup>
-import { defineComponent, PropType, defineProps } from 'vue'
+import { defineComponent, PropType } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
@@ -51,6 +51,7 @@ import { UserProps } from '../store/user'
 import { DownOutlined, GithubFilled } from '@ant-design/icons-vue'
 import axios from 'axios'
 
+// eslint-disable-next-line no-undef
 defineProps({
   user: {
     type: Object as PropType<UserProps>,
