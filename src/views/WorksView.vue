@@ -76,9 +76,12 @@ import { GlobalDataProps } from '../store/index'
 import WorksList from '../components/WorksList.vue'
 import useLoadMore from '../hooks/useLoadMore'
 import { message } from 'ant-design-vue'
+import { Empty as AEmpty } from 'ant-design-vue/es'
+
 export default defineComponent({
   components: {
     WorksList,
+    AEmpty,
   },
   setup() {
     const store = useStore<GlobalDataProps>()

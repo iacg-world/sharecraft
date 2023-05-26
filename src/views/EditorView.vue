@@ -142,6 +142,7 @@ import usePublishWork from '@/hooks/usePublishWork'
 import PublishForm from './PublishForm.vue'
 import PreviewForm from './editor/PreviewForm.vue'
 import { HomeTwoTone } from '@ant-design/icons-vue'
+import { Empty as AEmpty } from 'ant-design-vue/es'
 
 export type TabType = 'component' | 'layer' | 'page'
 export default defineComponent({
@@ -159,6 +160,7 @@ export default defineComponent({
     PublishForm,
     PreviewForm,
     HomeTwoTone,
+    AEmpty,
   },
   setup() {
     initHotKeys()
