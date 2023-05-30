@@ -54,7 +54,12 @@
                 </a-input>
               </a-form-item>
               <a-form-item>
-                <a-button type="primary" size="large" @click="login">
+                <a-button
+                  type="primary"
+                  size="large"
+                  @click="login"
+                  :loading="isLoginLoading"
+                >
                   登录
                 </a-button>
                 <a-button
@@ -62,6 +67,7 @@
                   :style="{ marginLeft: '20px' }"
                   :disabled="codeButtonDisable"
                   @click="getCode"
+                  :loading="isGenVeriCodeLoading"
                 >
                   {{ counter === 60 ? '获取验证码' : `${counter}秒后重发` }}
                 </a-button>
@@ -128,6 +134,7 @@
                   v-else
                   type="primary"
                   size="large"
+                  :loading="isLoginLoading"
                   @click="loginByEmail"
                 >
                   登录
@@ -246,11 +253,15 @@ watch(counter, (newValue) => {
     counter.value = 60
   }
 })
+const isGenVeriCodeLoading = computed(() =>
+  store.getters.isOpLoading('genVeriCode')
+)
 const getCode = () => {
-  axios.post('/users/genVeriCode', { phoneNumber: form.cellphone }).then(() => {
-    message.success('验证码已发送，请注意查收', 5)
-    startCounter()
-  })
+  store
+    .dispatch('genVeriCode', { data: { phoneNumber: form.cellphone } })
+    .then(() => {
+      message.success('验证码已发送，请注意查收', 5)
+    })
 }
 
 const loginType = ref<LoginType>('phone')
@@ -296,12 +307,8 @@ const signUp = () => {
       password: emailForm.passwd,
     }
     store.dispatch('signUpAndLoginByEmail', { data: payload }).then((val) => {
-      console.log(val)
-
-      message.success('注册成功 正在跳转首页')
-      setTimeout(() => {
-        router.push('/')
-      }, 1500)
+      message.success('登录成功~')
+      router.push('/')
     })
   })
 }
@@ -319,10 +326,8 @@ const loginByEmail = () => {
       .then((val) => {
         console.log(val)
 
-        message.success('登录成功 正在跳转首页')
-        setTimeout(() => {
-          router.push('/')
-        }, 1500)
+        message.success('登录成功~')
+        router.push('/')
       })
       .catch((reason) => {
         if (reason.errno === 101003) {

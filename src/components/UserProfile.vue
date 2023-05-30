@@ -66,9 +66,7 @@ const router = useRouter()
 const logout = () => {
   store.commit('logout')
   message.success('退出登录成功', 2)
-  setTimeout(() => {
-    router.push('/')
-  }, 2000)
+  router.push('/')
 }
 const createDesign = async () => {
   const payload = {

@@ -48,6 +48,9 @@ const user: Module<UserProps, GlobalDataProps> = {
     signUpByEmail() {
       // no content
     },
+    genVeriCode() {
+      // no content
+    },
   },
   actions: {
     // login({ commit }, payload) {
@@ -57,6 +60,9 @@ const user: Module<UserProps, GlobalDataProps> = {
     //       commit('login', rawData.data)
     //     })
     // },
+    genVeriCode: actionWrapper('/users/genVeriCode', 'genVeriCode', {
+      method: 'post',
+    }),
     login: actionWrapper('/users/loginByPhoneNumber', 'login', {
       method: 'post',
     }),
