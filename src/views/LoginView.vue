@@ -223,10 +223,8 @@ const login = () => {
       veriCode: form.verifyCode,
     }
     store.dispatch('loginAndFetch', { data: payload }).then(() => {
-      message.success('登录成功 正在跳转首页')
-      setTimeout(() => {
-        router.push('/')
-      }, 1500)
+      message.success('登录成功~')
+      router.push('/')
     })
   })
 }
