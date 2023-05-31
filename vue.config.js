@@ -149,4 +149,11 @@ module.exports = defineConfig({
       ])
     }
   },
+  devServer: {
+    proxy: {
+      '/api': {
+        target: process.env.VUE_APP_BASE_URL_PROXY,
+      },
+    },
+  },
 })
