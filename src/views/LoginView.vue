@@ -46,6 +46,7 @@
               <a-form-item label="验证码" required name="verifyCode">
                 <a-input
                   placeholder="四位验证码"
+                  @keyup.enter="login"
                   v-model:value="form.verifyCode"
                 >
                   <template v-slot:prefix
@@ -102,6 +103,7 @@
                 <a-input
                   placeholder="输入密码"
                   type="password"
+                  @keyup.enter="loginByEmail"
                   v-model:value="emailForm.passwd"
                 >
                   <template v-slot:prefix
@@ -113,6 +115,7 @@
                 <a-input
                   placeholder="确认密码"
                   type="password"
+                  @keyup.enter="signUp"
                   v-model:value="emailForm.rePasswd"
                 >
                   <template v-slot:prefix
@@ -298,8 +301,6 @@ const { validate: validateEmail } = useForm(emailForm, emailRules)
 
 const signUp = () => {
   validateEmail().then((val) => {
-    console.log(val)
-
     const payload = {
       username: emailForm.email,
       password: emailForm.passwd,
@@ -313,7 +314,6 @@ const signUp = () => {
 
 const loginByEmail = () => {
   validateEmail().then((val) => {
-    console.log(val)
     store.state.user
     const payload = {
       username: emailForm.email,
@@ -322,8 +322,6 @@ const loginByEmail = () => {
     store
       .dispatch('loginByEmailAndFetch', { data: payload })
       .then((val) => {
-        console.log(val)
-
         message.success('登录成功~')
         router.push('/')
       })
