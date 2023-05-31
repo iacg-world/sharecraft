@@ -38,7 +38,7 @@ describe('test vuex store', () => {
 
       it('激活画布组件编辑：dblclick component should change editStatus and clear component click event timeout', () => {
         const editStatus = store.state.editor.isEditing
-        store.commit('setEditStatus', editStatus)
+        store.commit('setEditStatus', !editStatus)
         expect(store.state.editor.isEditing).toBe(!editStatus)
         expect(store.state.editor.clickTimeout).toBe(0)
       })

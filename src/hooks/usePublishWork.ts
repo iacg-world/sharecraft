@@ -1,4 +1,4 @@
-import { computed, ref } from 'vue'
+import { computed, nextTick, ref } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 import { GlobalDataProps } from '@/store/index'
@@ -16,6 +16,8 @@ function usePublishWork() {
   const publishWork = async (el: HTMLElement) => {
     try {
       isPublishing.value = true
+      store.commit('setEditStatus', false)
+      await nextTick()
       const resp = await takeScreenshotAndUpload(el)
       if (resp) {
         store.commit('updatePage', {

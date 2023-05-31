@@ -85,7 +85,7 @@ export default defineComponent({
     const onChangeEditStatus = (id: string) => {
       const isEditing = store.state.editor.isEditing
       store.commit('clearClickTimeout')
-      store.commit('setEditStatus', isEditing)
+      store.commit('setEditStatus', !isEditing)
       if (!isEditing) {
         onItemClick(id)
       }

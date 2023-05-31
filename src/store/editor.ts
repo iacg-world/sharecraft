@@ -254,9 +254,8 @@ const editor: Module<EditorProps, GlobalDataProps> = {
     channels: [],
   },
   mutations: {
-    setEditStatus(state, status) {
-      // status是当前的编辑状态
-      state.isEditing = !status
+    setEditStatus(state, newStatus) {
+      state.isEditing = newStatus
     },
     clearClickTimeout(state) {
       clearTimeout(state.clickTimeout)
