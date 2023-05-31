@@ -45,7 +45,7 @@
           <img id="test-image" :style="{ width: '300px' }" />
         </div>
       </a-layout-sider>
-      <a-layout style="padding: 0 24px 24px">
+      <a-layout style="padding: 0 24px 24px; position: relative">
         <a-layout-content class="preview-container">
           <p>画布区域</p>
           <history-area></history-area>
@@ -75,6 +75,16 @@
             </div>
           </div>
         </a-layout-content>
+        <div class="switch_editing-btn" @click="switchEditStatus(isEditing)">
+          <template v-if="isEditing">
+            <DoubleRightOutlined />
+            <div class="text">收起编辑</div>
+          </template>
+          <template v-else>
+            <DoubleLeftOutlined />
+            <div class="text">打开编辑</div>
+          </template>
+        </div>
       </a-layout>
       <a-layout-sider
         v-show="isEditing"
@@ -141,7 +151,11 @@ import useSaveWork from '@/hooks/useSaveWork'
 import usePublishWork from '@/hooks/usePublishWork'
 import PublishForm from './PublishForm.vue'
 import PreviewForm from './editor/PreviewForm.vue'
-import { HomeTwoTone } from '@ant-design/icons-vue'
+import {
+  DoubleLeftOutlined,
+  DoubleRightOutlined,
+  HomeTwoTone,
+} from '@ant-design/icons-vue'
 import { Empty as AEmpty } from 'ant-design-vue/es'
 
 export type TabType = 'component' | 'layer' | 'page'
@@ -161,6 +175,8 @@ export default defineComponent({
     PreviewForm,
     HomeTwoTone,
     AEmpty,
+    DoubleLeftOutlined,
+    DoubleRightOutlined,
   },
   setup() {
     initHotKeys()
@@ -243,6 +259,10 @@ export default defineComponent({
       await saveWork()
       showPreviewForm.value = true
     }
+
+    const switchEditStatus = (status: boolean) => {
+      store.commit('setEditStatus', !status)
+    }
     return {
       components,
       defaultTextTemplates,
@@ -266,6 +286,7 @@ export default defineComponent({
       showPublishForm,
       preview,
       showPreviewForm,
+      switchEditStatus,
     }
   },
 })
@@ -339,5 +360,24 @@ export default defineComponent({
 .preview-list.canvas-fix {
   position: absolute;
   max-height: none;
+}
+.switch_editing-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  border-radius: 8px 0 0 8px;
+  background-color: #1890ff;
+  color: #fff !important;
+
+  .text {
+    width: 14px;
+    line-height: 18px;
+    font-size: 12px;
+  }
 }
 </style>
