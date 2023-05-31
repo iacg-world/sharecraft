@@ -254,6 +254,8 @@ export default defineComponent({
     z-index: 1500;
     .resizers {
       display: block;
+      position: absolute !important;
+      top: 0;
     }
     .resizers .resizer {
       width: 10px;
