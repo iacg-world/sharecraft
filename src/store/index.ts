@@ -6,7 +6,6 @@ import editor, { EditorProps } from './editor'
 import global, { GlobalStatus } from './global'
 import { compile } from 'path-to-regexp'
 import { forEach } from 'lodash-es'
-import router from '@/router'
 export interface GlobalDataProps {
   user: UserProps
   templates: TemplatesProps
@@ -44,9 +43,6 @@ export function actionWrapper(
       newURL += '?' + search.toString()
     }
     const resp = await axios(newURL, newConfig)
-    if (resp.data.errno === 101005) {
-      router.push('/')
-    }
 
     context.commit(commitName, { ...resp.data, ...props })
     return resp.data
