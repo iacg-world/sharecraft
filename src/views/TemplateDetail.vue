@@ -19,7 +19,7 @@
         </div>
         <div class="use-button">
           <a-button type="primary" size="large" @click="copyWork">
-            使用模板
+            使用此模板创作
           </a-button>
           <a-button size="large" @click="download"> 下载图片海报 </a-button>
         </div>
