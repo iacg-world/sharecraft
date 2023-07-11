@@ -1,4 +1,5 @@
 const { defineConfig } = require('@vue/cli-service')
+const path = require('path')
 const isStaging = !!process.env.VUE_APP_STAGINE
 const NODE_ENV = process.env.NODE_ENV
 const isProduction = NODE_ENV === 'production'
@@ -9,6 +10,7 @@ const { IgnorePlugin } = require('webpack')
 const mode = process.VUE_CLI_SERVICE.mode
 
 module.exports = defineConfig({
+  parallel: true,
   publicPath: isProduction && !isStaging ? '/' : '/',
   transpileDependencies: true,
   productionSourceMap: false,
@@ -84,6 +86,13 @@ module.exports = defineConfig({
         /* 如果有其他的东西被构建依赖，你可以在这里添加它们*/
         /* 注意，webpack.config，加载器和所有从你的配置中引用的模块都会被自动添加*/
       },
+      // cacheDirectory: path.resolve(__dirname, './node_modules/.cache_temp'),
+      // name: 'share-craft',
+      cacheLocation: path.resolve(
+        __dirname,
+        './node_modules/.cache_temp',
+        'share-craft'
+      ),
       // 指定缓存的版本
       version: '1.0',
     }
@@ -96,32 +105,32 @@ module.exports = defineConfig({
     config.optimization.splitChunks = {
       maxInitialRequests: Infinity,
       chunks: 'all',
-      maxSize: 300 * 1024,
-      minSize: 100 * 1024,
+      minSize: 50 * 1024,
+      name: 'common',
       cacheGroups: {
-        vendors: {
-          name: 'chunk-vendors',
-          chunks: 'initial',
-          test: /[\\/]node_modules[\\/]/,
-          maxSize: 300 * 1024,
-          minSize: 100 * 1024,
-          priority: -15,
-        },
         antVendor: {
           name: 'chunk-antd',
-          test: /[\\/]node_modules[\\/]ant-design-vue/,
-          maxSize: 300 * 1024,
-          minSize: 100 * 1024,
+          test: /[\\/]ant-design-vue/,
+          minSize: 30 * 1024,
           priority: -10,
-          reuseExistingChunk: true,
         },
         antIconVendor: {
           name: 'chunk-ant-icon',
-          test: /[\\/]node_modules[\\/]@ant-design/,
-          maxSize: 300 * 1024,
-          minSize: 100 * 1024,
+          test: /[\\/]@ant-design/,
+          minSize: 30 * 1024,
           priority: -5,
-          reuseExistingChunk: true,
+        },
+        lodash: {
+          name: 'chunk-lodash',
+          test: /[\\/]lodash-es/,
+          minSize: 30 * 1024,
+          priority: -5,
+        },
+        vuedraggable: {
+          name: 'chunk-vuedraggable',
+          test: /[\\/]vuedraggable/,
+          minSize: 30 * 1024,
+          priority: -5,
         },
       },
     }
