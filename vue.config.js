@@ -49,9 +49,9 @@ module.exports = defineConfig({
     config.plugins.delete('prefetch')
     config.plugins.delete('preload')
     config.externals({
-      vue: 'Vue',
-      'vue-router': 'VueRouter',
-      vuex: 'Vuex',
+      // vue: 'Vue',
+      // 'vue-router': 'VueRouter',
+      // vuex: 'Vuex',
       axios: 'axios',
       // vuedraggable: 'vuedraggable',
       cropperjs: 'Cropper',
