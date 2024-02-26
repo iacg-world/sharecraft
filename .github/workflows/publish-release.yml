@@ -54,7 +54,7 @@ jobs:
       - name: 'copy sharecraft folder via scp'
         uses: appleboy/scp-action@master
         with:
-          host: ${{ secrets.HOST_2 }}
+          host: ${{ secrets.HOST }}
           port: ${{ secrets.SSH_PORT }}
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PWD }}
@@ -64,7 +64,7 @@ jobs:
       - name: executing ssh and restart docker
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.HOST_2 }}
+          host: ${{ secrets.HOST }}
           port: ${{ secrets.SSH_PORT }}
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PWD }}
