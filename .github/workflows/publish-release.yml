@@ -2,6 +2,8 @@ name: 自动部署前端新版本到服务器
 # 在特定 tag 被 push 以后被触发
 on:
   push:
+    # branches:
+    #   - release
     tags:
       - 'v*.*.*'
 jobs:
