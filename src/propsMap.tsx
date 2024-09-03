@@ -119,6 +119,7 @@ export const mapPropsToForms: PropsToForms = {
   // imageComponentProps
   src: {
     component: 'image-processer',
+    text: '背景图片',
   },
   // commonComponentProps - sizes
   width: {

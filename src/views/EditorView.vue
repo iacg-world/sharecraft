@@ -37,7 +37,7 @@
     <a-layout>
       <a-layout-sider width="200" style="background: #fff">
         <div class="sidebar-container">
-          组件列表
+          <h2>组件列表</h2>
           <components-list
             :list="defaultTextTemplates"
             @onItemClick="addItem"
