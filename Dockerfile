@@ -6,8 +6,8 @@ RUN npm i pnpm@8 -g --registry=https://r.cnpmjs.org/
 RUN pnpm install --registry=https://r.cnpmjs.org/
 RUN pnpm run build
 
-FROM nginx:latest
-RUN mkdir -p /app
-COPY --from=0 /usr/src/sharecraft/dist /app
-COPY ./nginx.conf /etc/nginx/nginx.conf
-EXPOSE 80
+# FROM nginx:latest
+# RUN mkdir -p /app
+# COPY --from=0 /usr/src/sharecraft/dist /app
+# COPY ./nginx.conf /etc/nginx/nginx.conf
+# EXPOSE 80
