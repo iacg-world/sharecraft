@@ -78,7 +78,9 @@ const createDesign = async () => {
     data: payload,
   })
   message.success('创建作品成功', 2)
-  router.replace(`/editor/${data.id}`)
+  router.replace(`/editor/${data.id}`).then(() => {
+    window.location.reload()
+  })
 }
 
 const asyncError = () => {
