@@ -3,10 +3,10 @@ services:
   sharecraft:
     image: registry.cn-hangzhou.aliyuncs.com/supercll/craft-fe:{{tag}}
     container_name: "sharecraft"
-    # volumes:
-    #   - /etc/nginx/cert/:/etc/nginx/cert/
-    # ports:
-    #   - "80:80"
+    volumes:
+      - /etc/nginx/cert/:/etc/nginx/cert/
+    ports:
+      - "8080:8080"
     #   - "443:443"
     env_file:
       - .env
