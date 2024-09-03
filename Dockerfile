@@ -10,4 +10,4 @@ FROM nginx:latest
 RUN mkdir -p /app
 COPY --from=0 /usr/src/sharecraft/dist /app
 COPY ./nginx.conf /etc/nginx/nginx.conf
-EXPOSE 8080
+EXPOSE 4433

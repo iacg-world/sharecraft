@@ -6,7 +6,7 @@ services:
     volumes:
       - /etc/nginx/cert/:/etc/nginx/cert/
     ports:
-      - "8080:8080"
-    #   - "443:443"
+      # - "8080:8080"
+      - "4433:443"
     env_file:
       - .env
