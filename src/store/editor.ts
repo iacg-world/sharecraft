@@ -244,7 +244,7 @@ const editor: Module<EditorProps, GlobalDataProps> = {
     page: {
       id: 1,
       props: pageDefaultProps,
-      title: 'test title',
+      title: '双击编辑标题',
     },
     histories: [],
     historyIndex: -1,

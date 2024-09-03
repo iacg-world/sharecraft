@@ -119,7 +119,6 @@ export const mapPropsToForms: PropsToForms = {
   // imageComponentProps
   src: {
     component: 'image-processer',
-    text: '背景图片',
   },
   // commonComponentProps - sizes
   width: {
@@ -216,6 +215,7 @@ export const mapPropsToForms: PropsToForms = {
   backgroundImage: {
     ...defaultHandler,
     component: 'background-processer',
+    text: '背景图',
     initalTransform: (v: string) => {
       if (v) {
         const reg = /\(["'](.+)["']\)/g
