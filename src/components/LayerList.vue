@@ -39,11 +39,7 @@
           </a-button>
         </a-tooltip>
         <a-tooltip title="删除图层">
-          <a-button
-            shape="circle"
-            type="danger"
-            @click.stop="removeLayer(element.id)"
-          >
+          <a-button shape="circle" danger @click.stop="removeLayer(element.id)">
             <template v-slot:icon><DeleteOutlined /> </template
           ></a-button>
         </a-tooltip>
@@ -136,6 +132,7 @@ export default defineComponent({
   justify-content: normal;
   border: 1px solid #fff;
   border-bottom-color: #f0f0f0;
+  display: flex;
 }
 .ant-list-item.active {
   border: 1px solid #1890ff;

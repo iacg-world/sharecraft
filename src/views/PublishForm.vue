@@ -106,7 +106,7 @@ import { GlobalDataProps } from '@/store/index'
 import { baseH5URL } from '@/axios'
 import { generateQRCode } from '@/helper'
 import { last } from 'lodash-es'
-import { message } from 'ant-design-vue'
+import { message } from 'ant-design-vue/es'
 import ClipboardJS from 'clipboard'
 
 const store = useStore<GlobalDataProps>()

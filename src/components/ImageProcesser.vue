@@ -22,7 +22,7 @@
       <a-button @click="showModal = true">
         <template v-slot:icon><ScissorOutlined /></template>裁剪
       </a-button>
-      <a-button v-if="showDelete" type="danger" @click="handleDelete">
+      <a-button v-if="showDelete" danger @click="handleDelete">
         <template v-slot:icon><DeleteOutlined /></template>删除
       </a-button>
     </div>
@@ -31,7 +31,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, ref, watch, nextTick } from 'vue'
-import { message } from 'ant-design-vue'
+import { message } from 'ant-design-vue/es'
 import Cropper from 'cropperjs'
 import { DeleteOutlined, ScissorOutlined } from '@ant-design/icons-vue'
 import StyledUploader from './StyledUploader.vue'

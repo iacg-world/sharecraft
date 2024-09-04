@@ -46,7 +46,7 @@
 import { defineComponent, PropType } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
-import { message } from 'ant-design-vue'
+import { message } from 'ant-design-vue/es'
 import { UserProps } from '../store/user'
 import { DownOutlined, GithubFilled } from '@ant-design/icons-vue'
 import axios from 'axios'

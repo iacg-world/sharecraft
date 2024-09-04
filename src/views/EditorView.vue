@@ -359,9 +359,9 @@ export default defineComponent({
     display: flex;
     align-items: center;
   }
-  .inline-edit span {
+  .inline-edit > span {
     font-weight: 500;
-    margin-left: 10px;
+    margin-left: 15px;
     font-size: 16px;
   }
 }

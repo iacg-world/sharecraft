@@ -30,7 +30,20 @@
     >
     </works-list>
     <a-row type="flex" justify="end" align="middle">
-      <ul class="ant-pagination">
+      <a-pagination
+        v-model:current="currentPage"
+        v-model:page-size="pageSize"
+        :total="totalWorks"
+        @change="(current) => goToPage(current - 1)"
+        show-less-items
+      >
+        <template #itemRender="{ type, originalElement }">
+          <a v-if="type === 'prev'">上一页</a>
+          <a v-else-if="type === 'next'">下一页</a>
+          <component :is="originalElement" v-else></component>
+        </template>
+      </a-pagination>
+      <!-- <ul class="ant-pagination">
         <li
           class="ant-pagination-prev"
           :class="{ 'ant-pagination-disabled': isFirstPage }"
@@ -63,7 +76,7 @@
             >下一页</a-button
           >
         </li>
-      </ul>
+      </ul> -->
     </a-row>
   </div>
 </template>
@@ -75,7 +88,7 @@ import { useRouter } from 'vue-router'
 import { GlobalDataProps } from '../store/index'
 import WorksList from '../components/WorksList.vue'
 import useLoadMore from '../hooks/useLoadMore'
-import { message } from 'ant-design-vue'
+import { message } from 'ant-design-vue/es'
 import { Empty as AEmpty } from 'ant-design-vue/es'
 
 export default defineComponent({
@@ -92,7 +105,7 @@ export default defineComponent({
     const isTemplate = ref(0)
     const searchParams = computed(() => ({
       pageIndex: 0,
-      pageSize: 4,
+      pageSize: 8,
     }))
     onMounted(() => {
       store.dispatch('fetchWorks', { searchParams: searchParams.value })
@@ -103,9 +116,12 @@ export default defineComponent({
       isFirstPage,
       loadPrevPage,
       pageIndex,
+      currentPage,
+      pageSize,
       requestParams,
       goToPage,
       totalPage,
+      totalWorks,
     } = useLoadMore('fetchWorks', total, searchParams.value)
     const onDelete = async (id: number, isTemplate: number) => {
       await store.dispatch('deleteWorkAndFetch', { id, isTemplate })
@@ -158,8 +174,10 @@ export default defineComponent({
       isFirstPage,
       loadPrevPage,
       pageIndex,
+      pageSize,
       goToPage,
       totalPage,
+      totalWorks,
       publishTemplate,
       onChange,
       createDesign,

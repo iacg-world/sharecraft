@@ -9,8 +9,8 @@
       class="ant-input"
     />
     <slot v-else :text="innerValue"
-      ><span>{{ innerValue }}</span></slot
-    >
+      ><span>{{ innerValue }} <EditFilled /></span
+    ></slot>
   </div>
 </template>
 
@@ -18,8 +18,12 @@
 import { defineComponent, ref, watch, computed, nextTick } from 'vue'
 import useKeyPress from '../hooks/useKeyPress'
 import useClickOutside from '../hooks/useClickOutside'
+import { EditFilled } from '@ant-design/icons-vue'
 export default defineComponent({
   name: 'inline-edit',
+  components: {
+    EditFilled,
+  },
   props: {
     value: {
       type: String,
@@ -91,9 +95,13 @@ export default defineComponent({
 })
 </script>
 
-<style>
+<style lang="scss">
 .inline-edit {
   cursor: pointer;
+  input {
+    color: black;
+    height: 45px;
+  }
 }
 .ant-input.input-error {
   border: 1px solid #f5222d;

@@ -1,4 +1,4 @@
-import { message } from 'ant-design-vue'
+import { message } from 'ant-design-vue/es'
 import axios from 'axios'
 import { toBlob } from 'html-to-image'
 import { RespUploadData } from './respTypes'

@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@ant-design/icons-vue": "^6.1.0",
-    "ant-design-vue": "^3.2.20",
+    "ant-design-vue": "^4.2.3",
     "array-move": "^4.0.0",
     "axios": "^1.7.7",
     "babel-plugin-import": "^1.13.5",
