@@ -18,6 +18,12 @@
           <router-link to="/">
             <home-two-tone style="font-size: 26px" />
           </router-link>
+          <a>
+            <LeftCircleTwoTone
+              @click="back"
+              style="font-size: 26px; margin-left: 5px"
+            />
+          </a>
           <inline-edit :value="page.title" @change="titleChange" />
         </div>
         <div class="action_warp">
@@ -35,7 +41,7 @@
       </a-layout-header>
     </a-layout>
     <a-layout>
-      <a-layout-sider width="200" style="background: #fff">
+      <a-layout-sider width="160" style="background: #fff">
         <div class="sidebar-container">
           <h2>组件列表</h2>
           <components-list
@@ -89,7 +95,11 @@
         class="settings-panel"
       >
         <a-tabs type="card" v-model:activeKey="activePanel">
-          <a-tab-pane key="component" tab="属性设置" class="no-top-radius">
+          <a-tab-pane
+            key="component"
+            tab="属性设置"
+            class="no-top-radius tab_pane_content"
+          >
             <div v-if="currentElement">
               <edit-group
                 v-if="!currentElement.isLocked"
@@ -151,8 +161,10 @@ import {
   DoubleLeftOutlined,
   DoubleRightOutlined,
   HomeTwoTone,
+  LeftCircleTwoTone,
 } from '@ant-design/icons-vue'
 import { Empty as AEmpty } from 'ant-design-vue/es'
+import router from '@/router'
 
 export type TabType = 'component' | 'layer' | 'page'
 export default defineComponent({
@@ -173,6 +185,7 @@ export default defineComponent({
     AEmpty,
     DoubleLeftOutlined,
     DoubleRightOutlined,
+    LeftCircleTwoTone,
   },
   setup() {
     initHotKeys()
@@ -283,6 +296,9 @@ export default defineComponent({
       preview,
       showPreviewForm,
       switchEditStatus,
+      back: () => {
+        router.back()
+      },
     }
   },
 })
@@ -326,6 +342,10 @@ export default defineComponent({
     button {
       margin: 0 5px;
     }
+  }
+  .tab_pane_content {
+    max-height: 80vh;
+    overflow-y: auto;
   }
 }
 .page-title {
