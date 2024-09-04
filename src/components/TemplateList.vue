@@ -17,7 +17,7 @@
             <a-card-meta :title="item.title">
               <template v-slot:description>
                 <div class="description-detail">
-                  <span>作者：{{ item.author }}</span>
+                  <span>作者：{{ handlEprivacy(item) }}</span>
                   <span class="user-number">{{ item.copiedCount }}</span>
                 </div>
               </template>
@@ -42,6 +42,18 @@ export default defineComponent({
     list: {
       type: Array as PropType<TemplateProps[]>,
       required: true,
+    },
+  },
+  methods: {
+    handlEprivacy(item: TemplateProps) {
+      const name = item.user?.nickName ? item.user.nickName : item.author
+      if (/^1[3456789]\d{9}/.test(name)) {
+        return name.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')
+      } else if (/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/.test(name)) {
+        return name.replace(/(\w{1,3})\w+(\w{1,2}@\w+\.\w+)/, '$1***$2')
+      } else {
+        return name
+      }
     },
   },
 })
