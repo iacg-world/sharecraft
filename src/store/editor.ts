@@ -43,7 +43,7 @@ export interface PageData {
     gender: string
     nickName: string
     picture: string
-    userName: string
+    username: string
   }
 }
 
