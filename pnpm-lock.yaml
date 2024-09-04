@@ -15,8 +15,8 @@ dependencies:
     specifier: ^4.0.0
     version: 4.0.0
   axios:
-    specifier: ^0.27.2
-    version: 0.27.2
+    specifier: ^1.7.7
+    version: 1.7.7
   babel-plugin-import:
     specifier: ^1.13.5
     version: 1.13.5
@@ -3812,11 +3812,12 @@ packages:
       possible-typed-array-names: 1.0.0
     dev: true
 
-  /axios@0.27.2:
-    resolution: {integrity: sha512-t+yRIyySRTp/wua5xEr+z1q60QmLq8ABsS5O9Me1AsE5dfKqgnCFzwiCZZ/cGNd1lq4/7akDWMxdhVlucjmnOQ==}
+  /axios@1.7.7:
+    resolution: {integrity: sha512-S4kL7XrjgBmvdGut0sN3yJxqYzrDOnivkBiN0OFs6hLiUam3UPvswUo0kqGyhqUZGEOytHyumEdXsAkgCOUf3Q==}
     dependencies:
       follow-redirects: 1.15.8(debug@4.3.6)
       form-data: 4.0.0
+      proxy-from-env: 1.1.0
     transitivePeerDependencies:
       - debug
     dev: false
@@ -9830,7 +9831,6 @@ packages:
 
   /proxy-from-env@1.1.0:
     resolution: {integrity: sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==}
-    dev: true
 
   /pseudomap@1.0.2:
     resolution: {integrity: sha512-b/YwNhb8lk1Zz2+bXXpS/LK9OisiZZ1SNsSLxN1x2OXVEhW2Ckr/7mWE5vrC1ZTiJlD9g19jWszTmJsB+oEpFQ==}
