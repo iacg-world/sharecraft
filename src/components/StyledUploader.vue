@@ -79,7 +79,7 @@ export default defineComponent({
 .styled-uploader {
   .uploader-container {
     width: 100px;
-    padding: 10px;
+    padding: 5px 10px;
     color: #ffffff;
     background: #1890ff;
     display: flex;
@@ -94,7 +94,7 @@ export default defineComponent({
     h4 {
       color: #ffffff;
       margin-bottom: 0;
-      margin-left: 10px;
+      margin-left: 5px;
     }
     img {
       width: 100%;

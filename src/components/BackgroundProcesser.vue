@@ -14,7 +14,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { message } from 'ant-design-vue'
+import { message } from 'ant-design-vue/es'
 import ImageProcesser from './ImageProcesser.vue'
 import StyledUploader from './StyledUploader.vue'
 import { UploadResp } from '../extraType'

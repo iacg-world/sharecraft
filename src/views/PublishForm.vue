@@ -79,7 +79,7 @@
 
           <a-tab-pane key="template" tab="发布为模板">
             <a-form>
-              <a-form-item label="Resources">
+              <a-form-item label="发布模板">
                 <a-radio-group v-model:value="isPublic">
                   <a-radio :value="0">发布为个人模板</a-radio>
                   <a-radio :value="1">发布为公开模板</a-radio>
@@ -106,7 +106,7 @@ import { GlobalDataProps } from '@/store/index'
 import { baseH5URL } from '@/axios'
 import { generateQRCode } from '@/helper'
 import { last } from 'lodash-es'
-import { message } from 'ant-design-vue'
+import { message } from 'ant-design-vue/es'
 import ClipboardJS from 'clipboard'
 
 const store = useStore<GlobalDataProps>()

@@ -11,10 +11,10 @@
           <a-menu-item key="2" @click="apiError">接口错误</a-menu-item>
         </a-menu>
       </template>
-      <a-button>
+      <!-- <a-button>
         错误触发器
         <DownOutlined />
-      </a-button>
+      </a-button> -->
     </a-dropdown>
     <a-button v-if="$route.path === '/'"
       ><router-link to="/works">我的作品</router-link></a-button
@@ -46,7 +46,7 @@
 import { defineComponent, PropType } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
-import { message } from 'ant-design-vue'
+import { message } from 'ant-design-vue/es'
 import { UserProps } from '../store/user'
 import { DownOutlined, GithubFilled } from '@ant-design/icons-vue'
 import axios from 'axios'
@@ -78,7 +78,9 @@ const createDesign = async () => {
     data: payload,
   })
   message.success('创建作品成功', 2)
-  router.push(`/editor/${data.id}`)
+  router.replace(`/editor/${data.id}`).then(() => {
+    window.location.reload()
+  })
 }
 
 const asyncError = () => {

@@ -113,6 +113,9 @@ export default defineComponent({
 </script>
 
 <style>
+.props-table {
+  padding: 0 5px;
+}
 .prop-item {
   display: flex;
   margin-bottom: 10px;

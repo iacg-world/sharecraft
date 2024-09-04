@@ -215,6 +215,7 @@ export const mapPropsToForms: PropsToForms = {
   backgroundImage: {
     ...defaultHandler,
     component: 'background-processer',
+    text: '背景图',
     initalTransform: (v: string) => {
       if (v) {
         const reg = /\(["'](.+)["']\)/g

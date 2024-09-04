@@ -1,4 +1,4 @@
-import { message } from 'ant-design-vue'
+import { message } from 'ant-design-vue/es'
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import Home from '../views/HomeView.vue'
 import TemplateDetail from '../views/TemplateDetail.vue'

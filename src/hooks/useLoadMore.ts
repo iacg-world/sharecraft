@@ -34,12 +34,15 @@ const useLoadMore = (
   return {
     loadMorePage,
     isLastPage,
+    currentPage: computed(() => pageIndex.value + 1),
     pageIndex,
+    pageSize: params.pageSize,
     loadPrevPage,
     isFirstPage,
     requestParams,
     goToPage,
     totalPage,
+    totalWorks: computed(() => total.value),
   }
 }
 export default useLoadMore

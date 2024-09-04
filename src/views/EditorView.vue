@@ -18,6 +18,12 @@
           <router-link to="/">
             <home-two-tone style="font-size: 26px" />
           </router-link>
+          <a>
+            <LeftCircleTwoTone
+              @click="back"
+              style="font-size: 26px; margin-left: 5px"
+            />
+          </a>
           <inline-edit :value="page.title" @change="titleChange" />
         </div>
         <div class="action_warp">
@@ -35,9 +41,9 @@
       </a-layout-header>
     </a-layout>
     <a-layout>
-      <a-layout-sider width="200" style="background: #fff">
+      <a-layout-sider width="160" style="background: #fff">
         <div class="sidebar-container">
-          组件列表
+          <h2>组件列表</h2>
           <components-list
             :list="defaultTextTemplates"
             @onItemClick="addItem"
@@ -49,12 +55,8 @@
         <a-layout-content class="preview-container">
           <p>画布区域</p>
           <history-area></history-area>
-          <div
-            class="preview-list"
-            id="canvas-area"
-            :class="{ 'canvas-fix': canvasFix }"
-          >
-            <div class="body-container" :style="page.props">
+          <div class="preview-list" :class="{ 'canvas-fix': canvasFix }">
+            <div class="body-container" id="canvas-area" :style="page.props">
               <edit-wrapper
                 @setActive="setActive"
                 @removeComponent="removeComponent"
@@ -93,7 +95,11 @@
         class="settings-panel"
       >
         <a-tabs type="card" v-model:activeKey="activePanel">
-          <a-tab-pane key="component" tab="属性设置" class="no-top-radius">
+          <a-tab-pane
+            key="component"
+            tab="属性设置"
+            class="no-top-radius tab_pane_content"
+          >
             <div v-if="currentElement">
               <edit-group
                 v-if="!currentElement.isLocked"
@@ -155,8 +161,10 @@ import {
   DoubleLeftOutlined,
   DoubleRightOutlined,
   HomeTwoTone,
+  LeftCircleTwoTone,
 } from '@ant-design/icons-vue'
 import { Empty as AEmpty } from 'ant-design-vue/es'
+import router from '@/router'
 
 export type TabType = 'component' | 'layer' | 'page'
 export default defineComponent({
@@ -177,6 +185,7 @@ export default defineComponent({
     AEmpty,
     DoubleLeftOutlined,
     DoubleRightOutlined,
+    LeftCircleTwoTone,
   },
   setup() {
     initHotKeys()
@@ -287,6 +296,9 @@ export default defineComponent({
       preview,
       showPreviewForm,
       switchEditStatus,
+      back: () => {
+        router.back()
+      },
     }
   },
 })
@@ -331,6 +343,10 @@ export default defineComponent({
       margin: 0 5px;
     }
   }
+  .tab_pane_content {
+    max-height: 80vh;
+    overflow-y: auto;
+  }
 }
 .page-title {
   display: flex;
@@ -343,9 +359,9 @@ export default defineComponent({
     display: flex;
     align-items: center;
   }
-  .inline-edit span {
+  .inline-edit > span {
     font-weight: 500;
-    margin-left: 10px;
+    margin-left: 15px;
     font-size: 16px;
   }
 }

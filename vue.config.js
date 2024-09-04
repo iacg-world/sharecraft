@@ -52,15 +52,14 @@ module.exports = defineConfig({
       // vue: 'Vue',
       // 'vue-router': 'VueRouter',
       // vuex: 'Vuex',
-      axios: 'axios',
+      // axios: 'axios',
       // vuedraggable: 'vuedraggable',
-      cropperjs: 'Cropper',
-      html2canvas: 'html2canvas',
+      // cropperjs: 'Cropper',
       // 'ant-design-vue': 'antd',
     })
     config.plugin('html').tap((args) => {
       args[0].title = '分享乐'
-      args[0].desc = '一键生成 H5 海报进行分享'
+      args[0].desc = '一键生成海报'
       return args
     })
   },
@@ -111,15 +110,14 @@ module.exports = defineConfig({
         antVendor: {
           name: 'chunk-antd',
           test: /[\\/]ant-design-vue/,
-          minSize: 30 * 1024,
-          priority: -10,
+          priority: 10,
         },
         antIconVendor: {
           name: 'chunk-ant-icon',
           test: /[\\/]@ant-design/,
-          minSize: 30 * 1024,
-          priority: -5,
+          priority: 10,
         },
+
         lodash: {
           name: 'chunk-lodash',
           test: /[\\/]lodash-es/,

@@ -10,24 +10,26 @@
       <a-layout-content class="home-layout">
         <router-view></router-view>
       </a-layout-content>
+      <ALayoutFooter>
+        © lc404 (sharecraft.lc404.com) 版权所有
+        <a href="https://beian.miit.gov.cn/" target="_blank"
+          >蜀ICP备2023012528号</a
+        ></ALayoutFooter
+      >
     </a-layout>
-    <a-layout-footer>
-      © lc404 (sharecraft.lc404.com) 版权所有
-      <a href="https://beian.miit.gov.cn/" target="_blank"
-        >蜀ICP备2023012528号</a
-      ></a-layout-footer
-    >
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" scope>
 import { computed, defineComponent } from 'vue'
 import { useStore } from 'vuex'
 import { GlobalDataProps } from '../store/index'
 import UserProfile from '../components/UserProfile.vue'
+import { LayoutFooter as ALayoutFooter } from 'ant-design-vue/es'
 export default defineComponent({
   components: {
     UserProfile,
+    ALayoutFooter,
   },
   setup() {
     const store = useStore<GlobalDataProps>()

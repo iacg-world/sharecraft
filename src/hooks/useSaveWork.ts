@@ -1,7 +1,7 @@
 import { computed, onMounted, onUnmounted } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute, onBeforeRouteLeave } from 'vue-router'
-import { Modal } from 'ant-design-vue'
+import { Modal } from 'ant-design-vue/es'
 import { GlobalDataProps } from '../store/index'
 
 function useSaveWork(disableSideEffects = false) {

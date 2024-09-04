@@ -2,7 +2,7 @@ import { Module, Mutation } from 'vuex'
 import { v4 as uuidv4 } from 'uuid'
 import store, { actionWrapper, GlobalDataProps } from './index'
 import { AllComponentProps, textDefaultProps } from '../defaultProps'
-import { message } from 'ant-design-vue'
+import { message } from 'ant-design-vue/es'
 import { cloneDeep, debounce } from 'lodash-es'
 import { insertAt } from '../helper'
 import { RespData, RespListData, RespWorkData } from '@/respTypes'
@@ -43,7 +43,7 @@ export interface PageData {
     gender: string
     nickName: string
     picture: string
-    userName: string
+    username: string
   }
 }
 
@@ -244,7 +244,7 @@ const editor: Module<EditorProps, GlobalDataProps> = {
     page: {
       id: 1,
       props: pageDefaultProps,
-      title: 'test title',
+      title: '双击编辑标题',
     },
     histories: [],
     historyIndex: -1,
