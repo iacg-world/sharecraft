@@ -49,12 +49,8 @@
         <a-layout-content class="preview-container">
           <p>画布区域</p>
           <history-area></history-area>
-          <div
-            class="preview-list"
-            id="canvas-area"
-            :class="{ 'canvas-fix': canvasFix }"
-          >
-            <div class="body-container" :style="page.props">
+          <div class="preview-list" :class="{ 'canvas-fix': canvasFix }">
+            <div class="body-container" id="canvas-area" :style="page.props">
               <edit-wrapper
                 @setActive="setActive"
                 @removeComponent="removeComponent"

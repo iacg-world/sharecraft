@@ -105,7 +105,7 @@ export default defineComponent({
       pick(props.props, ['position', 'top', 'left', 'width', 'height'])
     )
     const calculateMovePosition = (e: MouseEvent) => {
-      const container = document.getElementById('canvas-area') as HTMLElement
+      const container = document.querySelector('.preview-list') as HTMLElement
       const left = e.clientX - gap.x - container.offsetLeft
       const top = e.clientY - gap.y - container.offsetTop + container.scrollTop
       return {
@@ -150,7 +150,7 @@ export default defineComponent({
     ) => {
       const { clientX, clientY } = e
       const { left, right, top, bottom } = positions
-      const container = document.getElementById('canvas-area') as HTMLElement
+      const container = document.querySelector('.preview-list') as HTMLElement
       const rightWidth = clientX - left
       const leftWidth = right - clientX
       const bottomHeight = clientY - top

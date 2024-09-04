@@ -1,6 +1,6 @@
 import { message } from 'ant-design-vue'
 import axios from 'axios'
-import html2canvas from 'html2canvas'
+import { toBlob } from 'html-to-image'
 import { RespUploadData } from './respTypes'
 import QRCode from 'qrcode'
 import { saveAs } from 'file-saver'
@@ -119,8 +119,7 @@ function getCanvasBlob(canvas: HTMLCanvasElement) {
   })
 }
 export async function takeScreenshotAndUpload(ele: HTMLElement) {
-  const canvas = await html2canvas(ele, { width: 375, useCORS: true, scale: 1 })
-  const canvasBlob = await getCanvasBlob(canvas)
+  const canvasBlob = await toBlob(ele, { width: 375 })
   if (canvasBlob) {
     const data = await uploadFile<RespUploadData>(canvasBlob)
     return data

@@ -21,7 +21,7 @@
     "cropperjs": "^1.5.12",
     "file-saver": "^2.0.5",
     "hotkeys-js": "^3.10.2",
-    "html2canvas": "^1.4.1",
+    "html-to-image": "^1.11.11",
     "iacg-block": "^1.0.3",
     "lodash-es": "^4.17.21",
     "path-to-regexp": "^6.2.1",

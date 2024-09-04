@@ -55,7 +55,7 @@ module.exports = defineConfig({
       axios: 'axios',
       // vuedraggable: 'vuedraggable',
       cropperjs: 'Cropper',
-      html2canvas: 'html2canvas',
+      // html2canvas: 'html2canvas',
       // 'ant-design-vue': 'antd',
     })
     config.plugin('html').tap((args) => {
