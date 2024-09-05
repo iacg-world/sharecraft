@@ -19,7 +19,7 @@ export const defaultTextTemplates = [
   },
   {
     text: '链接内容',
-    color: '#1890ff',
+    color: '#75409A',
     textDecoration: 'underline',
     fontWeight: 'normal',
     tag: 'p',
@@ -28,9 +28,9 @@ export const defaultTextTemplates = [
   {
     text: '按钮内容',
     color: '#ffffff',
-    backgroundColor: '#1890ff',
+    backgroundColor: '#75409A',
     borderWidth: '1px',
-    borderColor: '#1890ff',
+    borderColor: '#75409A',
     borderStyle: 'solid',
     borderRadius: '2px',
     paddingLeft: '10px',

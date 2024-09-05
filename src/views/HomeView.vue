@@ -60,9 +60,6 @@ export default defineComponent({
 </script>
 
 <style>
-.page-title {
-  color: #fff;
-}
 .content-container {
   background: #fff;
   padding: 20px 24px 24px 30px;

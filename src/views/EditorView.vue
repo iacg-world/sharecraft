@@ -16,13 +16,10 @@
       <a-layout-header class="header">
         <div class="page-title">
           <router-link to="/">
-            <home-two-tone style="font-size: 26px" />
+            <HomeOutlined />
           </router-link>
           <a>
-            <LeftCircleTwoTone
-              @click="back"
-              style="font-size: 26px; margin-left: 5px"
-            />
+            <LeftCircleOutlined @click="back" style="margin-left: 10px" />
           </a>
           <inline-edit :value="page.title" @change="titleChange" />
         </div>
@@ -160,8 +157,8 @@ import PreviewForm from './editor/PreviewForm.vue'
 import {
   DoubleLeftOutlined,
   DoubleRightOutlined,
-  HomeTwoTone,
-  LeftCircleTwoTone,
+  HomeOutlined,
+  LeftCircleOutlined,
 } from '@ant-design/icons-vue'
 import { Empty as AEmpty } from 'ant-design-vue/es'
 import router from '@/router'
@@ -181,11 +178,11 @@ export default defineComponent({
     UserProfile,
     PublishForm,
     PreviewForm,
-    HomeTwoTone,
+    HomeOutlined,
     AEmpty,
     DoubleLeftOutlined,
     DoubleRightOutlined,
-    LeftCircleTwoTone,
+    LeftCircleOutlined,
   },
   setup() {
     initHotKeys()
@@ -387,7 +384,7 @@ export default defineComponent({
   transform: translateY(-50%);
   cursor: pointer;
   border-radius: 8px 0 0 8px;
-  background-color: #1890ff;
+  background-color: #75409a;
   color: #fff !important;
 
   .text {

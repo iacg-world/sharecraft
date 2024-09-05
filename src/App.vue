@@ -1,7 +1,15 @@
 <template>
   <div class="app-container">
-    <a-spin v-if="showLoading" tip="读取中" class="global-spinner" />
-    <router-view />
+    <a-config-provider
+      :theme="{
+        token: {
+          colorPrimary: '#75409A',
+        },
+      }"
+    >
+      <a-spin v-if="showLoading" tip="读取中" class="global-spinner" />
+      <router-view />
+    </a-config-provider>
   </div>
 </template>
 

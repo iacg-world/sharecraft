@@ -2,9 +2,14 @@
   <div class="homepage-container">
     <a-layout :style="{ background: '#fff' }">
       <a-layout-header class="home-layout-header">
-        <div class="page-title">
-          <router-link v-if="route.fullPath === '/'" to="/">分享乐</router-link>
-          <router-link v-else to="/"><HomeTwoTone /></router-link>
+        <div class="page-title page-icon">
+          <a
+            v-if="route.fullPath === '/'"
+            href="https://github.com/iacg-world/sharecraft"
+            target="_blank"
+            >分享乐<GithubFilled style="margin-left: 5px"
+          /></a>
+          <router-link v-else to="/"><HomeOutlined /></router-link>
         </div>
         <user-profile :user="user"></user-profile>
       </a-layout-header>
@@ -20,8 +25,7 @@
           style="color: white; font-size: 20px; margin-left: 10px"
           href="https://github.com/iacg-world/sharecraft"
           target="_blank"
-          ><GithubFilled
-        /></a>
+        ></a>
       </ALayoutFooter>
     </a-layout>
   </div>
@@ -33,7 +37,7 @@ import { useStore } from 'vuex'
 import { GlobalDataProps } from '../store/index'
 import UserProfile from '../components/UserProfile.vue'
 import { GithubFilled } from '@ant-design/icons-vue'
-import { HomeTwoTone } from '@ant-design/icons-vue'
+import { HomeOutlined } from '@ant-design/icons-vue'
 import { useRoute } from 'vue-router'
 
 const store = useStore<GlobalDataProps>()
@@ -42,6 +46,10 @@ const route = useRoute()
 </script>
 
 <style lang="scss">
+.page-icon {
+  display: flex;
+  align-items: center;
+}
 .home-layout-header {
   height: 10vh !important;
   line-height: unset !important;
