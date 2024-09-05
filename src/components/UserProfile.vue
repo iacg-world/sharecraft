@@ -33,12 +33,6 @@
         </a-menu>
       </template>
     </a-dropdown-button>
-    <a
-      style="color: white; font-size: 20px; margin-left: 10px"
-      href="https://github.com/iacg-world/sharecraft"
-      target="_blank"
-      ><GithubFilled
-    /></a>
   </div>
 </template>
 
@@ -48,7 +42,7 @@ import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import { message } from 'ant-design-vue/es'
 import { UserProps } from '../store/user'
-import { DownOutlined, GithubFilled } from '@ant-design/icons-vue'
+import { DownOutlined } from '@ant-design/icons-vue'
 import axios from 'axios'
 
 // eslint-disable-next-line no-undef
@@ -58,8 +52,6 @@ defineProps({
     required: true,
   },
 })
-
-defineComponent({ GithubFilled, DownOutlined })
 
 const store = useStore()
 const router = useRouter()

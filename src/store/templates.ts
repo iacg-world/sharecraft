@@ -63,7 +63,6 @@ const templates: Module<TemplatesProps, GlobalDataProps> = {
       )
     },
     deleteWorkAndFetch({ dispatch }, { id, isTemplate }) {
-      debugger
       return dispatch('deleteWork', { urlParams: { id } }).then(() => {
         const searchParams = {
           pageIndex: 0,

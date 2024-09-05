@@ -98,7 +98,7 @@ export default defineComponent({
   font-weight: bold;
 }
 .poster-title {
-  height: 70px;
+  height: 50px;
 }
 .poster-title h2 {
   margin-bottom: 0px;

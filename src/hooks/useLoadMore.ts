@@ -1,4 +1,4 @@
-import { computed, ComputedRef, reactive, toRef } from 'vue'
+import { computed, ComputedRef, reactive, ref, toRef } from 'vue'
 import { useStore } from 'vuex'
 interface LoadParams {
   pageIndex: number
@@ -31,10 +31,11 @@ const useLoadMore = (
     return totalPage.value === requestParams.pageIndex + 1
   })
   const pageIndex = toRef(requestParams, 'pageIndex')
+  const currentPage = computed(() => pageIndex.value + 1)
   return {
     loadMorePage,
     isLastPage,
-    currentPage: computed(() => pageIndex.value + 1),
+    currentPage,
     pageIndex,
     pageSize: params.pageSize,
     loadPrevPage,
