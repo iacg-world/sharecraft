@@ -28,10 +28,10 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
 const defaultColors = [
+  '#ffffff',
   '#f5f2e9',
   '#a11715',
   '#ff4364',
-  '#fadb14',
   '#C7EDCC',
   '#2e59a7',
   '#722ed1',
