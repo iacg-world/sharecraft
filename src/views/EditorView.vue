@@ -305,6 +305,7 @@ export default defineComponent({
 .editor-container {
   .header {
     display: flex;
+    justify-content: space-between;
     .ant-menu {
       flex: 1;
       justify-content: flex-end;
