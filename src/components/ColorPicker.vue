@@ -31,7 +31,7 @@ const defaultColors = [
   '#ffffff',
   '#f5f2e9',
   '#a11715',
-  '#ff4364',
+  '#f5deb3',
   '#C7EDCC',
   '#2e59a7',
   '#722ed1',
