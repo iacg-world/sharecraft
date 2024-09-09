@@ -180,7 +180,7 @@ export const mapPropsToForms: PropsToForms = {
     component: 'a-slider',
     text: '透明度',
     initalTransform: (v: number) => (v ? v * 100 : 100),
-    afterTransform: (e: number) => e / 100,
+    afterTransform: (e: number) => String(e / 100),
     extraProps: { min: 0, max: 100, reverse: true },
   },
   boxShadow: {
