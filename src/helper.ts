@@ -111,7 +111,7 @@ export async function uploadFile<R = any>(
   })
   return data
 }
-function getCanvasBlob(canvas: HTMLCanvasElement) {
+export function getCanvasBlob(canvas: HTMLCanvasElement) {
   return new Promise<Blob | null>((resolve) => {
     canvas.toBlob((blob) => {
       resolve(blob)

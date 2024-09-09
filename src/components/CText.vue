@@ -2,14 +2,18 @@
   <component
     :is="tag"
     :style="styleProps"
+    contenteditable="true"
     class="c-text-component"
     @click="handleClick"
+    @input="onChange"
+    @focus="handleFocus"
+    @blur="handleBlur"
   >
-    {{ text }}
+    {{ isFocus ? innerText : text }}
   </component>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 import useComponentCommon from '../hooks/useComponentCommon'
 import {
   transformToComponentProps,
@@ -28,22 +32,44 @@ export default defineComponent({
     },
     ...defaultProps,
   },
-  setup(props) {
+  emits: ['change'],
+  setup(props, context) {
+    let isFocus = ref(false)
+    let innerText = ref(props.text)
     // 重用并且简化
     // 抽离并且获得 styleProps
     const { styleProps, handleClick } = useComponentCommon(
       props,
       textStylePropNames
     )
+    const onChange = (e: Event) => {
+      const text = (e.target as HTMLParagraphElement).innerText
+      context.emit('change', {
+        key: 'text',
+        value: text,
+      })
+    }
+    const handleFocus = () => {
+      innerText.value = props.text
+      isFocus.value = true
+    }
+    const handleBlur = () => {
+      isFocus.value = false
+    }
     return {
       styleProps,
       handleClick,
+      onChange,
+      handleFocus,
+      handleBlur,
+      innerText,
+      isFocus,
     }
   },
 })
 </script>
 
-<style scoped>
+<style>
 h2.c-text-component,
 p.c-text-component {
   margin-bottom: 0;

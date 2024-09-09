@@ -5,7 +5,6 @@
     :style="styles"
     :data-component-id="id"
     @click="onItemClick(id)"
-    @dblclick="onChangeEditStatus(id)"
     @mousedown="startMove"
     :class="{ active: active && isEditing, hidden: hidden }"
   >
@@ -114,7 +113,7 @@ export default defineComponent({
       }
     }
     const startMove = (e: MouseEvent) => {
-      e.preventDefault && e.preventDefault()
+      // e.preventDefault && e.preventDefault()
       const currentElement = editWrapper.value
       if (currentElement) {
         const { left, top } = currentElement.getBoundingClientRect()
@@ -256,6 +255,7 @@ export default defineComponent({
       display: block;
       position: absolute !important;
       top: 0;
+      z-index: -1;
     }
     .resizers .resizer {
       width: 10px;

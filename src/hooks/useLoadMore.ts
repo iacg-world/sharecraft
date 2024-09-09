@@ -1,4 +1,4 @@
-import { computed, ComputedRef, reactive, ref, toRef } from 'vue'
+import { computed, ComputedRef, reactive, toRef } from 'vue'
 import { useStore } from 'vuex'
 interface LoadParams {
   pageIndex: number

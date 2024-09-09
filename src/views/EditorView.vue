@@ -67,6 +67,11 @@
               >
                 <component
                   :is="component.name"
+                  @change="(data: any) => onchange({
+                    id: component.id,
+                    key: data.key,
+                    value: data.value
+                  })"
                   v-bind="component.props"
                   :isEditing="isEditing"
                 />
@@ -135,7 +140,7 @@
 import { defineComponent, computed, ref, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { GlobalDataProps } from '../store/index'
-import { CText, CImage } from 'iacg-block'
+import { CImage } from 'iacg-block'
 import ComponentsList from '../components/ComponentsList.vue'
 import EditWrapper from '../components/EditWrapper.vue'
 import PropsTable from '../components/PropsTable.vue'
@@ -162,6 +167,7 @@ import {
 } from '@ant-design/icons-vue'
 import { Empty as AEmpty } from 'ant-design-vue/es'
 import router from '@/router'
+import CText from '@/components/CText.vue'
 
 export type TabType = 'component' | 'layer' | 'page'
 export default defineComponent({
@@ -269,6 +275,9 @@ export default defineComponent({
     const switchEditStatus = (status: boolean) => {
       store.commit('setEditStatus', !status)
     }
+    const onchange = (data: { id: string; key: string; value: string }) => {
+      handleChange(data)
+    }
     return {
       components,
       defaultTextTemplates,
@@ -296,6 +305,7 @@ export default defineComponent({
       back: () => {
         router.back()
       },
+      onchange,
     }
   },
 })
