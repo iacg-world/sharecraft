@@ -149,7 +149,7 @@ import EditGroup from '../components/EditGroup.vue'
 import HistoryArea from './editor/HistoryArea.vue'
 import { ComponentData } from '../store/editor'
 import defaultTextTemplates from '../defaultTemplates'
-import { pickBy } from 'lodash-es'
+import { cloneDeep, pickBy } from 'lodash-es'
 import initHotKeys from '@/plugins/hotKeys'
 import initContextMenu from '../plugins/contextMenu'
 import { useRoute } from 'vue-router'
@@ -205,10 +205,8 @@ export default defineComponent({
     const page = computed(() => store.state.editor.page)
     const userInfo = computed(() => store.state.user)
 
-    const addItem = (component: any) => {
-      console.log('addItem: ', component)
-
-      store.commit('addComponent', component)
+    const addItem = (component: ComponentData) => {
+      store.commit('addComponent', cloneDeep(component))
     }
     const setActive = (id: string) => {
       store.commit('setActive', id)
