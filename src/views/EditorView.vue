@@ -40,12 +40,14 @@
     <a-layout>
       <a-layout-sider width="160" style="background: #fff">
         <div class="sidebar-container">
-          <h2>组件列表</h2>
-          <components-list
-            :list="defaultTextTemplates"
-            @onItemClick="addItem"
-          />
-          <img id="test-image" :style="{ width: '300px' }" />
+          <a-collapse activeKey="component" accordion>
+            <a-collapse-panel key="component" header="组件列表">
+              <components-list
+                :list="defaultTextTemplates"
+                @onItemClick="addItem"
+              />
+            </a-collapse-panel>
+          </a-collapse>
         </div>
       </a-layout-sider>
       <a-layout style="padding: 0 24px 24px; position: relative">
