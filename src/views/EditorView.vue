@@ -1,19 +1,19 @@
 <template>
-  <div class="editor-container">
-    <a-modal
-      title="发布成功"
-      v-model:visible="showPublishForm"
-      width="60vw"
-      :footer="null"
-    >
-      <publish-form />
-    </a-modal>
-    <preview-form
-      v-model:visible="showPreviewForm"
-      v-if="showPreviewForm"
-    ></preview-form>
-    <a-layout>
+  <a-flex vertical class="editor-container">
+    <a-layout style="height: 6vh; flex-grow: 0">
       <a-layout-header class="header">
+        <a-modal
+          title="发布成功"
+          v-model:visible="showPublishForm"
+          width="60vw"
+          :footer="null"
+        >
+          <publish-form />
+        </a-modal>
+        <preview-form
+          v-model:visible="showPreviewForm"
+          v-if="showPreviewForm"
+        ></preview-form>
         <div class="page-title">
           <router-link to="/">
             <HomeOutlined />
@@ -37,7 +37,7 @@
         </div>
       </a-layout-header>
     </a-layout>
-    <a-layout>
+    <a-layout style="flex: 1">
       <a-layout-sider width="160" style="background: #fff">
         <div class="sidebar-container">
           <a-collapse activeKey="component" accordion>
@@ -50,7 +50,7 @@
           </a-collapse>
         </div>
       </a-layout-sider>
-      <a-layout style="padding: 0 24px 24px; position: relative">
+      <a-layout style="position: relative">
         <a-layout-content class="preview-container">
           <p>画布区域</p>
           <history-area></history-area>
@@ -93,10 +93,12 @@
         </div>
       </a-layout>
       <a-layout-sider
-        v-show="isEditing"
         width="320"
         style="background: #fff"
         class="settings-panel"
+        collapsible
+        collapsedWidth="0"
+        :collapsed="!isEditing"
       >
         <a-tabs type="card" v-model:activeKey="activePanel">
           <a-tab-pane
@@ -135,7 +137,7 @@
         </a-tabs>
       </a-layout-sider>
     </a-layout>
-  </div>
+  </a-flex>
 </template>
 
 <script lang="ts">
@@ -208,6 +210,10 @@ export default defineComponent({
     const userInfo = computed(() => store.state.user)
 
     const addItem = (component: ComponentData) => {
+      if (component.name === 'c-text') {
+        component.props.paddingTop = '3px'
+        component.props.paddingBottom = '3px'
+      }
       store.commit('addComponent', cloneDeep(component))
     }
     const setActive = (id: string) => {
@@ -313,16 +319,20 @@ export default defineComponent({
 
 <style lang="scss">
 .editor-container {
+  height: 100vh;
+  overflow: hidden;
   .header {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    height: 100%;
     .ant-menu {
       flex: 1;
       justify-content: flex-end;
     }
   }
   .preview-container {
-    padding: 24px;
+    padding: 16px;
     margin: 0;
     min-height: 85vh;
     display: flex;
@@ -334,17 +344,17 @@ export default defineComponent({
     padding: 0;
     margin: 0;
     min-width: 375px;
-    min-height: 200px;
+    max-height: 85%;
+    top: 12%;
     border: 1px solid #efefef;
     background: #fff;
     overflow-x: hidden;
     overflow-y: auto;
     position: fixed;
-    margin-top: 50px;
-    max-height: 80vh;
   }
   .action_warp {
     display: flex;
+    align-items: center;
   }
   .action_buttons {
     button {
@@ -394,7 +404,7 @@ export default defineComponent({
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
-  border-radius: 8px 0 0 8px;
+  border-radius: 4px 0 0 4px;
   background-color: #75409a;
   color: #fff !important;
 

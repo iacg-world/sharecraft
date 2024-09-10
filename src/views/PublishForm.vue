@@ -1,20 +1,22 @@
 <template>
   <div class="publish-channel-container">
-    <a-row :style="{ marginBottom: '10px', marginTop: '20px' }">
-      <a-col :span="8" class="left-col">
-        <img :src="page.coverImg" :alt="page.title" />
+    <a-row :gutter="20" :style="{ marginBottom: '10px', marginTop: '20px' }">
+      <a-col :span="6" class="left-col">
+        <div class="final-preview">
+          <div class="final-preview-inner">
+            <img :src="page.coverImg" :alt="page.title" />
+          </div>
+          <div class="home_key"></div>
+        </div>
         <a-button type="primary" :href="page.coverImg">
           <template #icon>
             <DownloadOutlined />
           </template>
-          下载封面图
+          下载图片
         </a-button>
       </a-col>
-      <a-col :span="16" class="right-col">
+      <a-col :span="14" class="right-col">
         <a-row>
-          <a-col :span="6">
-            <img :src="page.coverImg" :alt="page.title" />
-          </a-col>
           <a-col :span="18" class="left-gap">
             <h4>标题：{{ page.title }}</h4>
             <p>描述：{{ page.desc }}</p>
@@ -190,23 +192,64 @@ const publishTemplate = async () => {
 }
 </script>
 
-<style>
+<style lang="scss">
 .publish-channel-container {
+  position: relative;
   height: 60vh;
+
+  .final-preview {
+    margin-bottom: 5px;
+    position: relative;
+    box-sizing: border-box;
+    height: 52vh;
+    background: transparent;
+    z-index: 1500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .home_key {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #d8d8d8;
+    bottom: 5px;
+  }
+  .final-preview-inner {
+    box-sizing: border-box;
+    height: 100%;
+    position: relative;
+    border-style: solid;
+    border-color: #bbb;
+    border-width: 20px 8px 30px;
+    border-radius: 20px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: #ffffff;
+  }
 }
-.left-col img {
-  width: 90%;
-  box-shadow: outset 10px 10px 10px #efefef;
+.left-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  img {
+    width: 100%;
+    box-shadow: outset 10px 10px 10px #efefef;
+  }
 }
-.right-col img {
-  width: 100px;
-}
+
 .left-gap {
   padding-left: 5px;
   height: 80px;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  h4 {
+    font-size: large;
+    font-weight: bold;
+  }
 }
 .delete-area {
   position: absolute;
