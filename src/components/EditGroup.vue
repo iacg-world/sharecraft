@@ -54,7 +54,7 @@ const defaultEditGroups: GroupProps[] = [
 export default defineComponent({
   props: {
     props: {
-      type: Object as PropType<AllComponentProps>,
+      type: Object as PropType<Partial<AllComponentProps>>,
       required: true,
     },
     groups: {
@@ -83,7 +83,7 @@ export default defineComponent({
     })
     const editGroups = computed(() => {
       return newGroups.value.map((group) => {
-        const propsMap = {} as AllComponentProps
+        const propsMap = {} as Partial<AllComponentProps>
         group.items.forEach((item) => {
           const key = item as keyof AllComponentProps
           propsMap[key] = props.props[key]

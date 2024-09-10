@@ -57,7 +57,7 @@ export default defineComponent({
   name: 'props-table',
   props: {
     props: {
-      type: Object as PropType<AllComponentProps>,
+      type: Object as PropType<Partial<AllComponentProps>>,
       required: true,
     },
   },

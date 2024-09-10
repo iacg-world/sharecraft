@@ -57,6 +57,7 @@
           <div class="preview-list" :class="{ 'canvas-fix': canvasFix }">
             <div class="body-container" id="canvas-area" :style="page.props">
               <edit-wrapper
+                :isLocked="currentElement?.isLocked"
                 @setActive="setActive"
                 @removeComponent="removeComponent"
                 @update-position="updatePosition"
@@ -115,7 +116,7 @@
               <div v-else>
                 <a-empty>
                   <template #description>
-                    <p>该元素被锁定，无法编辑</p>
+                    <p>该元素被锁定，只允许在画布编辑文字内容</p>
                   </template>
                 </a-empty>
               </div>
