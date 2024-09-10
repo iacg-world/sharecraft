@@ -3,7 +3,7 @@
     <a-modal
       title="发布成功"
       v-model:visible="showPublishForm"
-      width="700px"
+      width="60vw"
       :footer="null"
     >
       <publish-form />

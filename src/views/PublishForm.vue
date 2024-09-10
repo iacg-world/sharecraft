@@ -1,9 +1,14 @@
 <template>
   <div class="publish-channel-container">
-    <a-row :style="{ marginBottom: '20px' }">
+    <a-row :style="{ marginBottom: '10px', marginTop: '20px' }">
       <a-col :span="8" class="left-col">
-        封面图
         <img :src="page.coverImg" :alt="page.title" />
+        <a-button type="primary" :href="page.coverImg">
+          <template #icon>
+            <DownloadOutlined />
+          </template>
+          下载封面图
+        </a-button>
       </a-col>
       <a-col :span="16" class="right-col">
         <a-row>
@@ -11,12 +16,26 @@
             <img :src="page.coverImg" :alt="page.title" />
           </a-col>
           <a-col :span="18" class="left-gap">
-            <h4>{{ page.title }}</h4>
-            <p>{{ page.desc }}</p>
+            <h4>标题：{{ page.title }}</h4>
+            <p>描述：{{ page.desc }}</p>
           </a-col>
         </a-row>
         <a-tabs type="card" :style="{ marginTop: '20px' }">
-          <a-tab-pane key="channels" tab="渠道管理">
+          <a-tab-pane key="template" tab="发布为模板">
+            <a-form>
+              <a-form-item label="发布模板">
+                <a-radio-group v-model:value="isPublic">
+                  <a-radio :value="0">发布为个人模板</a-radio>
+                  <a-radio :value="1">发布为公开模板</a-radio>
+                </a-radio-group>
+              </a-form-item>
+            </a-form>
+
+            <a-button type="primary" @click="publishTemplate">
+              一键发布模板
+            </a-button>
+          </a-tab-pane>
+          <a-tab-pane key="channels" tab="渠道管理" disabled>
             <a-row
               v-for="channel in channels"
               :key="channel.id"
@@ -76,21 +95,6 @@
               </a-form-item>
             </a-form>
           </a-tab-pane>
-
-          <a-tab-pane key="template" tab="发布为模板">
-            <a-form>
-              <a-form-item label="发布模板">
-                <a-radio-group v-model:value="isPublic">
-                  <a-radio :value="0">发布为个人模板</a-radio>
-                  <a-radio :value="1">发布为公开模板</a-radio>
-                </a-radio-group>
-              </a-form-item>
-            </a-form>
-
-            <a-button type="primary" @click="publishTemplate">
-              一键发布模板
-            </a-button>
-          </a-tab-pane>
         </a-tabs>
       </a-col>
     </a-row>
@@ -108,6 +112,7 @@ import { generateQRCode } from '@/helper'
 import { last } from 'lodash-es'
 import { message } from 'ant-design-vue/es'
 import ClipboardJS from 'clipboard'
+import { DownloadOutlined } from '@ant-design/icons-vue'
 
 const store = useStore<GlobalDataProps>()
 const route = useRoute()
@@ -186,11 +191,15 @@ const publishTemplate = async () => {
 </script>
 
 <style>
+.publish-channel-container {
+  height: 60vh;
+}
 .left-col img {
-  width: 80%;
+  width: 90%;
+  box-shadow: outset 10px 10px 10px #efefef;
 }
 .right-col img {
-  width: 80px;
+  width: 100px;
 }
 .left-gap {
   padding-left: 5px;
