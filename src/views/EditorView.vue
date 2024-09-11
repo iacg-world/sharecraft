@@ -52,33 +52,41 @@
       </a-layout-sider>
       <a-layout style="position: relative">
         <a-layout-content class="preview-container">
-          <p>画布区域</p>
+          <div>画布区域</div>
           <history-area></history-area>
           <div class="preview-list" :class="{ 'canvas-fix': canvasFix }">
-            <div class="canvas-container" id="canvas-area" :style="page.props">
-              <edit-wrapper
-                :isLocked="currentElement?.isLocked"
-                @setActive="setActive"
-                @removeComponent="removeComponent"
-                @update-position="updatePosition"
-                v-for="component in components"
-                :key="component.id"
-                :id="component.id"
-                :active="component.id === (currentElement && currentElement.id)"
-                :hidden="component.isHidden"
-                :props="component.props"
+            <div class="preview_container">
+              <div
+                class="canvas-container"
+                id="canvas-area"
+                :style="page.props"
               >
-                <component
-                  :is="component.name"
-                  @change="(data: any) => onchange({
+                <edit-wrapper
+                  :isLocked="currentElement?.isLocked"
+                  @setActive="setActive"
+                  @removeComponent="removeComponent"
+                  @update-position="updatePosition"
+                  v-for="component in components"
+                  :key="component.id"
+                  :id="component.id"
+                  :active="
+                    component.id === (currentElement && currentElement.id)
+                  "
+                  :hidden="component.isHidden"
+                  :props="component.props"
+                >
+                  <component
+                    :is="component.name"
+                    @change="(data: any) => onchange({
                     id: component.id,
                     key: data.key,
                     value: data.value
                   })"
-                  v-bind="component.props"
-                  :isEditing="isEditing"
-                />
-              </edit-wrapper>
+                    v-bind="component.props"
+                    :isEditing="isEditing"
+                  />
+                </edit-wrapper>
+              </div>
             </div>
           </div>
         </a-layout-content>
@@ -342,16 +350,23 @@ export default defineComponent({
     position: relative;
   }
   .preview-list {
-    padding: 0;
+    padding: 0 5px;
     margin: 0;
     min-width: 375px;
     max-height: 85%;
     top: 12%;
-    border: 1px solid #efefef;
-    background: #fff;
-    overflow-x: hidden;
     overflow-y: auto;
     position: fixed;
+  }
+  .preview_container {
+    position: relative;
+    border: 1px dotted #efefef;
+    min-width: 375px;
+    overflow: hidden;
+    max-height: 85%;
+    *::-webkit-scrollbar {
+      visibility: hidden;
+    }
   }
   .action_warp {
     display: flex;
