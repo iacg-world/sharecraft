@@ -73,6 +73,7 @@ export default defineComponent({
 h2.c-text-component,
 p.c-text-component {
   margin-bottom: 0;
+  overflow: hidden;
 }
 button.c-text-component {
   padding: 5px 10px;
