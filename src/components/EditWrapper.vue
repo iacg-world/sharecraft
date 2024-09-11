@@ -113,6 +113,7 @@ export default defineComponent({
       }
     }
     const startMove = (e: MouseEvent) => {
+      e.preventDefault()
       if (props.isLocked || !isEditing.value) {
         return
       }
