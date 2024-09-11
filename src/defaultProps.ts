@@ -56,6 +56,7 @@ export const commonDefaultProps: CommonComponentProps = {
 export interface TextComponentProps extends CommonComponentProps {
   text: string
   fontSize: string
+  letterSpacing: string
   fontFamily: string
   fontWeight: string
   fontStyle: string
@@ -73,6 +74,7 @@ export const textDefaultProps: TextComponentProps = {
   // basic props - font styles
   text: '正文内容',
   fontSize: '14px',
+  letterSpacing: '1px',
   fontFamily: '',
   fontWeight: 'normal',
   fontStyle: 'normal',

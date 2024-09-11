@@ -61,6 +61,10 @@ export const mapPropsToForms: PropsToForms = {
     text: '字号',
     ...pxToNumberHandler,
   },
+  letterSpacing: {
+    text: '字间距',
+    ...pxToNumberHandler,
+  },
   lineHeight: {
     text: '行高',
     component: 'a-slider',

@@ -15,6 +15,8 @@ export const defaultTextTemplates = [
     color: '#000000',
     fontWeight: 'normal',
     tag: 'p',
+    lineHeight: '1.5',
+    letterSpacing: '1px',
     width: '100px',
   },
   {
