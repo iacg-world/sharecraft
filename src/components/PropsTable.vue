@@ -15,7 +15,7 @@
           v-bind="value.extraProps"
           v-on="value.events"
         >
-          <template v-if="value.options">
+          <template v-if="value.options && value.subComponent">
             <component
               :is="value.subComponent"
               v-for="(option, k) in value.options"
@@ -42,6 +42,7 @@ import ImageProcesser from './ImageProcesser.vue'
 import ShadowPicker from './ShadowPicker.vue'
 import IconSwitch from './IconSwitch.vue'
 import BackgroundProcesser from './BackgroundProcesser.vue'
+import FontFamilySelect from './FontFamilySelect.vue'
 interface FormProps {
   component: string
   subComponent?: string
@@ -68,6 +69,7 @@ export default defineComponent({
     ShadowPicker,
     IconSwitch,
     BackgroundProcesser,
+    FontFamilySelect,
   },
   emits: ['change'],
   setup(props, context) {
