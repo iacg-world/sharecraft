@@ -11,7 +11,7 @@
 ![alt](https://sharecraft-backend.oss-cn-shanghai.aliyuncs.com/sharecraft-test/AYLX4q.png)
 
 ## Technology
-- 前端：Vue3.2、Vuex、ant-design-vue、TypeScript、pnpm
+- 前端：Vue3.4、Vuex、ant-design-vue、TypeScript
   - [自定义组件库：https://github.com/iacg-world/iacg-block](https://github.com/iacg-world/iacg-block)
   - [前端监控JSSDK：https://github.com/iacg-world/iacg-monitor](https://github.com/iacg-world/iacg-monitor)
 - 服务端：egg、TypeScript、MongoDB
@@ -20,7 +20,7 @@
 - 云服务：阿里云ACR、阿里云OSS、阿里云短信服务
 ## Project setup
 ```
-pnpm install
+npm install
 ```
 
 ### Compiles and hot-reloads for development
