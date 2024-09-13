@@ -45,6 +45,7 @@
               </a-form-item>
               <a-form-item label="验证码" required name="verifyCode">
                 <a-input
+                  ref="codeInput"
                   placeholder="四位验证码"
                   @keyup.enter="login"
                   v-model:value="form.verifyCode"
@@ -232,7 +233,7 @@ const login = () => {
   })
 }
 
-const isToLogin = ref(false)
+const isToLogin = ref(true)
 const handleToLogin = () => {
   isToLogin.value = true
 }
@@ -257,10 +258,12 @@ watch(counter, (newValue) => {
 const isGenVeriCodeLoading = computed(() =>
   store.getters.isOpLoading('genVeriCode')
 )
+const codeInput = ref()
 const getCode = () => {
   store
     .dispatch('genVeriCode', { data: { phoneNumber: form.cellphone } })
     .then(() => {
+      codeInput.value.focus()
       message.success('验证码已发送，请注意查收', 5)
     })
 }
@@ -313,15 +316,14 @@ const signUp = () => {
 }
 
 const loginByEmail = () => {
-  validateEmail().then((val) => {
-    store.state.user
+  validateEmail().then(() => {
     const payload = {
       username: emailForm.email,
       password: emailForm.passwd,
     }
     store
       .dispatch('loginByEmailAndFetch', { data: payload })
-      .then((val) => {
+      .then(() => {
         message.success('登录成功~')
         router.push('/')
       })
