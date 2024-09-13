@@ -1,4 +1,4 @@
-FROM node:16-alpine
+FROM node:20-alpine
 RUN mkdir -p /usr/src/sharecraft
 WORKDIR /usr/src/sharecraft
 COPY ./ /usr/src/sharecraft
