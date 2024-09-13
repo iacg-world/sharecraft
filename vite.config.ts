@@ -34,11 +34,11 @@ export default defineConfig(({ mode }) => {
       }),
       Vue(),
       VueJsx(),
-      eslintPlugin({
+      env.VUE_APP_ENV === 'development' && eslintPlugin({
         include: ['src/**/*.js', 'src/**/*.vue', 'src/**/*.ts', 'src/**/*.tsx'],    // 指定需要检查的文件
-        exclude: ['node_modules/**', 'dist/**'],    // 指定不需要检查的文件
+        exclude: ['node_modules/**', 'dist/**', '*.spec.ts'],    // 指定不需要检查的文件
         fix: false,    // 是否自动修复
-        cache: true    // 是否启用缓存
+        cache: true,
       })
     ],
     // 别名配置
