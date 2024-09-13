@@ -13,8 +13,8 @@ export default defineConfig(({ mode }) => {
         output: {
           manualChunks: {
             'vue-vendor': ['vue', 'vue-router', 'vuex'],
-            'antd-vendor': ['ant-design-vue'],
             'lodash': ['lodash-es'],
+            'antd-vendor': ['ant-design-vue'],
           },
         }
       }
