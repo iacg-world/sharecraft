@@ -29,11 +29,13 @@ const global: Module<GlobalStatus, GlobalDataProps> = {
         state.loadingText = loadingText
       }
     },
-    finishLoading(state, { opName }) {
+    finishLoading(state, { opName, init = false }) {
       setTimeout(() => {
         state.requestNumber--
         delete state.opNames[opName]
-        state.loadingText = '读取中'
+        if (init) {
+          state.loadingText = '读取中'
+        }
       }, 300)
     },
     setError(state, e) {

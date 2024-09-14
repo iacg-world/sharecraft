@@ -21,10 +21,11 @@ function usePublishWork() {
         store.commit('finishLoading', { opName: 'prePublish'})
         store.commit('startLoading', { opName: 'prePublish', loadingText: '发布中, 三方字体渲染较慢，请耐心等待' })
 
-      }, 3000)
+      }, 2000)
       store.commit('setEditStatus', false)
       await nextTick()
       const resp = await takeScreenshotAndUpload(el)
+      clearTimeout(timer)
       if (resp) {
         store.commit('updatePage', {
           key: 'coverImg',
@@ -38,13 +39,12 @@ function usePublishWork() {
         await store.dispatch('fetchChannels', {
           urlParams: { id: currentWorkId },
         })
-        clearTimeout(timer)
         if (channels.value.length === 0) {
           await store.dispatch('createChannel', {
             data: { name: '默认', workId: parseInt(currentWorkId as string) },
           })
         }
-        store.commit('finishLoading', { opName: 'prePublish'})
+        store.commit('finishLoading', { opName: 'prePublish', init: true})
 
       }
     } catch (e) {
