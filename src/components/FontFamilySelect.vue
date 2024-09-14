@@ -34,31 +34,31 @@ const fontFamilyArr = [
   {
     label: '中文字体',
     options: [
-      { label: '无', value: '' },
-      { label: '宋体', value: 'SimSun' },
-      { label: '黑体', value: 'SimHei' },
-      { label: '微软雅黑', value: 'Microsoft YaHei' },
-      { label: '楷体', value: 'KaiTi' },
-      { label: '仿宋', value: 'FangSong' },
-      { label: '新宋体', value: 'NSimSun' },
-      { label: '隶书', value: 'LiSu' },
+      { label: '无', value: '无' },
+      { label: '宋体', value: '"SimSun"' },
+      { label: '黑体', value: '"SimHei"' },
+      // { label: '微软雅黑', value: '"Microsoft YaHei"' },
+      { label: '楷体', value: '"KaiTi"' },
+      { label: '仿宋', value: '"FangSong"' },
+      { label: '目哉像素体', value: '"MuzaiPixel"' },
+      { label: '汇文明朝体', value: '"Huiwen-mincho"' },
     ],
   },
   {
     label: '英文字体',
     options: [
-      { label: '无', value: '' },
+      { label: '无', value: '无' },
       {
         label: 'Palatino Linotype',
-        value: 'Palatino Linotype',
+        value: '"Palatino Linotype"',
       },
-      { label: 'Comic Sans MS', value: 'Comic Sans MS' },
-      { label: 'Verdana', value: 'Verdana' },
-      { label: 'Times New Roman', value: 'Times New Roman' },
-      { label: 'Trebuchet MS', value: 'Trebuchet MS' },
-      { label: 'Georgia', value: 'Georgia' },
-      { label: 'Arial', value: 'Arial' },
-      { label: 'Impact', value: 'Impact' },
+      { label: 'Comic Sans MS', value: '"Comic Sans MS"' },
+      { label: 'Verdana', value: '"Verdana"' },
+      { label: 'Times New Roman', value: '"Times New Roman"' },
+      { label: 'Trebuchet MS', value: '"Trebuchet MS"' },
+      { label: 'Georgia', value: '"Georgia"' },
+      { label: 'Arial', value: '"Arial"' },
+      { label: 'Impact', value: '"Impact"' },
     ],
   },
 ]
@@ -75,7 +75,7 @@ const formatOptions = (options: Exclude<SelectProps['options'], undefined>) => {
 
 const emit = defineEmits(['change'])
 const selectChange = () => {
-  const res = [v2.value, v1.value].filter((item) => item).toString()
+  const res = [v2.value || '无', v1.value].filter((item) => item).toString()
 
   emit('change', res)
 }

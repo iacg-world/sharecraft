@@ -8,6 +8,7 @@ import VueJsx from '@vitejs/plugin-vue-jsx'
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), 'VUE_APP_')
   return {
+
     build: {
       rollupOptions: {
         output: {
@@ -57,6 +58,7 @@ export default defineConfig(({ mode }) => {
 
     },
     server: {
+      port: 8080,
       proxy: {
         '^/api': {
           target: env.VUE_APP_BASE_URL_PROXY,
