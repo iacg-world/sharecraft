@@ -40,8 +40,8 @@ const fontFamilyArr = [
       // { label: '微软雅黑', value: '"Microsoft YaHei"' },
       { label: '楷体', value: '"KaiTi"' },
       { label: '仿宋', value: '"FangSong"' },
-      { label: '目哉像素体', value: '"MuzaiPixel"' },
-      { label: '汇文明朝体', value: '"Huiwen-mincho"' },
+      { label: '目哉像素体（三方）', value: '"MuzaiPixel"' },
+      { label: '汇文明朝体（三方）', value: '"Huiwen-mincho"' },
     ],
   },
   {
