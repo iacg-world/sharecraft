@@ -9,6 +9,7 @@
       okText="确认"
       cancelText="取消"
       width="800px"
+      :maskClosable="false"
     >
       <div class="image-cropper">
         <img :src="baseImageUrl" id="processed-image" ref="cropperImg" />
@@ -33,7 +34,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, ref, watch, nextTick } from 'vue'
-import { message } from 'ant-design-vue/es'
+import { message, Modal } from 'ant-design-vue/es'
 import Cropper from 'cropperjs'
 import 'cropperjs/dist/cropper.css'
 import { DeleteOutlined, ScissorOutlined } from '@ant-design/icons-vue'
@@ -64,6 +65,7 @@ export default defineComponent({
     DeleteOutlined,
     StyledUploader,
     ScissorOutlined,
+    AModal: Modal,
   },
   emits: ['change', 'uploaded'],
   setup(props, context) {
