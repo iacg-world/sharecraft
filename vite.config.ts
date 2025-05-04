@@ -4,6 +4,8 @@ import path from 'path'
 import compression from 'vite-plugin-compression'
 import eslintPlugin from 'vite-plugin-eslint'
 import VueJsx from '@vitejs/plugin-vue-jsx'
+import Components from "unplugin-vue-components/vite";
+import { AntDesignVueResolver } from "unplugin-vue-components/resolvers";
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), 'VUE_APP_')
@@ -35,6 +37,12 @@ export default defineConfig(({ mode }) => {
       }),
       Vue(),
       VueJsx(),
+      Components({
+        resolvers: [AntDesignVueResolver({
+          importStyle: false,
+          cjs: true,
+        })],
+      }),
       env.VUE_APP_ENV === 'development' && eslintPlugin({
         include: ['src/**/*.js', 'src/**/*.vue', 'src/**/*.ts', 'src/**/*.tsx'],    // 指定需要检查的文件
         exclude: ['node_modules/**', 'dist/**', '*.spec.ts'],    // 指定不需要检查的文件

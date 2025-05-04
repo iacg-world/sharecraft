@@ -179,7 +179,6 @@ export default defineComponent({
   .final-preview {
     position: absolute;
     width: calc(100% - 400px);
-    height: 100%;
     background: transparent;
     top: 0;
     left: 0;
@@ -199,7 +198,6 @@ export default defineComponent({
   }
   .final-preview-inner {
     box-sizing: border-box;
-    height: 100vh;
     padding: 60px 28px;
     position: relative;
     border-style: solid;
@@ -221,8 +219,7 @@ export default defineComponent({
   .iframe-container {
     width: 100%;
     height: 706px;
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: hidden;
   }
   .iframe-placeholder {
     background: url('~@/assets/loading.svg') 50% 50% no-repeat;

@@ -30,6 +30,7 @@
     "lodash-es": "^4.17.21",
     "path-to-regexp": "^6.2.1",
     "qrcode": "^1.5.3",
+    "unplugin-vue-components": "^28.5.0",
     "uuid": "^8.3.2",
     "vue": "^3.3.1",
     "vue-class-component": "^8.0.0-0",
