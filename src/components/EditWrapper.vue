@@ -4,8 +4,8 @@
     ref="editWrapper"
     :style="styles"
     :data-component-id="id"
-    @click="onItemClick(id)"
-    @mousedown="startMove"
+    @mousedown="onItemClick(id)"
+    v-longpress="startMove"
     :class="{ active: active && isEditing && !isLocked, hidden: hidden }"
   >
     <slot></slot>
@@ -94,7 +94,7 @@ export default defineComponent({
         context.emit('remove-component', id)
       }
     }
-
+ 
     const gap = {
       x: 0,
       y: 0,
