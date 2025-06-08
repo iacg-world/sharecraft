@@ -14,11 +14,43 @@ export default defineConfig(({ mode }) => {
     build: {
       rollupOptions: {
         output: {
+          chunkFileNames: 'static/js/[name]-[hash].js',
+          entryFileNames: 'static/js/[name]-[hash].js',
+          assetFileNames: 'static/[ext]/[name]-[hash].[ext]',
           manualChunks: {
             'vue-vendor': ['vue', 'vue-router', 'vuex'],
             'lodash-es': ['lodash-es'],
             'ant-icon': ['@ant-design/icons-vue'],
-            'antd-vendor': ['ant-design-vue'],
+            'axios': ['axios'],
+            // 按组件类型拆分antd chunks
+            'antd-other': [
+              'ant-design-vue/es/vc-picker',
+              'ant-design-vue/es/vc-slick',
+              'ant-design-vue/es/result',
+              'ant-design-vue/es/qrcode',
+            ],
+            'antd-layout': [
+              'ant-design-vue/es/layout',
+              'ant-design-vue/es/tabs',
+            ],
+            'antd-form': [
+              'ant-design-vue/es/form',
+              'ant-design-vue/es/input',
+              'ant-design-vue/es/select',
+              'ant-design-vue/es/checkbox',
+              'ant-design-vue/es/radio',
+              'ant-design-vue/es/date-picker',
+            ],
+            'antd-data': [
+              'ant-design-vue/es/table',
+              'ant-design-vue/es/pagination'
+            ],
+            'antd-feedback': [
+              'ant-design-vue/es/modal',
+              'ant-design-vue/es/message',
+              'ant-design-vue/es/notification'
+            ],
+
           },
         }
       }
@@ -38,6 +70,7 @@ export default defineConfig(({ mode }) => {
       Components({
         dts: true,
         resolvers: [AntDesignVueResolver({importStyle: 'less'})],
+        include: [/\.vue$/, /\.vue\?vue/, /\.vue\.[tj]sx?\?vue/, /\.md$/]
       }),
       Vue(),
       VueJsx(),
@@ -46,7 +79,7 @@ export default defineConfig(({ mode }) => {
         exclude: ['node_modules/**', 'dist/**', '*.spec.ts'],    // 指定不需要检查的文件
         fix: false,    // 是否自动修复
         cache: true,
-      })
+      }),
     ],
     // 别名配置
     resolve: {
