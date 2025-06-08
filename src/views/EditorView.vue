@@ -181,7 +181,8 @@ import {
 import { Empty as AEmpty } from 'ant-design-vue/es'
 import router from '@/router'
 import CText from '@/components/CText.vue'
-
+import '@chinese-fonts/mzxst/dist/MZPXflat/result.css'
+import '@chinese-fonts/hwmct/dist/汇文明朝体/result.css'
 export type TabType = 'component' | 'layer' | 'page'
 export default defineComponent({
   components: {

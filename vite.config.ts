@@ -4,6 +4,8 @@ import path from 'path'
 import compression from 'vite-plugin-compression'
 import eslintPlugin from 'vite-plugin-eslint'
 import VueJsx from '@vitejs/plugin-vue-jsx'
+import Components from "unplugin-vue-components/vite";
+import { AntDesignVueResolver } from "unplugin-vue-components/resolvers";
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), 'VUE_APP_')
@@ -32,6 +34,10 @@ export default defineConfig(({ mode }) => {
         threshold: 10 * 1024, // 压缩阈值，小于这个值的文件将不会被压缩（单位为字节）这里就是大于 10kb 菜压缩
         algorithm: 'gzip', // 压缩算法
         ext: '.gz', // 压缩文件后缀名
+      }),
+      Components({
+        dts: true,
+        resolvers: [AntDesignVueResolver({importStyle: 'less'})],
       }),
       Vue(),
       VueJsx(),
