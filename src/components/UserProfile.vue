@@ -16,9 +16,7 @@
         <DownOutlined />
       </a-button> -->
     </a-dropdown>
-    <a-button v-if="$route.path === '/'"
-      ><router-link to="/works">我的作品</router-link></a-button
-    >
+    <router-link v-if="$route.path === '/'" to="/works"><a-button>我的作品</a-button></router-link>
     <a-dropdown-button class="user-profile-component user-profile-container">
       <router-link to="/setting">{{
         user.data.nickName || user.data.username
