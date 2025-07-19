@@ -504,6 +504,14 @@ const editor: Module<EditorProps, GlobalDataProps> = {
     createChannel(state, { data }: RespData<ChannelProps>) {
       state.channels = [...state.channels, data]
     },
+    setComponents: setDirtyWrapper((state, components: ComponentData[]) => {
+      state.components = components
+      // 清空当前选中
+      state.currentElementId = ''
+      // 清空历史记录
+      state.histories = []
+      state.historyIndex = -1
+    }),
   },
   actions: {
     fetchWork: actionWrapper('/works/:id', 'fetchWork'),
