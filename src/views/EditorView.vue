@@ -140,17 +140,15 @@
             >
             </layer-list>
           </a-tab-pane>
-          <a-tab-pane key="ai" tab="AI助手" class="ai-tab-pane">
-            <div class="ai-agent-wrapper">
-              <ai-agent />
-            </div>
-          </a-tab-pane>
+
           <a-tab-pane key="page" tab="页面设置">
             <props-table :props="page.props" @change="pageChange"></props-table>
           </a-tab-pane>
         </a-tabs>
       </a-layout-sider>
     </a-layout>
+    
+
   </a-flex>
 </template>
 
@@ -186,10 +184,9 @@ import {
 import { Empty as AEmpty } from 'ant-design-vue/es'
 import router from '@/router'
 import CText from '@/components/CText.vue'
-import AIAgent from '@/components/AIAgent.vue'
 import '@chinese-fonts/mzxst/dist/MZPXflat/result.css'
 import '@chinese-fonts/hwmct/dist/汇文明朝体/result.css'
-export type TabType = 'component' | 'layer' | 'page' | 'ai'
+export type TabType = 'component' | 'layer' | 'page'
 export default defineComponent({
   components: {
     CText,
@@ -204,7 +201,7 @@ export default defineComponent({
     UserProfile,
     PublishForm,
     PreviewForm,
-    AIAgent,
+
     HomeOutlined,
     AEmpty,
     DoubleLeftOutlined,
@@ -439,13 +436,5 @@ export default defineComponent({
   }
 }
 
-/* AI面板样式 */
-.ai-tab-pane {
-  padding: 0 !important;
-  height: calc(100vh - 120px);
-}
 
-.ai-agent-wrapper {
-  height: 100%;
-}
 </style>

@@ -38,12 +38,24 @@
 3. 点击"应用到编辑器"即可将生成的组件添加到画布
 
 ### 🔧 配置AI服务
-1. 复制 `.env.example` 为 `.env`
+1. 在项目根目录创建 `.env` 文件
 2. 配置你的AI服务提供商和API Key：
 ```bash
-VITE_AI_PROVIDER=openai  # 或 claude
-VITE_AI_API_KEY=your_api_key_here
+# OpenAI配置
+VITE_AI_PROVIDER=openai
+VITE_AI_API_KEY=sk-your-openai-api-key-here
+VITE_AI_BASE_URL=https://api.openai.com/v1
+VITE_AI_MODEL=gpt-3.5-turbo
+VITE_AI_MAX_TOKENS=1500
+VITE_AI_TEMPERATURE=0.7
+
+# 或者使用Claude
+# VITE_AI_PROVIDER=claude
+# VITE_AI_API_KEY=your-claude-api-key-here
+# VITE_AI_BASE_URL=https://api.anthropic.com/v1
+# VITE_AI_MODEL=claude-3-sonnet-20240229
 ```
+3. 重启开发服务器：`npm run dev`
 
 详细文档请参考：[AI_AGENT_README.md](./AI_AGENT_README.md)
 ## Project setup

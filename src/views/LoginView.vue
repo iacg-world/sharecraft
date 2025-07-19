@@ -281,7 +281,6 @@ const emailForm = reactive({
 
 const notSignUp = ref(false)
 const validateRePasswd = async (_rule: Rule, value: string) => {
-  console.log(value, emailForm.passwd)
 
   if (!notSignUp.value) {
     return Promise.resolve()

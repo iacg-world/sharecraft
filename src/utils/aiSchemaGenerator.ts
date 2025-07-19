@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid'
 import { ComponentData } from '@/store/editor'
 import { textDefaultProps, imageDefaultProps } from '@/defaultProps'
+import { callAI, AIApiRequest } from './aiApi'
 
 export interface AIGenerateResult {
   description: string
@@ -542,8 +543,44 @@ function generateCustomComponents(input: string): ComponentData[] {
 
 // 主要的生成函数
 export async function generatePageSchema(input: string): Promise<AIGenerateResult> {
-  // 模拟AI处理延迟
-  await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 2000))
+  try {
+    // 优先尝试调用真实AI API
+    const apiRequest: AIApiRequest = {
+      message: input,
+      userId: 'user-' + Date.now(), // 可以从用户状态获取
+      sessionId: 'session-' + Date.now()
+    }
+    
+    const apiResponse = await callAI(apiRequest)
+    
+    if (apiResponse.success && apiResponse.data.components && apiResponse.data.components.length > 0) {
+      // 处理AI返回的组件数据，确保符合我们的格式
+      const processedComponents = apiResponse.data.components.map(component => {
+        // 确保每个组件都有必需的字段
+        return {
+          id: component.id || uuidv4(),
+          name: component.name || 'c-text',
+          layerName: component.layerName || '组件',
+          props: {
+            ...textDefaultProps, // 使用默认props作为基础
+            ...component.props   // 覆盖AI提供的props
+          },
+          isHidden: component.isHidden || false,
+          isLocked: component.isLocked || false
+        }
+      })
+      
+      return {
+        description: apiResponse.data.reply,
+        components: processedComponents
+      }
+    }
+  } catch (error) {
+    console.warn('AI API调用失败，使用本地模板:', error)
+  }
+  
+  // 如果API调用失败，回退到本地模板匹配
+  console.log('使用本地模板生成页面...')
   
   // 尝试匹配预定义模板
   const templateMatch = matchTemplate(input)

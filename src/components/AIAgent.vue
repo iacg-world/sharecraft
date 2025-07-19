@@ -170,11 +170,11 @@ const sendMessage = async () => {
 const applySchema = (schema: ComponentData[]) => {
   try {
     // 清空当前组件
-    store.commit('editor/setComponents', [])
+    store.commit('setComponents', [])
     
     // 添加新组件
     schema.forEach(component => {
-      store.commit('editor/addComponent', component)
+      store.commit('addComponent', component)
     })
     
     message.success('页面结构已应用到编辑器')
@@ -220,7 +220,7 @@ onMounted(() => {
   height: 100%;
   background: #fff;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  min-height: 60vh;
 }
 
 .ai-header {
