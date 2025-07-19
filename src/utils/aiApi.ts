@@ -1,9 +1,5 @@
 import { ComponentData } from '@/store/editor'
 
-
-
-
-
 export interface AIApiRequest {
   message: string
   context?: string
@@ -31,7 +27,9 @@ export const AI_CONFIG = {
 }
 
 // OpenAI API 调用示例
-export async function callOpenAI(request: AIApiRequest): Promise<AIApiResponse> {
+export async function callOpenAI(
+  request: AIApiRequest,
+): Promise<AIApiResponse> {
   try {
     const prompt = generatePrompt(request.message)
 
@@ -39,51 +37,44 @@ export async function callOpenAI(request: AIApiRequest): Promise<AIApiResponse> 
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${AI_CONFIG.apiKey}`
+        Authorization: `Bearer ${AI_CONFIG.apiKey}`,
       },
       body: JSON.stringify({
         model: 'gpt-3.5-turbo',
         messages: [
           {
             role: 'system',
-            content: 'You are a UI/UX design assistant that generates page layouts based on user descriptions. Always respond with both a description and component data in JSON format.'
+            content:
+              'You are a UI/UX design assistant that generates page layouts based on user descriptions. Always respond with both a description and component data in JSON format.',
           },
           {
             role: 'user',
-            content: prompt
-          }
+            content: prompt,
+          },
         ],
         max_tokens: AI_CONFIG.maxTokens,
-        temperature: AI_CONFIG.temperature
-      })
+        temperature: AI_CONFIG.temperature,
+      }),
     })
 
     const data = await response.json()
-    
+
     if (!response.ok) {
       console.error('❌ OpenAI API 错误:', data)
       throw new Error(data.error?.message || 'API call failed')
     }
 
     const aiReply = data.choices[0].message.content
-    console.log('✅ OpenAI API 响应成功')
-    console.log('📄 原始响应长度:', aiReply.length, '字符')
-    console.log('📄 原始响应内容:', aiReply.substring(0, 200) + '...')
-    
+
     const parsedResult = parseAIResponse(aiReply)
-    
-    console.log('🎨 解析结果:', {
-      description: parsedResult.description,
-      componentCount: parsedResult.components.length
-    })
-    
+
     return {
       success: true,
       data: {
         reply: parsedResult.description,
         components: parsedResult.components,
-        confidence: 0.8
-      }
+        confidence: 0.8,
+      },
     }
   } catch (error) {
     console.error('OpenAI API Error:', error)
@@ -92,23 +83,25 @@ export async function callOpenAI(request: AIApiRequest): Promise<AIApiResponse> 
       error: error instanceof Error ? error.message : 'Unknown error',
       data: {
         reply: '抱歉，AI服务暂时不可用，请稍后重试。',
-        confidence: 0
-      }
+        confidence: 0,
+      },
     }
   }
 }
 
 // Claude API 调用示例
-export async function callClaude(request: AIApiRequest): Promise<AIApiResponse> {
+export async function callClaude(
+  request: AIApiRequest,
+): Promise<AIApiResponse> {
   try {
     const prompt = generatePrompt(request.message)
-    
+
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'x-api-key': AI_CONFIG.apiKey,
-        'anthropic-version': '2023-06-01'
+        'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
         model: 'claude-3-sonnet-20240229',
@@ -116,28 +109,28 @@ export async function callClaude(request: AIApiRequest): Promise<AIApiResponse> 
         messages: [
           {
             role: 'user',
-            content: prompt
-          }
-        ]
-      })
+            content: prompt,
+          },
+        ],
+      }),
     })
 
     const data = await response.json()
-    
+
     if (!response.ok) {
       throw new Error(data.error?.message || 'API call failed')
     }
 
     const aiReply = data.content[0].text
     const parsedResult = parseAIResponse(aiReply)
-    
+
     return {
       success: true,
       data: {
         reply: parsedResult.description,
         components: parsedResult.components,
-        confidence: 0.9
-      }
+        confidence: 0.9,
+      },
     }
   } catch (error) {
     console.error('Claude API Error:', error)
@@ -146,8 +139,8 @@ export async function callClaude(request: AIApiRequest): Promise<AIApiResponse> 
       error: error instanceof Error ? error.message : 'Unknown error',
       data: {
         reply: '抱歉，AI服务暂时不可用，请稍后重试。',
-        confidence: 0
-      }
+        confidence: 0,
+      },
     }
   }
 }
@@ -181,7 +174,7 @@ function generatePrompt(userMessage: string): string {
         "borderWidth": "0px",
         "borderRadius": "0px",
         "paddingLeft": "0px",
-        "paddingRight": "0px", 
+        "paddingRight": "0px",
         "paddingTop": "0px",
         "paddingBottom": "0px",
         "left": "位置x坐标（如：50px）",
@@ -207,14 +200,19 @@ function generatePrompt(userMessage: string): string {
 }
 
 // 解析AI返回的结果
-function parseAIResponse(aiReply: string): { description: string; components: ComponentData[] } {
+function parseAIResponse(aiReply: string): {
+  description: string
+  components: ComponentData[]
+} {
   try {
     // 清理AI返回的内容，移除可能的markdown代码块标记
     let cleanedReply = aiReply.trim()
-    
+
     // 移除可能的markdown代码块
-    cleanedReply = cleanedReply.replace(/```json\s*/g, '').replace(/```\s*/g, '')
-    
+    cleanedReply = cleanedReply
+      .replace(/```json\s*/g, '')
+      .replace(/```\s*/g, '')
+
     // 尝试直接解析整个响应
     let parsed: any
     try {
@@ -228,47 +226,50 @@ function parseAIResponse(aiReply: string): { description: string; components: Co
         throw new Error('No valid JSON found')
       }
     }
-    
+
     // 验证和处理组件数据
     const components = (parsed.components || []).map((comp: any) => {
       // 确保组件有必需的字段
       const component: ComponentData = {
-        id: comp.id || `comp-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        id:
+          comp.id ||
+          `comp-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         name: comp.name === 'c-image' ? 'c-image' : 'c-text', // 默认为c-text
         layerName: comp.layerName || '组件',
         props: {
           // 基础属性
           position: 'absolute',
-          ...comp.props
+          ...comp.props,
         },
         isHidden: comp.isHidden || false,
-        isLocked: comp.isLocked || false
+        isLocked: comp.isLocked || false,
       }
-      
+
       // 确保文本组件有text属性
       if (component.name === 'c-text' && !component.props.text) {
         component.props.text = '文本内容'
       }
-      
+
       // 确保图片组件有src属性
       if (component.name === 'c-image' && !component.props.src) {
         component.props.src = 'https://via.placeholder.com/200x150?text=Image'
       }
-      
+
       return component
     })
-    
+
     return {
       description: parsed.description || '已生成页面组件',
-      components
+      components,
     }
   } catch (error) {
     console.error('Parse AI response error:', error)
     console.error('AI response content:', aiReply)
-    
+
     return {
-      description: '解析AI响应时出错，请重试。原始回复：' + aiReply.substring(0, 200),
-      components: []
+      description:
+        '解析AI响应时出错，请重试。原始回复：' + aiReply.substring(0, 200),
+      components: [],
     }
   }
 }
@@ -283,8 +284,8 @@ export async function callAI(request: AIApiRequest): Promise<AIApiResponse> {
       error: 'AI服务未配置',
       data: {
         reply: '请配置AI服务的API Key',
-        confidence: 0
-      }
+        confidence: 0,
+      },
     }
   }
 
@@ -300,8 +301,8 @@ export async function callAI(request: AIApiRequest): Promise<AIApiResponse> {
         error: 'Unsupported AI provider',
         data: {
           reply: '不支持的AI服务提供商',
-          confidence: 0
-        }
+          confidence: 0,
+        },
       }
   }
 }
@@ -316,19 +317,18 @@ export function configureAI() {
     AI_CONFIG.provider = process.env.VUE_APP_AI_PROVIDER
   }
 
-  
   if (process.env.VUE_APP_AI_BASE_URL) {
     AI_CONFIG.baseURL = process.env.VUE_APP_AI_BASE_URL
   }
-  
+
   if (process.env.VUE_APP_AI_MAX_TOKENS) {
     AI_CONFIG.maxTokens = parseInt(process.env.VUE_APP_AI_MAX_TOKENS) || 1500
   }
-  
+
   if (process.env.VUE_APP_AI_TEMPERATURE) {
-    AI_CONFIG.temperature = parseFloat(process.env.VUE_APP_AI_TEMPERATURE) || 0.7
+    AI_CONFIG.temperature =
+      parseFloat(process.env.VUE_APP_AI_TEMPERATURE) || 0.7
   }
-  
 }
 
 // 初始化配置

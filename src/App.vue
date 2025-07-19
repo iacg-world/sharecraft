@@ -7,9 +7,14 @@
         },
       }"
     >
-      <a-spin v-if="showLoading" :tip="loadingText" wrapperClassName="global-spinner" class="global-spinner" />
+      <a-spin
+        v-if="showLoading"
+        :tip="loadingText"
+        wrapperClassName="global-spinner"
+        class="global-spinner"
+      />
       <router-view />
-      
+
       <!-- 悬浮AI助手 - 只在特定页面显示 -->
       <FloatingAIAssistant v-if="shouldShowAI" />
     </a-config-provider>
@@ -29,7 +34,7 @@ const route = useRoute()
 const isLoading = computed(() => store.getters.isLoading)
 const loadingText = computed(() => store.getters.loadingText)
 const showLoading = computed(
-  () => isLoading.value && !route.meta.disableLoading
+  () => isLoading.value && !route.meta.disableLoading,
 )
 const error = computed(() => store.state.global.error)
 
@@ -37,18 +42,20 @@ const error = computed(() => store.state.global.error)
 const shouldShowAI = computed(() => {
   // 只在编辑器相关页面显示AI助手
   const showAIRoutes = ['/editor', '/editor/']
-  return showAIRoutes.some(path => route.path.includes(path)) || route.name === 'editor'
+  return (
+    showAIRoutes.some(path => route.path.includes(path)) ||
+    route.name === 'editor'
+  )
 })
 
 watch(
   () => error.value.status,
-  (errorValue) => {
+  errorValue => {
     if (errorValue) {
       message.error(error.value.message || '未知错误', 2)
     }
-  }
+  },
 )
-
 </script>
 <style lang="scss">
 .app-container .global-spinner {

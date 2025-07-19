@@ -8,32 +8,32 @@
 
 ```bash
 # 选择AI服务提供商
-VITE_AI_PROVIDER=openai
+VUE_APP_AI_PROVIDER=openai
 
 # OpenAI API配置
-VITE_AI_API_KEY=sk-your-openai-api-key-here
-VITE_AI_BASE_URL=https://api.openai.com/v1
-VITE_AI_MODEL=gpt-3.5-turbo
+VUE_APP_AI_API_KEY=sk-your-openai-api-key-here
+VUE_APP_AI_BASE_URL=https://api.openai.com/v1
+VUE_APP_AI_MODEL=gpt-3.5-turbo
 
 # 生成参数
-VITE_AI_MAX_TOKENS=1500
-VITE_AI_TEMPERATURE=0.7
+VUE_APP_AI_MAX_TOKENS=1500
+VUE_APP_AI_TEMPERATURE=0.7
 ```
 
 ### Claude 配置
 
 ```bash
 # 选择AI服务提供商
-VITE_AI_PROVIDER=claude
+VUE_APP_AI_PROVIDER=claude
 
 # Claude API配置
-VITE_AI_API_KEY=your-claude-api-key-here
-VITE_AI_BASE_URL=https://api.anthropic.com/v1
-VITE_AI_MODEL=claude-3-sonnet-20240229
+VUE_APP_AI_API_KEY=your-claude-api-key-here
+VUE_APP_AI_BASE_URL=https://api.anthropic.com/v1
+VUE_APP_AI_MODEL=claude-3-sonnet-20240229
 
 # 生成参数
-VITE_AI_MAX_TOKENS=1500
-VITE_AI_TEMPERATURE=0.7
+VUE_APP_AI_MAX_TOKENS=1500
+VUE_APP_AI_TEMPERATURE=0.7
 ```
 
 ## 🚀 快速开始
@@ -58,12 +58,12 @@ VITE_AI_TEMPERATURE=0.7
 
 ```bash
 # 复制下面的配置并替换为你的实际API Key
-VITE_AI_PROVIDER=openai
-VITE_AI_API_KEY=your-actual-api-key-here
-VITE_AI_BASE_URL=https://api.openai.com/v1
-VITE_AI_MODEL=gpt-3.5-turbo
-VITE_AI_MAX_TOKENS=1500
-VITE_AI_TEMPERATURE=0.7
+VUE_APP_AI_PROVIDER=openai
+VUE_APP_AI_API_KEY=your-actual-api-key-here
+VUE_APP_AI_BASE_URL=https://api.openai.com/v1
+VUE_APP_AI_MODEL=gpt-3.5-turbo
+VUE_APP_AI_MAX_TOKENS=1500
+VUE_APP_AI_TEMPERATURE=0.7
 ```
 
 ### 3. 重启开发服务器
@@ -83,25 +83,25 @@ npm run dev
 
 ## 📊 配置参数说明
 
-### VITE_AI_PROVIDER
+### VUE_APP_AI_PROVIDER
 - **类型**: string
 - **可选值**: `openai`, `claude`, `custom`
 - **说明**: 选择AI服务提供商
 
-### VITE_AI_API_KEY
+### VUE_APP_AI_API_KEY
 - **类型**: string
 - **说明**: AI服务的API密钥，必需配置
 
-### VITE_AI_BASE_URL
+### VUE_APP_AI_BASE_URL
 - **类型**: string
 - **说明**: AI API的基础URL
 - **OpenAI**: `https://api.openai.com/v1`
 - **Claude**: `https://api.anthropic.com/v1`
 
-### VITE_AI_MODEL
+### VUE_APP_AI_MODEL
 - **类型**: string
 - **说明**: 使用的AI模型
-- **OpenAI常用模型**: 
+- **OpenAI常用模型**:
   - `gpt-3.5-turbo` (推荐，性价比高)
   - `gpt-4` (质量更高，成本更高)
   - `gpt-4-turbo-preview` (最新模型)
@@ -109,12 +109,12 @@ npm run dev
   - `claude-3-sonnet-20240229` (推荐)
   - `claude-3-opus-20240229` (质量最高)
 
-### VITE_AI_MAX_TOKENS
+### VUE_APP_AI_MAX_TOKENS
 - **类型**: number
 - **默认值**: 1500
 - **说明**: 生成内容的最大token数量
 
-### VITE_AI_TEMPERATURE
+### VUE_APP_AI_TEMPERATURE
 - **类型**: number (0-1)
 - **默认值**: 0.7
 - **说明**: 控制生成内容的随机性，0最保守，1最创意
@@ -129,7 +129,7 @@ npm run dev
 // 应该显示类似这样的输出
 AI配置信息: {
   provider: "openai",
-  baseUrl: "https://api.openai.com/v1", 
+  baseUrl: "https://api.openai.com/v1",
   model: "gpt-3.5-turbo",
   maxTokens: 1500,
   temperature: 0.7,
@@ -141,7 +141,7 @@ AI配置信息: {
 
 #### 问题1: API Key无效
 **错误**: `401 Unauthorized` 或 `Invalid API Key`
-**解决方案**: 
+**解决方案**:
 - 检查API Key是否正确复制
 - 确认API Key没有过期
 - 验证账户是否有足够的余额
@@ -216,10 +216,10 @@ console.log('AI返回的原始内容:', aiReply)
 如果你使用自定义的AI服务，需要确保它兼容OpenAI的API格式：
 
 ```bash
-VITE_AI_PROVIDER=custom
-VITE_AI_API_KEY=your-custom-api-key
-VITE_AI_BASE_URL=https://your-ai-service.com/v1
-VITE_AI_MODEL=your-custom-model
+VUE_APP_AI_PROVIDER=custom
+VUE_APP_AI_API_KEY=your-custom-api-key
+VUE_APP_AI_BASE_URL=https://your-ai-service.com/v1
+VUE_APP_AI_MODEL=your-custom-model
 ```
 
 ### 代理配置
@@ -227,7 +227,7 @@ VITE_AI_MODEL=your-custom-model
 如果需要通过代理访问AI服务，可以配置代理URL：
 
 ```bash
-VITE_AI_BASE_URL=https://your-proxy-server.com/api/openai/v1
+VUE_APP_AI_BASE_URL=https://your-proxy-server.com/api/openai/v1
 ```
 
 ## 📈 监控和分析
@@ -240,4 +240,4 @@ VITE_AI_BASE_URL=https://your-proxy-server.com/api/openai/v1
 4. **错误类型分布**
 5. **用户满意度**
 
-可以通过在代码中添加相关统计来实现监控。 
+可以通过在代码中添加相关统计来实现监控。

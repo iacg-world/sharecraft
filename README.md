@@ -5,7 +5,7 @@
 - 这是一个用于创建活动页/落地页/分享页海报并支持在线浏览的零代码建站网站
 - 你可以通过添加元素、拖拽元素、改变元素属性的方式来丰富你的分享页
 - 🆕 **新增AI Agent功能**：通过自然语言对话自动生成页面组件，大幅提升设计效率
-  
+
 生成的活动页预览页
 
 
@@ -42,18 +42,18 @@
 2. 配置你的AI服务提供商和API Key：
 ```bash
 # OpenAI配置
-VITE_AI_PROVIDER=openai
-VITE_AI_API_KEY=sk-your-openai-api-key-here
-VITE_AI_BASE_URL=https://api.openai.com/v1
-VITE_AI_MODEL=gpt-3.5-turbo
-VITE_AI_MAX_TOKENS=1500
-VITE_AI_TEMPERATURE=0.7
+VUE_APP_AI_PROVIDER=openai
+VUE_APP_AI_API_KEY=sk-your-openai-api-key-here
+VUE_APP_AI_BASE_URL=https://api.openai.com/v1
+VUE_APP_AI_MODEL=gpt-3.5-turbo
+VUE_APP_AI_MAX_TOKENS=1500
+VUE_APP_AI_TEMPERATURE=0.7
 
 # 或者使用Claude
-# VITE_AI_PROVIDER=claude
-# VITE_AI_API_KEY=your-claude-api-key-here
-# VITE_AI_BASE_URL=https://api.anthropic.com/v1
-# VITE_AI_MODEL=claude-3-sonnet-20240229
+# VUE_APP_AI_PROVIDER=claude
+# VUE_APP_AI_API_KEY=your-claude-api-key-here
+# VUE_APP_AI_BASE_URL=https://api.anthropic.com/v1
+# VUE_APP_AI_MODEL=claude-3-sonnet-20240229
 ```
 3. 重启开发服务器：`npm run dev`
 

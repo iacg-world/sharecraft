@@ -22,7 +22,7 @@
               :key="k"
               :value="option.value"
             >
-              <render-vnode :vNode="option.text"></render-vnode>
+              <RenderVnode :vNode="option.text"></RenderVnode>
             </component>
           </template>
         </component>
@@ -55,7 +55,7 @@ interface FormProps {
   events: { [key: string]: (e: any) => void }
 }
 export default defineComponent({
-  name: 'props-table',
+  name: 'PropsTable',
   props: {
     props: {
       type: Object as PropType<Partial<AllComponentProps>>,
@@ -104,7 +104,7 @@ export default defineComponent({
           }
           return result
         },
-        {} as { [key: string]: FormProps }
+        {} as { [key: string]: FormProps },
       )
     })
     return {

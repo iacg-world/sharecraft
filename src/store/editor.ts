@@ -190,7 +190,7 @@ const pushHistory = (state: EditorProps, historyRecord: HistoryProps) => {
 }
 const pushModifyHistory = (
   state: EditorProps,
-  { key, value, id }: UpdateComponentData
+  { key, value, id }: UpdateComponentData,
 ) => {
   pushHistory(state, {
     id: uuidv4(),
@@ -206,13 +206,13 @@ const pushHistoryDebounce = debounce(pushModifyHistory, 350)
 const modifyHistory = (
   state: EditorProps,
   history: HistoryProps,
-  type: 'undo' | 'redo'
+  type: 'undo' | 'redo',
 ) => {
   const { componentId, data } = history
   const { key, oldValue, newValue } = data
   const newKey = key as keyof AllComponentProps | Array<keyof AllComponentProps>
   const updatedComponent = state.components.find(
-    (component) => component.id === componentId
+    component => component.id === componentId,
   )
   if (updatedComponent) {
     // check if key is array
@@ -280,7 +280,7 @@ const editor: Module<EditorProps, GlobalDataProps> = {
       state.currentElementId = currentId
     },
     removeComponent(state, targetId: string) {
-      state.components = state.components.filter((item) => {
+      state.components = state.components.filter(item => {
         if (item.id !== targetId) {
           return item
         }
@@ -296,7 +296,7 @@ const editor: Module<EditorProps, GlobalDataProps> = {
             ;(updatedComponent as any)[key as string] = value
           } else {
             const oldValue = Array.isArray(key)
-              ? key.map((key) => updatedComponent.props[key])
+              ? key.map(key => updatedComponent.props[key])
               : updatedComponent.props[key] // 先存储当前状态
             if (!state.cachedOldValues) {
               state.cachedOldValues = oldValue
@@ -312,7 +312,7 @@ const editor: Module<EditorProps, GlobalDataProps> = {
             }
           }
         }
-      }
+      },
     ),
     updatePage: setDirtyWrapper((state, { key, value, isRoot, isSetting }) => {
       if (isRoot) {
@@ -336,7 +336,7 @@ const editor: Module<EditorProps, GlobalDataProps> = {
         message.success('已拷贝当前图层', 1)
       }
     },
-    pasteCopiedComponent: setDirtyWrapper((state) => {
+    pasteCopiedComponent: setDirtyWrapper(state => {
       if (state.copiedComponent) {
         const clone = cloneDeep(state.copiedComponent)
         clone.id = uuidv4()
@@ -355,10 +355,10 @@ const editor: Module<EditorProps, GlobalDataProps> = {
       const currentComponent = store.getters.getElement(id)
       if (currentComponent) {
         const currentIndex = state.components.findIndex(
-          (component) => component.id === id
+          component => component.id === id,
         )
         state.components = state.components.filter(
-          (component) => component.id !== id
+          component => component.id !== id,
         )
         pushHistory(state, {
           id: uuidv4(),
@@ -372,7 +372,7 @@ const editor: Module<EditorProps, GlobalDataProps> = {
     }),
     moveComponent(
       state,
-      data: { direction: MoveDirection; amount: number; id: string }
+      data: { direction: MoveDirection; amount: number; id: string },
     ) {
       const currentComponent = store.getters.getElement(data.id)
 
@@ -437,7 +437,7 @@ const editor: Module<EditorProps, GlobalDataProps> = {
         case 'add':
           // 如果上一步是添加元素，撤销添加===删除
           state.components = state.components.filter(
-            (component) => component.id !== history.componentId
+            component => component.id !== history.componentId,
           )
           break
         case 'delete':
@@ -445,7 +445,7 @@ const editor: Module<EditorProps, GlobalDataProps> = {
           state.components = insertAt(
             state.components,
             history.index as number,
-            history.data
+            history.data,
           )
           break
         case 'modify': {
@@ -468,7 +468,7 @@ const editor: Module<EditorProps, GlobalDataProps> = {
           break
         case 'delete':
           state.components = state.components.filter(
-            (component) => component.id !== history.componentId
+            component => component.id !== history.componentId,
           )
           break
         case 'modify': {
@@ -524,31 +524,31 @@ const editor: Module<EditorProps, GlobalDataProps> = {
       'publishWork',
       {
         method: 'post',
-      }
+      },
     ),
     fetchChannels: actionWrapper(
       '/channel/getWorkChannels/:id',
-      'fetchChannels'
+      'fetchChannels',
     ),
     createChannel: actionWrapper('/channel/', 'createChannel', {
       method: 'post',
     }),
   },
   getters: {
-    getCurrentElement: (state) => {
+    getCurrentElement: state => {
       return state.components.find(
-        (component) => component.id === state.currentElementId
+        component => component.id === state.currentElementId,
       )
     },
-    getElement: (state) => (id: string) => {
+    getElement: state => (id: string) => {
       return state.components.find(
-        (component) => component.id === (id || state.currentElementId)
+        component => component.id === (id || state.currentElementId),
       )
     },
-    getComponentsLength: (state) => {
+    getComponentsLength: state => {
       return state.components.length
     },
-    checkUndoDisable: (state) => {
+    checkUndoDisable: state => {
       // 1 没有历史元素
       // 2 已经是第一个元素
       if (state.histories.length === 0 || state.historyIndex === 0) {
@@ -556,7 +556,7 @@ const editor: Module<EditorProps, GlobalDataProps> = {
       }
       return false
     },
-    checkRedoDisable: (state) => {
+    checkRedoDisable: state => {
       // 1 没有历史元素
       // 2 指针指向最后
       // 3 之前从未撤销过

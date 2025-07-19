@@ -94,14 +94,14 @@ export default defineComponent({
         context.emit('remove-component', id)
       }
     }
- 
+
     const gap = {
       x: 0,
       y: 0,
     }
     let isMoving = false
     const styles = computed(() =>
-      pick(props.props, ['position', 'top', 'left', 'width', 'height'])
+      pick(props.props, ['position', 'top', 'left', 'width', 'height']),
     )
     const calculateMovePosition = (e: MouseEvent) => {
       const container = document.querySelector('.preview-list') as HTMLElement
@@ -148,7 +148,7 @@ export default defineComponent({
     const calculateSize = (
       direction: ResizeDirection,
       e: MouseEvent,
-      positions: OriginalPositions
+      positions: OriginalPositions,
     ) => {
       const { clientX, clientY } = e
       const { left, right, top, bottom } = positions

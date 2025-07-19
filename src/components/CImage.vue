@@ -17,7 +17,7 @@ import {
 const defaultProps = transformToComponentProps(imageDefaultProps)
 
 export default defineComponent({
-  name: 'c-image',
+  name: 'CImage',
   props: {
     ...defaultProps,
   },
@@ -26,7 +26,7 @@ export default defineComponent({
     // 抽离并且获得 styleProps
     const { styleProps, handleClick } = useComponentCommon(
       props,
-      imageStylePropsNames
+      imageStylePropsNames,
     )
     return {
       styleProps,

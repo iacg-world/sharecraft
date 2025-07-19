@@ -11,7 +11,7 @@
           /></a>
           <router-link v-else to="/"><HomeOutlined /></router-link>
         </div>
-        <user-profile :user="user"></user-profile>
+        <UserProfile :user="user"></UserProfile>
       </a-layout-header>
       <a-layout-content class="home-layout-content">
         <router-view></router-view>
@@ -36,8 +36,7 @@ import { computed } from 'vue'
 import { useStore } from 'vuex'
 import { GlobalDataProps } from '../store/index'
 import UserProfile from '../components/UserProfile.vue'
-import { GithubFilled } from '@ant-design/icons-vue'
-import { HomeOutlined } from '@ant-design/icons-vue'
+import { GithubFilled, HomeOutlined } from '@ant-design/icons-vue'
 import { useRoute } from 'vue-router'
 
 const store = useStore<GlobalDataProps>()

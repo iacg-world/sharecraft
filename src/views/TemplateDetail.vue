@@ -42,10 +42,10 @@ export default defineComponent({
     const store = useStore<GlobalDataProps>()
     const currentId = route.params.id as string
     const template = computed<TemplateProps>(() =>
-      store.getters.getTemplateById(parseInt(currentId))
+      store.getters.getTemplateById(parseInt(currentId)),
     )
     const channelURL = computed(
-      () => `${baseH5URL}/p/${template.value.id}-${template.value.uuid}`
+      () => `${baseH5URL}/p/${template.value.id}-${template.value.uuid}`,
     )
     onMounted(async () => {
       await store.dispatch('fetchTemplate', { urlParams: { id: currentId } })

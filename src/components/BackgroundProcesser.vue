@@ -1,14 +1,13 @@
 <template>
   <div class="background-processer">
-    <styled-uploader v-if="!value" @success="onImageUploaded">
-    </styled-uploader>
-    <image-processer
+    <StyledUploader v-if="!value" @success="onImageUploaded"> </StyledUploader>
+    <ImageProcesser
       v-else
       :value="value"
       @change="handleUploadUrl"
       :showDelete="true"
     >
-    </image-processer>
+    </ImageProcesser>
   </div>
 </template>
 

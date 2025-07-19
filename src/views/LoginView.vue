@@ -249,14 +249,14 @@ const startCounter = () => {
     counter.value--
   }, 1000)
 }
-watch(counter, (newValue) => {
+watch(counter, newValue => {
   if (newValue === 0) {
     clearInterval(timer)
     counter.value = 60
   }
 })
 const isGenVeriCodeLoading = computed(() =>
-  store.getters.isOpLoading('genVeriCode')
+  store.getters.isOpLoading('genVeriCode'),
 )
 const codeInput = ref()
 const getCode = () => {
@@ -281,7 +281,6 @@ const emailForm = reactive({
 
 const notSignUp = ref(false)
 const validateRePasswd = async (_rule: Rule, value: string) => {
-
   if (!notSignUp.value) {
     return Promise.resolve()
   }
@@ -302,12 +301,12 @@ const emailRules = reactive<Record<string, Rule[]>>({
 const { validate: validateEmail } = useForm(emailForm, emailRules)
 
 const signUp = () => {
-  validateEmail().then((val) => {
+  validateEmail().then(val => {
     const payload = {
       username: emailForm.email,
       password: emailForm.passwd,
     }
-    store.dispatch('signUpAndLoginByEmail', { data: payload }).then((val) => {
+    store.dispatch('signUpAndLoginByEmail', { data: payload }).then(val => {
       message.success('登录成功~')
       router.push('/')
     })
@@ -326,7 +325,7 @@ const loginByEmail = () => {
         message.success('登录成功~')
         router.push('/')
       })
-      .catch((reason) => {
+      .catch(reason => {
         if (reason.errno === 101003) {
           // console.log('进入注册流程')
           notSignUp.value = true

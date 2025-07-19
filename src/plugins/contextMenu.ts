@@ -7,7 +7,7 @@ const initContextMenu = () => {
     {
       shortcut: 'Backspace / Delete',
       text: '删除图层',
-      action: (cid) => {
+      action: cid => {
         store.commit('deleteComponent', cid)
       },
     },

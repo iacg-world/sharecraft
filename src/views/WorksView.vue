@@ -21,14 +21,14 @@
       </a-button>
     </a-empty>
 
-    <works-list
+    <WorksList
       :list="works"
       @on-delete="onDelete"
       @on-copy="onCopy"
       @on-publish="publishTemplate"
       :loading="isLoading"
     >
-    </works-list>
+    </WorksList>
     <a-row type="flex" justify="end" align="middle">
       <a-pagination
         v-model:current="currentPage"

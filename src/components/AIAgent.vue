@@ -2,47 +2,59 @@
   <div class="ai-agent-container">
     <div class="ai-header">
       <h3>
-        <robot-outlined />
+        <RobotOutlined />
         AI 页面设计助手
       </h3>
       <a-button size="small" @click="clearChat" type="text">
-        <clear-outlined />
+        <ClearOutlined />
         清空对话
       </a-button>
     </div>
-    
+
     <div class="chat-container" ref="chatContainer">
-      <div v-for="(message, index) in chatHistory" :key="index" class="message-item">
+      <div
+        v-for="(message, index) in chatHistory"
+        :key="index"
+        class="message-item"
+      >
         <div v-if="message.type === 'user'" class="user-message">
           <div class="message-content">{{ message.content }}</div>
           <div class="message-time">{{ formatTime(message.timestamp) }}</div>
         </div>
-        
+
         <div v-else class="ai-message">
           <div class="ai-avatar">
-            <robot-outlined />
+            <RobotOutlined />
           </div>
           <div class="message-wrapper">
             <div class="message-content">
-              <div v-if="message.text" class="ai-response">{{ message.text }}</div>
+              <div v-if="message.text" class="ai-response">
+                {{ message.text }}
+              </div>
               <div v-if="message.schema" class="schema-preview">
                 <div class="schema-header">
                   <span>生成的页面结构：</span>
-                  <a-button size="small" @click="applySchema(message.schema)" type="primary">
+                  <a-button
+                    size="small"
+                    @click="applySchema(message.schema)"
+                    type="primary"
+                  >
                     应用到编辑器
                   </a-button>
                 </div>
-                <pre class="schema-code">{{ formatSchema(message.schema) }}</pre>
+                <pre class="schema-code">{{
+                  formatSchema(message.schema)
+                }}</pre>
               </div>
             </div>
             <div class="message-time">{{ formatTime(message.timestamp) }}</div>
           </div>
         </div>
       </div>
-      
+
       <div v-if="isLoading" class="loading-message">
         <div class="ai-avatar">
-          <robot-outlined />
+          <RobotOutlined />
         </div>
         <div class="loading-content">
           <a-spin size="small" />
@@ -50,7 +62,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="input-container">
       <div class="input-wrapper">
         <a-textarea
@@ -62,8 +74,8 @@
         />
         <div class="input-actions">
           <div class="example-prompts">
-            <a-tag 
-              v-for="example in examplePrompts" 
+            <a-tag
+              v-for="example in examplePrompts"
               :key="example"
               @click="inputText = example"
               class="example-tag"
@@ -71,13 +83,13 @@
               {{ example }}
             </a-tag>
           </div>
-          <a-button 
-            type="primary" 
+          <a-button
+            type="primary"
             @click="sendMessage"
             :loading="isLoading"
             :disabled="!inputText.trim()"
           >
-            <send-outlined />
+            <SendOutlined />
             发送 (Ctrl+Enter)
           </a-button>
         </div>
@@ -89,10 +101,10 @@
 <script lang="ts" setup>
 import { ref, reactive, onMounted, nextTick } from 'vue'
 import { message } from 'ant-design-vue'
-import { 
-  RobotOutlined, 
-  SendOutlined, 
-  ClearOutlined 
+import {
+  RobotOutlined,
+  SendOutlined,
+  ClearOutlined,
 } from '@ant-design/icons-vue'
 import { generatePageSchema } from '@/utils/aiSchemaGenerator'
 import { ComponentData } from '@/store/editor'
@@ -114,50 +126,52 @@ const chatHistory = reactive<ChatMessage[]>([
   {
     type: 'ai',
     text: '你好！我是你的AI页面设计助手。请描述你想要创建的页面，我会帮你生成相应的页面结构。',
-    timestamp: Date.now()
-  }
+    timestamp: Date.now(),
+  },
 ])
 
 const examplePrompts = [
   '创建一个简单的登录页面',
   '设计一个产品展示卡片',
   '制作一个联系我们页面',
-  '生成一个新闻文章布局'
+  '生成一个新闻文章布局',
 ]
 
 const sendMessage = async () => {
-  if (!inputText.value.trim() || isLoading.value) return
-  
+  if (!inputText.value.trim() || isLoading.value) {
+    return
+  }
+
   const userMessage: ChatMessage = {
     type: 'user',
     content: inputText.value,
-    timestamp: Date.now()
+    timestamp: Date.now(),
   }
-  
+
   chatHistory.push(userMessage)
-  
+
   const userInput = inputText.value
   inputText.value = ''
   isLoading.value = true
-  
+
   scrollToBottom()
-  
+
   try {
     const result = await generatePageSchema(userInput)
-    
+
     const aiMessage: ChatMessage = {
       type: 'ai',
       text: result.description,
       schema: result.components,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     }
-    
+
     chatHistory.push(aiMessage)
   } catch (error) {
     const aiMessage: ChatMessage = {
       type: 'ai',
       text: '抱歉，处理您的请求时遇到了问题。请稍后重试或换一种表达方式。',
-      timestamp: Date.now()
+      timestamp: Date.now(),
     }
     chatHistory.push(aiMessage)
     console.error('AI生成错误:', error)
@@ -171,12 +185,12 @@ const applySchema = (schema: ComponentData[]) => {
   try {
     // 清空当前组件
     store.commit('setComponents', [])
-    
+
     // 添加新组件
     schema.forEach(component => {
       store.commit('addComponent', component)
     })
-    
+
     message.success('页面结构已应用到编辑器')
   } catch (error) {
     message.error('应用页面结构失败')
@@ -192,7 +206,7 @@ const clearChat = () => {
 const formatTime = (timestamp: number) => {
   return new Date(timestamp).toLocaleTimeString('zh-CN', {
     hour: '2-digit',
-    minute: '2-digit'
+    minute: '2-digit',
   })
 }
 
@@ -229,7 +243,7 @@ onMounted(() => {
   align-items: center;
   padding: 16px;
   border-bottom: 1px solid #f0f0f0;
-  
+
   h3 {
     margin: 0;
     display: flex;
@@ -254,7 +268,7 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  
+
   .message-content {
     background: #1890ff;
     color: white;
@@ -263,7 +277,7 @@ onMounted(() => {
     max-width: 70%;
     word-wrap: break-word;
   }
-  
+
   .message-time {
     font-size: 12px;
     color: #999;
@@ -275,7 +289,7 @@ onMounted(() => {
   display: flex;
   align-items: flex-start;
   gap: 8px;
-  
+
   .ai-avatar {
     width: 32px;
     height: 32px;
@@ -287,22 +301,22 @@ onMounted(() => {
     color: #1890ff;
     flex-shrink: 0;
   }
-  
+
   .message-wrapper {
     flex: 1;
-    
+
     .message-content {
       background: #f6f6f6;
       padding: 12px 16px;
       border-radius: 4px 18px 18px 18px;
       max-width: 85%;
-      
+
       .ai-response {
         margin-bottom: 12px;
         line-height: 1.6;
       }
     }
-    
+
     .message-time {
       font-size: 12px;
       color: #999;
@@ -317,7 +331,7 @@ onMounted(() => {
   border: 1px solid #d9d9d9;
   border-radius: 6px;
   overflow: hidden;
-  
+
   .schema-header {
     display: flex;
     justify-content: space-between;
@@ -328,7 +342,7 @@ onMounted(() => {
     font-size: 13px;
     font-weight: 500;
   }
-  
+
   .schema-code {
     margin: 0;
     padding: 12px;
@@ -345,7 +359,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   gap: 8px;
-  
+
   .ai-avatar {
     width: 32px;
     height: 32px;
@@ -356,7 +370,7 @@ onMounted(() => {
     justify-content: center;
     color: #1890ff;
   }
-  
+
   .loading-content {
     display: flex;
     align-items: center;
@@ -376,22 +390,22 @@ onMounted(() => {
     resize: none;
     border-radius: 8px;
   }
-  
+
   .input-actions {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-top: 12px;
-    
+
     .example-prompts {
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
-      
+
       .example-tag {
         cursor: pointer;
         transition: all 0.3s;
-        
+
         &:hover {
           background: #e6f7ff;
           border-color: #91d5ff;
@@ -406,7 +420,7 @@ onMounted(() => {
     flex-direction: column;
     align-items: stretch !important;
     gap: 12px;
-    
+
     .example-prompts {
       justify-content: center;
     }

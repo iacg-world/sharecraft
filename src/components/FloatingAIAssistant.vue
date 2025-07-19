@@ -8,10 +8,10 @@
       :style="{ left: position.x + 'px', top: position.y + 'px' }"
       @mousedown="startDrag"
       @click="openAI"
-      :class="{ 'dragging': isDragging }"
+      :class="{ dragging: isDragging }"
     >
       <div class="ai-icon">
-        <robot-outlined />
+        <RobotOutlined />
       </div>
       <div class="ai-tooltip">AI助手</div>
     </div>
@@ -45,7 +45,7 @@ const floatingButton = ref<HTMLElement>()
 // 悬浮按钮位置
 const position = reactive({
   x: 0,
-  y: 0
+  y: 0,
 })
 
 // 拖拽相关状态
@@ -53,7 +53,7 @@ const dragState = reactive({
   startX: 0,
   startY: 0,
   offsetX: 0,
-  offsetY: 0
+  offsetY: 0,
 })
 
 // 初始化位置（右下角）
@@ -67,7 +67,7 @@ const initPosition = () => {
 const startDrag = (e: MouseEvent) => {
   e.preventDefault()
   e.stopPropagation()
-  
+
   isDragging.value = true
   dragState.startX = e.clientX
   dragState.startY = e.clientY
@@ -76,14 +76,16 @@ const startDrag = (e: MouseEvent) => {
 
   document.addEventListener('mousemove', onDrag)
   document.addEventListener('mouseup', stopDrag)
-  
+
   // 添加全局样式，防止文本选择
   document.body.style.userSelect = 'none'
 }
 
 // 拖拽中
 const onDrag = (e: MouseEvent) => {
-  if (!isDragging.value) return
+  if (!isDragging.value) {
+    return
+  }
 
   const deltaX = e.clientX - dragState.startX
   const deltaY = e.clientY - dragState.startY
@@ -95,8 +97,14 @@ const onDrag = (e: MouseEvent) => {
   const buttonSize = 60
   const padding = 10
 
-  newX = Math.max(padding, Math.min(window.innerWidth - buttonSize - padding, newX))
-  newY = Math.max(padding, Math.min(window.innerHeight - buttonSize - padding, newY))
+  newX = Math.max(
+    padding,
+    Math.min(window.innerWidth - buttonSize - padding, newX),
+  )
+  newY = Math.max(
+    padding,
+    Math.min(window.innerHeight - buttonSize - padding, newY),
+  )
 
   position.x = newX
   position.y = newY
@@ -108,12 +116,15 @@ const stopDrag = () => {
   document.removeEventListener('mousemove', onDrag)
   document.removeEventListener('mouseup', stopDrag)
   document.body.style.userSelect = ''
-  
+
   // 保存位置到localStorage
-  localStorage.setItem('aiAssistantPosition', JSON.stringify({
-    x: position.x,
-    y: position.y
-  }))
+  localStorage.setItem(
+    'aiAssistantPosition',
+    JSON.stringify({
+      x: position.x,
+      y: position.y,
+    }),
+  )
 }
 
 // 打开AI助手
@@ -132,7 +143,7 @@ const closeAI = () => {
 const handleResize = () => {
   const buttonSize = 60
   const padding = 10
-  
+
   position.x = Math.min(position.x, window.innerWidth - buttonSize - padding)
   position.y = Math.min(position.y, window.innerHeight - buttonSize - padding)
 }
@@ -145,7 +156,7 @@ const restorePosition = () => {
       const savedPosition = JSON.parse(saved)
       position.x = savedPosition.x
       position.y = savedPosition.y
-      
+
       // 验证位置是否在屏幕范围内
       handleResize()
     } else {
@@ -187,7 +198,7 @@ onUnmounted(() => {
   &:hover {
     transform: scale(1.1);
     box-shadow: 0 6px 25px rgba(24, 144, 255, 0.4);
-    
+
     .ai-tooltip {
       opacity: 1;
       transform: translateX(-50%) translateY(0);
@@ -201,7 +212,7 @@ onUnmounted(() => {
   &.dragging {
     transform: scale(1.05);
     cursor: grabbing;
-    
+
     .ai-tooltip {
       opacity: 0;
     }
@@ -248,7 +259,9 @@ onUnmounted(() => {
     box-shadow: 0 4px 20px rgba(24, 144, 255, 0.3);
   }
   50% {
-    box-shadow: 0 4px 20px rgba(24, 144, 255, 0.5), 0 0 0 10px rgba(24, 144, 255, 0.1);
+    box-shadow:
+      0 4px 20px rgba(24, 144, 255, 0.5),
+      0 0 0 10px rgba(24, 144, 255, 0.1);
   }
   100% {
     box-shadow: 0 4px 20px rgba(24, 144, 255, 0.3);
@@ -273,4 +286,4 @@ onUnmounted(() => {
     flex-direction: column;
   }
 }
-</style> 
+</style>

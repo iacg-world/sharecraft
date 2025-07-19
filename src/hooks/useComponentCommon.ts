@@ -11,7 +11,7 @@ picks: fontSize，等样式数组
 */
 const useComponentCommon = (
   props: Readonly<Partial<TextComponentProps>>,
-  picks: string[]
+  picks: string[],
 ) => {
   const store = useStore<GlobalDataProps>()
 

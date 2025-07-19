@@ -33,7 +33,7 @@ export default function initHotKeys() {
         amount: 1,
         id: currentId.value,
       })
-    })
+    }),
   )
   useHotKey(
     'down',
@@ -43,7 +43,7 @@ export default function initHotKeys() {
         amount: 1,
         id: currentId.value,
       })
-    })
+    }),
   )
   useHotKey(
     'left',
@@ -53,7 +53,7 @@ export default function initHotKeys() {
         amount: 1,
         id: currentId.value,
       })
-    })
+    }),
   )
   useHotKey(
     'right',
@@ -63,7 +63,7 @@ export default function initHotKeys() {
         amount: 1,
         id: currentId.value,
       })
-    })
+    }),
   )
   useHotKey('shift+up', () => {
     store.commit('moveComponent', {

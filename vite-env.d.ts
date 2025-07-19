@@ -1,14 +1,22 @@
-/* eslint-disable */
+/// <reference types="vite/client" />
+
 declare module '*.vue' {
   import type { DefineComponent } from 'vue'
   const component: DefineComponent<{}, {}, any>
   export default component
 }
 
-declare namespace JSX {
-  interface Element extends React.ReactElement { }
-  interface ElementClass extends React.Component { }
-  interface IntrinsicElements {
-    [elemName: string]: any;
+declare global {
+  namespace JSX {
+    interface Element extends VNode {}
+    interface ElementClass extends ComponentPublicInstance {}
+    interface ElementAttributesProperty {
+      $props: any
+    }
+    interface IntrinsicElements {
+      [elem: string]: any
+    }
   }
 }
+
+import type { VNode, ComponentPublicInstance } from 'vue'

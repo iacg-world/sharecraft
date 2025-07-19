@@ -6,7 +6,7 @@
         :key="`item-${index}`"
         :header="item.text"
       >
-        <props-table :props="item.props" @change="handleChange"></props-table>
+        <PropsTable :props="item.props" @change="handleChange"></PropsTable>
       </a-collapse-panel>
     </a-collapse>
   </div>
@@ -82,9 +82,9 @@ export default defineComponent({
       ]
     })
     const editGroups = computed(() => {
-      return newGroups.value.map((group) => {
+      return newGroups.value.map(group => {
         const propsMap = {} as Partial<AllComponentProps>
-        group.items.forEach((item) => {
+        group.items.forEach(item => {
           const key = item as keyof AllComponentProps
           propsMap[key] = props.props[key]
         })

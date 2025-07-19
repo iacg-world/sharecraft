@@ -1,16 +1,16 @@
 <template>
-  <c-uploader
+  <CUploader
     class="styled-uploader"
     action="utils/upload-img"
     :showUploadList="false"
     :beforeUpload="commonUploadCheck"
     @success="
-      (data) => {
+      data => {
         handleUploadSuccess(data.resp, data.file.raw)
       }
     "
     @error="
-      (data) => {
+      data => {
         handleUploadError(data.resp, data.file.raw)
       }
     "
@@ -34,7 +34,7 @@
         </template>
       </div>
     </template>
-  </c-uploader>
+  </CUploader>
 </template>
 
 <script lang="ts">

@@ -44,15 +44,15 @@
           ></a-button>
         </a-tooltip>
         <a-tooltip title="双击修改">
-          <inline-edit
+          <InlineEdit
             class="edit-area"
             :value="element.layerName"
             @change="
-              (value) => {
+              value => {
                 handleChange(element.id, 'layerName', value)
               }
             "
-          ></inline-edit>
+          ></InlineEdit>
         </a-tooltip>
 
         <a-tooltip title="拖动排序">

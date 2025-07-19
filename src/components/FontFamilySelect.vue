@@ -21,7 +21,7 @@
 
 <script setup lang="tsx">
 import { Select, SelectProps } from 'ant-design-vue/es'
-import { ref, VNode, defineProps, defineEmits } from 'vue'
+import { ref, VNode } from 'vue'
 const props = defineProps({
   value: {
     type: String,
@@ -63,7 +63,7 @@ const fontFamilyArr = [
   },
 ]
 const formatOptions = (options: Exclude<SelectProps['options'], undefined>) => {
-  return options.map((font) => {
+  return options.map(font => {
     return {
       value: font.value,
       label: (
@@ -75,7 +75,7 @@ const formatOptions = (options: Exclude<SelectProps['options'], undefined>) => {
 
 const emit = defineEmits(['change'])
 const selectChange = () => {
-  const res = [v2.value || '无', v1.value].filter((item) => item).toString()
+  const res = [v2.value || '无', v1.value].filter(item => item).toString()
 
   emit('change', res)
 }

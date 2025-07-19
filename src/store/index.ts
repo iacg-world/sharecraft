@@ -22,11 +22,11 @@ export interface ActionPayload {
 export function actionWrapper(
   url: string,
   commitName: string,
-  config: AxiosRequestConfig = { method: 'get' }
+  config: AxiosRequestConfig = { method: 'get' },
 ) {
   return async (
     context: ActionContext<any, any>,
-    payload: ActionPayload = {}
+    payload: ActionPayload = {},
   ) => {
     const { urlParams, data, searchParams, props } = payload
     const newConfig = { ...config, data, opName: commitName }

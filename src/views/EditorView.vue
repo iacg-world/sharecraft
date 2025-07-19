@@ -8,12 +8,12 @@
           width="60vw"
           :footer="null"
         >
-          <publish-form />
+          <PublishForm />
         </a-modal>
-        <preview-form
+        <PreviewForm
           v-model:visible="showPreviewForm"
           v-if="showPreviewForm"
-        ></preview-form>
+        ></PreviewForm>
         <div class="page-title">
           <router-link to="/">
             <HomeOutlined />
@@ -21,7 +21,7 @@
           <a>
             <LeftCircleOutlined @click="back" style="margin-left: 10px" />
           </a>
-          <inline-edit :value="page.title" @change="titleChange" />
+          <InlineEdit :value="page.title" @change="titleChange" />
         </div>
         <div class="action_warp">
           <div class="action_buttons">
@@ -33,7 +33,7 @@
               >发布</a-button
             >
           </div>
-          <user-profile :user="userInfo"></user-profile>
+          <UserProfile :user="userInfo"></UserProfile>
         </div>
       </a-layout-header>
     </a-layout>
@@ -42,7 +42,7 @@
         <div class="sidebar-container">
           <a-collapse activeKey="component" accordion>
             <a-collapse-panel key="component" header="组件列表">
-              <components-list
+              <ComponentsList
                 :list="defaultTextTemplates"
                 @onItemClick="addItem"
               />
@@ -53,7 +53,7 @@
       <a-layout style="position: relative">
         <a-layout-content class="preview-container">
           <div>画布区域</div>
-          <history-area></history-area>
+          <HistoryArea></HistoryArea>
           <div class="preview-list" :class="{ 'canvas-fix': canvasFix }">
             <div class="preview_container">
               <div
@@ -61,7 +61,7 @@
                 id="canvas-area"
                 :style="page.props"
               >
-                <edit-wrapper
+                <EditWrapper
                   :isLocked="currentElement?.isLocked"
                   @setActive="setActive"
                   @removeComponent="removeComponent"
@@ -77,15 +77,18 @@
                 >
                   <component
                     :is="component.name"
-                    @change="(data: any) => onchange({
-                    id: component.id,
-                    key: data.key,
-                    value: data.value
-                  })"
+                    @change="
+                      (data: any) =>
+                        onchange({
+                          id: component.id,
+                          key: data.key,
+                          value: data.value,
+                        })
+                    "
                     v-bind="component.props"
                     :isEditing="isEditing"
                   />
-                </edit-wrapper>
+                </EditWrapper>
               </div>
             </div>
           </div>
@@ -116,39 +119,37 @@
             class="no-top-radius tab_pane_content"
           >
             <div v-if="currentElement">
-              <edit-group
+              <EditGroup
                 v-if="!currentElement.isLocked"
                 :props="currentElement.props"
                 @change="handleChange"
-              ></edit-group>
+              ></EditGroup>
               <div v-else>
-                <a-empty>
+                <AEmpty>
                   <template #description>
                     <p>该元素被锁定，只允许在画布编辑文字内容</p>
                   </template>
-                </a-empty>
+                </AEmpty>
               </div>
             </div>
           </a-tab-pane>
           <a-tab-pane key="layer" tab="图层设置">
-            <layer-list
+            <LayerList
               :list="components"
               :selectedId="(currentElement && currentElement.id) || ''"
               @change="handleChange"
               @drop="removeComponent"
               @select="setActive"
             >
-            </layer-list>
+            </LayerList>
           </a-tab-pane>
 
           <a-tab-pane key="page" tab="页面设置">
-            <props-table :props="page.props" @change="pageChange"></props-table>
+            <PropsTable :props="page.props" @change="pageChange"></PropsTable>
           </a-tab-pane>
         </a-tabs>
       </a-layout-sider>
     </a-layout>
-    
-
   </a-flex>
 </template>
 
@@ -218,7 +219,7 @@ export default defineComponent({
     const components = computed(() => store.state.editor.components)
     const isEditing = computed(() => store.state.editor.isEditing)
     const currentElement = computed<ComponentData | null>(
-      () => store.getters.getCurrentElement
+      () => store.getters.getCurrentElement,
     )
     const page = computed(() => store.state.editor.page)
     const userInfo = computed(() => store.state.user)
@@ -259,7 +260,7 @@ export default defineComponent({
       const updatedData = pickBy<number>(data, (v, k) => k !== 'id')
       // 将位置变化合并为数组传递
       const keysArr = Object.keys(updatedData)
-      const valuesArr = Object.values(updatedData).map((v) => v + 'px')
+      const valuesArr = Object.values(updatedData).map(v => v + 'px')
       store.commit('updateComponent', { key: keysArr, value: valuesArr, id })
     }
     const { saveWork, saveIsLoading } = useSaveWork()
@@ -435,6 +436,4 @@ export default defineComponent({
     font-size: 12px;
   }
 }
-
-
 </style>

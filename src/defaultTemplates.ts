@@ -47,7 +47,7 @@ export const defaultTextTemplates = [
   },
 ]
 
-export default defaultTextTemplates.map((template) => ({
+export default defaultTextTemplates.map(template => ({
   ...textDefaultProps,
   ...template,
 }))
