@@ -249,16 +249,16 @@ export async function callAI(request: AIApiRequest): Promise<AIApiResponse> {
 // 环境变量配置
 export function configureAI() {
   // 从环境变量读取配置
-  if (import.meta.env.VITE_AI_API_KEY) {
-    AI_CONFIG.apiKey = import.meta.env.VITE_AI_API_KEY
+  if (process.env.VUE_APP__API_KEY) {
+    AI_CONFIG.apiKey = process.env.VUE_APP__API_KEY
   }
   
-  if (import.meta.env.VITE_AI_PROVIDER) {
-    AI_CONFIG.provider = import.meta.env.VITE_AI_PROVIDER
+  if (process.env.VUE_APP__PROVIDER) {
+    AI_CONFIG.provider = process.env.VUE_APP__PROVIDER
   }
   
-  if (import.meta.env.VITE_AI_BASE_URL) {
-    AI_CONFIG.baseUrl = import.meta.env.VITE_AI_BASE_URL
+  if (process.env.VUE_APP__BASE_URL) {
+    AI_CONFIG.baseUrl = process.env.VUE_APP__BASE_URL
   }
 }
 
