@@ -105,8 +105,49 @@ export default defineComponent({
     )
     const calculateMovePosition = (e: MouseEvent) => {
       const container = document.querySelector('.preview-list') as HTMLElement
-      const left = e.clientX - gap.x - container.offsetLeft
-      const top = e.clientY - gap.y - container.offsetTop + container.scrollTop
+      const canvasContainer = document.querySelector(
+        '.canvas-container',
+      ) as HTMLElement
+
+      if (!container || !canvasContainer) {
+        return { left: 0, top: 0 }
+      }
+
+      let left = e.clientX - gap.x - container.offsetLeft
+      let top = e.clientY - gap.y - container.offsetTop + container.scrollTop
+
+      // 获取画布容器的尺寸
+      const canvasRect = canvasContainer.getBoundingClientRect()
+      const containerRect = container.getBoundingClientRect()
+
+      // 计算画布在预览容器中的相对位置
+      const canvasLeft = canvasRect.left - containerRect.left
+      const canvasTop = canvasRect.top - containerRect.top + container.scrollTop
+      const canvasWidth = canvasContainer.offsetWidth
+      const canvasHeight = canvasContainer.offsetHeight
+
+      // 获取当前组件的尺寸
+      const componentWidth = parseInt(props.props?.width || '0')
+      const componentHeight = parseInt(props.props?.height || '0')
+
+      // 边界检测：确保组件不超出画布边界
+      // 左边界检测
+      if (left < canvasLeft) {
+        left = canvasLeft
+      }
+      // 右边界检测
+      if (left + componentWidth > canvasLeft + canvasWidth) {
+        left = canvasLeft + canvasWidth - componentWidth
+      }
+      // 上边界检测
+      if (top < canvasTop) {
+        top = canvasTop
+      }
+      // 下边界检测
+      if (top + componentHeight > canvasTop + canvasHeight) {
+        top = canvasTop + canvasHeight - componentHeight
+      }
+
       return {
         left,
         top,
