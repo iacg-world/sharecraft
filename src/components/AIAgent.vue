@@ -9,6 +9,10 @@
         <ClearOutlined />
         清空对话
       </a-button>
+      <a-button size="small" @click="showSettings" type="text">
+        <SettingOutlined />
+        AI设置
+      </a-button>
     </div>
 
     <div class="chat-container" ref="chatContainer">
@@ -95,6 +99,17 @@
         </div>
       </div>
     </div>
+
+    <!-- AI设置模态框 -->
+    <a-modal
+      v-model:visible="showSettingsModal"
+      title="AI配置设置"
+      width="600px"
+      :footer="null"
+      @cancel="closeSettings"
+    >
+      <AISettings @settings-updated="onSettingsUpdated" />
+    </a-modal>
   </div>
 </template>
 
@@ -105,10 +120,12 @@ import {
   RobotOutlined,
   SendOutlined,
   ClearOutlined,
+  SettingOutlined,
 } from '@ant-design/icons-vue'
 import { generatePageSchema } from '@/utils/aiSchemaGenerator'
 import { ComponentData } from '@/store/editor'
 import { useStore } from 'vuex'
+import AISettings from './AISettings.vue'
 
 interface ChatMessage {
   type: 'user' | 'ai'
@@ -122,6 +139,7 @@ const store = useStore()
 const chatContainer = ref<HTMLElement>()
 const inputText = ref('')
 const isLoading = ref(false)
+const showSettingsModal = ref(false)
 const chatHistory = reactive<ChatMessage[]>([
   {
     type: 'ai',
@@ -201,6 +219,19 @@ const applySchema = (schema: ComponentData[]) => {
 const clearChat = () => {
   chatHistory.splice(1) // 保留欢迎消息
   inputText.value = ''
+}
+
+const showSettings = () => {
+  showSettingsModal.value = true
+}
+
+const closeSettings = () => {
+  showSettingsModal.value = false
+}
+
+const onSettingsUpdated = (settings: any) => {
+  console.log('AI设置已更新:', settings)
+  // 可以在这里添加设置更新后的逻辑
 }
 
 const formatTime = (timestamp: number) => {

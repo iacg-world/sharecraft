@@ -27,7 +27,6 @@ export default defineComponent({
   props: {
     value: {
       type: String,
-      required: true,
     },
   },
   emits: ['change'],

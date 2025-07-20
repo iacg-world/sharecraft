@@ -1,4 +1,5 @@
 import { ComponentData } from '@/store/editor'
+import { getAIUserSettings, type AIUserSettings } from './aiSettings'
 
 export interface AIApiRequest {
   message: string
@@ -276,25 +277,36 @@ function parseAIResponse(aiReply: string): {
 
 // 主要的AI调用函数
 export async function callAI(request: AIApiRequest): Promise<AIApiResponse> {
+  // 优先使用用户配置，如果没有则使用环境变量配置
+  const userSettings = getAIUserSettings()
+  const config = {
+    provider: userSettings.apiKey ? userSettings.provider : AI_CONFIG.provider,
+    apiKey: userSettings.apiKey || AI_CONFIG.apiKey,
+    baseUrl: userSettings.baseUrl || AI_CONFIG.baseURL,
+    model: userSettings.model || 'gpt-3.5-turbo',
+    maxTokens: userSettings.maxTokens || AI_CONFIG.maxTokens,
+    temperature: userSettings.temperature || AI_CONFIG.temperature,
+  }
+
   // 检查是否配置了API Key
-  if (!AI_CONFIG.apiKey) {
+  if (!config.apiKey) {
     console.warn('AI API Key not configured, using fallback')
     return {
       success: false,
       error: 'AI服务未配置',
       data: {
-        reply: '请配置AI服务的API Key',
+        reply: '请在AI设置中配置API Key，或在环境变量中配置',
         confidence: 0,
       },
     }
   }
 
   // 根据配置选择不同的AI服务
-  switch (AI_CONFIG.provider) {
+  switch (config.provider) {
     case 'openai':
-      return callOpenAI(request)
+      return callOpenAIWithConfig(request, config)
     case 'claude':
-      return callClaude(request)
+      return callClaudeWithConfig(request, config)
     default:
       return {
         success: false,
@@ -328,6 +340,129 @@ export function configureAI() {
   if (process.env.VUE_APP_AI_TEMPERATURE) {
     AI_CONFIG.temperature =
       parseFloat(process.env.VUE_APP_AI_TEMPERATURE) || 0.7
+  }
+}
+
+// 带自定义配置的OpenAI API调用
+export async function callOpenAIWithConfig(
+  request: AIApiRequest,
+  config: any,
+): Promise<AIApiResponse> {
+  try {
+    const prompt = generatePrompt(request.message)
+
+    const response = await fetch(`${config.baseUrl}/chat/completions`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${config.apiKey}`,
+      },
+      body: JSON.stringify({
+        model: config.model,
+        messages: [
+          {
+            role: 'system',
+            content:
+              'You are a UI/UX design assistant that generates page layouts based on user descriptions. Always respond with both a description and component data in JSON format.',
+          },
+          {
+            role: 'user',
+            content: prompt,
+          },
+        ],
+        max_tokens: config.maxTokens,
+        temperature: config.temperature,
+      }),
+    })
+
+    const data = await response.json()
+
+    if (!response.ok) {
+      console.error('❌ OpenAI API 错误:', data)
+      throw new Error(data.error?.message || 'API call failed')
+    }
+
+    const aiReply = data.choices[0].message.content
+
+    const parsedResult = parseAIResponse(aiReply)
+
+    return {
+      success: true,
+      data: {
+        reply: parsedResult.description,
+        components: parsedResult.components,
+        confidence: 0.8,
+      },
+    }
+  } catch (error) {
+    console.error('OpenAI API Error:', error)
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+      data: {
+        reply: '抱歉，AI服务暂时不可用，请稍后重试。',
+        confidence: 0,
+      },
+    }
+  }
+}
+
+// 带自定义配置的Claude API调用
+export async function callClaudeWithConfig(
+  request: AIApiRequest,
+  config: any,
+): Promise<AIApiResponse> {
+  try {
+    const prompt = generatePrompt(request.message)
+
+    const response = await fetch(`${config.baseUrl}/messages`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': config.apiKey,
+        'anthropic-version': '2023-06-01',
+      },
+      body: JSON.stringify({
+        model: config.model,
+        max_tokens: config.maxTokens,
+        messages: [
+          {
+            role: 'user',
+            content: prompt,
+          },
+        ],
+      }),
+    })
+
+    const data = await response.json()
+
+    if (!response.ok) {
+      console.error('❌ Claude API 错误:', data)
+      throw new Error(data.error?.message || 'API call failed')
+    }
+
+    const aiReply = data.content[0].text
+
+    const parsedResult = parseAIResponse(aiReply)
+
+    return {
+      success: true,
+      data: {
+        reply: parsedResult.description,
+        components: parsedResult.components,
+        confidence: 0.9,
+      },
+    }
+  } catch (error) {
+    console.error('Claude API Error:', error)
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+      data: {
+        reply: '抱歉，AI服务暂时不可用，请稍后重试。',
+        confidence: 0,
+      },
+    }
   }
 }
 
