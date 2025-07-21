@@ -68,6 +68,19 @@ export interface ChannelProps {
   workId: number
   status: number
 }
+export interface GridSettings {
+  // 网格是否启用
+  enabled: boolean
+  // 网格间距（像素）
+  spacing: number
+  // 网格是否可见
+  visible: boolean
+  // 网格线颜色
+  color: string
+  // 网格线透明度
+  opacity: number
+}
+
 export interface EditorProps {
   // 是否在编辑状态
   isEditing: boolean
@@ -91,6 +104,8 @@ export interface EditorProps {
   isDirty: boolean
   // 当前 work 的 channels
   channels: ChannelProps[]
+  // 网格系统设置
+  gridSettings: GridSettings
 }
 
 export const testComponents: ComponentData[] = [
@@ -252,6 +267,13 @@ const editor: Module<EditorProps, GlobalDataProps> = {
     maxHistoryNumber: 9,
     isDirty: false,
     channels: [],
+    gridSettings: {
+      enabled: false,
+      spacing: 20,
+      visible: true,
+      color: '#e6f7ff',
+      opacity: 0.5,
+    },
   },
   mutations: {
     setEditStatus(state, newStatus) {
@@ -512,6 +534,9 @@ const editor: Module<EditorProps, GlobalDataProps> = {
       state.histories = []
       state.historyIndex = -1
     }),
+    updateGridSettings(state, payload: Partial<GridSettings>) {
+      state.gridSettings = { ...state.gridSettings, ...payload }
+    },
   },
   actions: {
     fetchWork: actionWrapper('/works/:id', 'fetchWork'),
