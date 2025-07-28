@@ -241,7 +241,7 @@ export default defineComponent({
       const leftOffset = clientX - container.offsetLeft
       const directionMap = {
         'top-left': () => {
-          let result = {
+          const result = {
             width: leftWidth,
             height: topHeight,
             top: topOffset,
@@ -278,7 +278,7 @@ export default defineComponent({
           return result
         },
         'top-right': () => {
-          let result = {
+          const result = {
             width: rightWidth,
             height: topHeight,
             top: topOffset,
@@ -309,7 +309,7 @@ export default defineComponent({
           return result
         },
         'bottom-left': () => {
-          let result = {
+          const result = {
             width: leftWidth,
             height: bottomHeight,
             top: undefined,
@@ -339,7 +339,7 @@ export default defineComponent({
           return result
         },
         'bottom-right': () => {
-          let result = {
+          const result = {
             width: rightWidth,
             height: bottomHeight,
             top: undefined,

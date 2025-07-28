@@ -150,6 +150,14 @@
             <a-divider>网格设置</a-divider>
             <GridSettings />
           </a-tab-pane>
+
+          <a-tab-pane key="figma" tab="Figma导入">
+            <FigmaQuickImport ref="figmaQuickImportRef" />
+          </a-tab-pane>
+
+          <a-tab-pane key="ai" tab="AI助手">
+            <EnhancedAIAgent ref="enhancedAIAgentRef" />
+          </a-tab-pane>
         </a-tabs>
       </a-layout-sider>
     </a-layout>
@@ -190,9 +198,11 @@ import router from '@/router'
 import CText from '@/components/CText.vue'
 import GridSystem from '@/components/GridSystem.vue'
 import GridSettings from '@/components/GridSettings.vue'
+import FigmaQuickImport from '@/components/FigmaQuickImport.vue'
+import EnhancedAIAgent from '@/components/EnhancedAIAgent.vue'
 import '@chinese-fonts/mzxst/dist/MZPXflat/result.css'
 import '@chinese-fonts/hwmct/dist/汇文明朝体/result.css'
-export type TabType = 'component' | 'layer' | 'page'
+export type TabType = 'component' | 'layer' | 'page' | 'figma' | 'ai'
 export default defineComponent({
   components: {
     CText,
@@ -209,6 +219,8 @@ export default defineComponent({
     PreviewForm,
     GridSystem,
     GridSettings,
+    FigmaQuickImport,
+    EnhancedAIAgent,
 
     HomeOutlined,
     AEmpty,
