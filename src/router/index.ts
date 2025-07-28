@@ -34,6 +34,15 @@ const routes: Array<RouteRecordRaw> = [
           requiredLogin: true,
         },
       },
+      {
+        path: 'form-builder',
+        name: 'form-builder',
+        component: () =>
+          import(/* webpackChunkName: "FormBuilderDemo" */ '@/views/FormBuilderDemo.vue'),
+        meta: {
+          title: '表单构建器',
+        },
+      },
     ],
   },
   {

@@ -19,6 +19,9 @@
     <router-link v-if="$route.path === '/'" to="/works"
       ><a-button>我的作品</a-button></router-link
     >
+    <router-link v-if="$route.path === '/'" to="/form-builder"
+      ><a-button type="primary" ghost>表单构建器</a-button></router-link
+    >
     <a-dropdown-button class="user-profile-component user-profile-container">
       <router-link to="/setting">{{
         user.data.nickName || user.data.username
@@ -28,6 +31,9 @@
           <a-menu-item key="0" @click="createDesign">创建作品</a-menu-item>
           <a-menu-item key="1"
             ><router-link to="/works">我的作品</router-link></a-menu-item
+          >
+          <a-menu-item key="3"
+            ><router-link to="/form-builder">表单构建器</router-link></a-menu-item
           >
           <a-menu-item key="2" @click="logout">退出登录</a-menu-item>
         </a-menu>
