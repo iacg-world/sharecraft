@@ -81,7 +81,7 @@ export default defineComponent({
     width: 100px;
     padding: 5px 10px;
     color: #ffffff;
-    background: #1890ff;
+    background: #75409a;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -89,7 +89,7 @@ export default defineComponent({
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
     &:hover {
-      background: #40a9ff;
+      opacity: 0.8;
     }
     h4 {
       color: #ffffff;

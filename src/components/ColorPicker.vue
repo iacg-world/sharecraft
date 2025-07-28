@@ -29,14 +29,14 @@
 import { defineComponent, PropType } from 'vue'
 const defaultColors = [
   '#ffffff',
-  '#f5222d',
-  '#fa541c',
-  '#fadb14',
-  '#52c41a',
-  '#1890ff',
+  '#f5f2e9',
+  '#a11715',
+  '#f5deb3',
+  '#C7EDCC',
+  '#2e59a7',
   '#722ed1',
-  '#8c8c8c',
-  '#000000',
+  '#beb1aa',
+  '#1e2732',
   'transparent',
 ]
 export default defineComponent({

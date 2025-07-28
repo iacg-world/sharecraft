@@ -144,6 +144,8 @@ module.exports = defineConfig({
           threshold: 1024 * 10,
         })
       )
+    } else {
+      config.devtool = 'cheap-source-map'
     }
 
     if (mode === 'analyze') {

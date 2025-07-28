@@ -3,7 +3,6 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import Home from '../views/HomeView.vue'
 import TemplateDetail from '../views/TemplateDetail.vue'
 import Index from '../views/IndexView.vue'
-import Works from '../views/WorksView.vue'
 import store from '@/store'
 import axios from 'axios'
 
@@ -28,7 +27,8 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: 'works',
         name: 'works',
-        component: Works,
+        component: () =>
+          import(/* webpackChunkName: "WorksView" */ '@/views/WorksView.vue'),
         meta: {
           title: '我的作品',
           requiredLogin: true,

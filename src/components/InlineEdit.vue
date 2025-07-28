@@ -98,6 +98,7 @@ export default defineComponent({
 <style lang="scss">
 .inline-edit {
   cursor: pointer;
+  color: #f5deb3;
   input {
     color: black;
     height: 45px;

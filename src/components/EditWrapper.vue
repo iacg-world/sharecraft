@@ -4,13 +4,12 @@
     ref="editWrapper"
     :style="styles"
     :data-component-id="id"
-    @click="onItemClick(id)"
-    @dblclick="onChangeEditStatus(id)"
-    @mousedown="startMove"
-    :class="{ active: active && isEditing, hidden: hidden }"
+    @mousedown="onItemClick(id)"
+    v-longpress="startMove"
+    :class="{ active: active && isEditing && !isLocked, hidden: hidden }"
   >
     <slot></slot>
-    <div class="resizers">
+    <div class="resizers" v-if="active && isEditing && !isLocked">
       <div
         class="resizer top-left"
         @mousedown.stop="startResize('top-left')"
@@ -59,6 +58,7 @@ export default defineComponent({
       type: String,
       required: true,
     },
+    isLocked: Boolean,
     active: {
       type: Boolean,
       default: false,
@@ -78,24 +78,23 @@ export default defineComponent({
     const editWrapper = ref<null | HTMLElement>(null)
 
     const onItemClick = (id: string) => {
-      if (store.state.editor.isEditing) {
+      if (isEditing.value) {
         context.emit('set-active', id)
       }
     }
     const onChangeEditStatus = (id: string) => {
-      const isEditing = store.state.editor.isEditing
       store.commit('clearClickTimeout')
-      store.commit('setEditStatus', !isEditing)
-      if (!isEditing) {
+      store.commit('setEditStatus', !isEditing.value)
+      if (!isEditing.value) {
         onItemClick(id)
       }
     }
     const removeEditComponent = (id: string) => {
-      if (store.state.editor.isEditing) {
+      if (isEditing.value) {
         context.emit('remove-component', id)
       }
     }
-
+ 
     const gap = {
       x: 0,
       y: 0,
@@ -114,7 +113,10 @@ export default defineComponent({
       }
     }
     const startMove = (e: MouseEvent) => {
-      e.preventDefault && e.preventDefault()
+      // e.preventDefault()
+      if (props.isLocked || !isEditing.value) {
+        return
+      }
       const currentElement = editWrapper.value
       if (currentElement) {
         const { left, top } = currentElement.getBoundingClientRect()
@@ -256,6 +258,7 @@ export default defineComponent({
       display: block;
       position: absolute !important;
       top: 0;
+      z-index: -1;
     }
     .resizers .resizer {
       width: 10px;

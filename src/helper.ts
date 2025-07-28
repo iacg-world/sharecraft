@@ -1,6 +1,6 @@
 import { message } from 'ant-design-vue/es'
 import axios from 'axios'
-import { toBlob } from 'html-to-image'
+import { getFontEmbedCSS, toBlob } from 'html-to-image'
 import { RespUploadData } from './respTypes'
 import QRCode from 'qrcode'
 import { saveAs } from 'file-saver'
@@ -111,7 +111,7 @@ export async function uploadFile<R = any>(
   })
   return data
 }
-function getCanvasBlob(canvas: HTMLCanvasElement) {
+export function getCanvasBlob(canvas: HTMLCanvasElement) {
   return new Promise<Blob | null>((resolve) => {
     canvas.toBlob((blob) => {
       resolve(blob)
@@ -119,7 +119,8 @@ function getCanvasBlob(canvas: HTMLCanvasElement) {
   })
 }
 export async function takeScreenshotAndUpload(ele: HTMLElement) {
-  const canvasBlob = await toBlob(ele, { width: 375 })
+  const fontEmbedCSS = await getFontEmbedCSS(ele) || 'null'
+  const canvasBlob = await toBlob(ele, { width: 375, quality: 0.95, fontEmbedCSS })
   if (canvasBlob) {
     const data = await uploadFile<RespUploadData>(canvasBlob)
     return data

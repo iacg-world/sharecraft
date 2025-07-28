@@ -16,9 +16,7 @@
         <DownOutlined />
       </a-button> -->
     </a-dropdown>
-    <a-button v-if="$route.path === '/'"
-      ><router-link to="/works">我的作品</router-link></a-button
-    >
+    <router-link v-if="$route.path === '/'" to="/works"><a-button>我的作品</a-button></router-link>
     <a-dropdown-button class="user-profile-component user-profile-container">
       <router-link to="/setting">{{
         user.data.nickName || user.data.username
@@ -33,33 +31,24 @@
         </a-menu>
       </template>
     </a-dropdown-button>
-    <a
-      style="color: white; font-size: 20px; margin-left: 10px"
-      href="https://github.com/iacg-world/sharecraft"
-      target="_blank"
-      ><GithubFilled
-    /></a>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { defineComponent, PropType } from 'vue'
+import { PropType } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import { message } from 'ant-design-vue/es'
 import { UserProps } from '../store/user'
-import { DownOutlined, GithubFilled } from '@ant-design/icons-vue'
 import axios from 'axios'
 
-// eslint-disable-next-line no-undef
+ 
 defineProps({
   user: {
     type: Object as PropType<UserProps>,
     required: true,
   },
 })
-
-defineComponent({ GithubFilled, DownOutlined })
 
 const store = useStore()
 const router = useRouter()

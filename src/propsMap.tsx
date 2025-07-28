@@ -19,24 +19,6 @@ export interface PropToForm {
 export type PropsToForms = {
   [P in keyof AllFormProps]?: PropToForm
 }
-const fontFamilyArr = [
-  { text: '宋体', value: '"SimSun","STSong"' },
-  { text: '黑体', value: '"SimHei","STHeiti"' },
-  { text: '微软雅黑', value: '"Microsoft YaHei' },
-  { text: '楷体', value: '"KaiTi","STKaiti"' },
-  { text: '仿宋', value: '"FangSong","STFangsong"' },
-  { text: 'Palatino Linotype', value: '"Palatino Linotype", "Book Antiqua"' },
-  { text: 'Comic Sans MS', value: '"Comic Sans MS"' },
-  { text: 'Impact', value: '"Impact"' },
-]
-const fontFamilyOptions = fontFamilyArr.map((font) => {
-  return {
-    value: font.value,
-    text: (
-      <span style={{ fontFamily: font.value }}>{font.text}</span>
-    ) as VNode,
-  }
-})
 const defaultHandler = {
   component: 'a-input',
   eventName: 'change',
@@ -61,6 +43,10 @@ export const mapPropsToForms: PropsToForms = {
     text: '字号',
     ...pxToNumberHandler,
   },
+  letterSpacing: {
+    text: '字间距',
+    ...pxToNumberHandler,
+  },
   lineHeight: {
     text: '行高',
     component: 'a-slider',
@@ -81,11 +67,9 @@ export const mapPropsToForms: PropsToForms = {
   },
 
   fontFamily: {
-    component: 'a-select',
-    extraProps: { style: 'min-width: 100px' },
-    subComponent: 'a-select-option',
+    component: 'font-family-select',
+    extraProps: { style: 'min-width: 150px' },
     text: '字体',
-    options: [{ value: '', text: '无' }, ...fontFamilyOptions],
   },
   fontWeight: {
     component: 'icon-switch',
@@ -180,7 +164,7 @@ export const mapPropsToForms: PropsToForms = {
     component: 'a-slider',
     text: '透明度',
     initalTransform: (v: number) => (v ? v * 100 : 100),
-    afterTransform: (e: number) => e / 100,
+    afterTransform: (e: number) => String(e / 100),
     extraProps: { min: 0, max: 100, reverse: true },
   },
   boxShadow: {

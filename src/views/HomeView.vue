@@ -60,15 +60,11 @@ export default defineComponent({
 </script>
 
 <style>
-.page-title {
-  color: #fff;
-}
 .content-container {
   background: #fff;
-  padding: 0 24px 24px 30px;
-  min-height: 85vh;
-  max-width: 1200px;
-  margin: 50px auto;
+  padding: 20px 24px 24px 30px;
+  max-width: 100vw;
+  box-sizing: border-box;
   width: 100%;
 }
 </style>

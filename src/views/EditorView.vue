@@ -1,28 +1,25 @@
 <template>
-  <div class="editor-container">
-    <a-modal
-      title="发布成功"
-      v-model:visible="showPublishForm"
-      width="700px"
-      :footer="null"
-    >
-      <publish-form />
-    </a-modal>
-    <preview-form
-      v-model:visible="showPreviewForm"
-      v-if="showPreviewForm"
-    ></preview-form>
-    <a-layout>
+  <a-flex vertical class="editor-container">
+    <a-layout style="height: 6vh; flex-grow: 0">
       <a-layout-header class="header">
+        <a-modal
+          title="发布成功"
+          v-model:visible="showPublishForm"
+          width="60vw"
+          :footer="null"
+        >
+          <publish-form />
+        </a-modal>
+        <preview-form
+          v-model:visible="showPreviewForm"
+          v-if="showPreviewForm"
+        ></preview-form>
         <div class="page-title">
           <router-link to="/">
-            <home-two-tone style="font-size: 26px" />
+            <HomeOutlined />
           </router-link>
           <a>
-            <LeftCircleTwoTone
-              @click="back"
-              style="font-size: 26px; margin-left: 5px"
-            />
+            <LeftCircleOutlined @click="back" style="margin-left: 10px" />
           </a>
           <inline-edit :value="page.title" @change="titleChange" />
         </div>
@@ -40,40 +37,56 @@
         </div>
       </a-layout-header>
     </a-layout>
-    <a-layout>
+    <a-layout style="flex: 1">
       <a-layout-sider width="160" style="background: #fff">
         <div class="sidebar-container">
-          <h2>组件列表</h2>
-          <components-list
-            :list="defaultTextTemplates"
-            @onItemClick="addItem"
-          />
-          <img id="test-image" :style="{ width: '300px' }" />
+          <a-collapse activeKey="component" accordion>
+            <a-collapse-panel key="component" header="组件列表">
+              <components-list
+                :list="defaultTextTemplates"
+                @onItemClick="addItem"
+              />
+            </a-collapse-panel>
+          </a-collapse>
         </div>
       </a-layout-sider>
-      <a-layout style="padding: 0 24px 24px; position: relative">
+      <a-layout style="position: relative">
         <a-layout-content class="preview-container">
-          <p>画布区域</p>
+          <div>画布区域</div>
           <history-area></history-area>
           <div class="preview-list" :class="{ 'canvas-fix': canvasFix }">
-            <div class="body-container" id="canvas-area" :style="page.props">
-              <edit-wrapper
-                @setActive="setActive"
-                @removeComponent="removeComponent"
-                @update-position="updatePosition"
-                v-for="component in components"
-                :key="component.id"
-                :id="component.id"
-                :active="component.id === (currentElement && currentElement.id)"
-                :hidden="component.isHidden"
-                :props="component.props"
+            <div class="preview_container">
+              <div
+                class="canvas-container"
+                id="canvas-area"
+                :style="page.props"
               >
-                <component
-                  :is="component.name"
-                  v-bind="component.props"
-                  :isEditing="isEditing"
-                />
-              </edit-wrapper>
+                <edit-wrapper
+                  :isLocked="currentElement?.isLocked"
+                  @setActive="setActive"
+                  @removeComponent="removeComponent"
+                  @update-position="updatePosition"
+                  v-for="component in components"
+                  :key="component.id"
+                  :id="component.id"
+                  :active="
+                    component.id === (currentElement && currentElement.id)
+                  "
+                  :hidden="component.isHidden"
+                  :props="component.props"
+                >
+                  <component
+                    :is="component.name"
+                    @change="(data: any) => onchange({
+                    id: component.id,
+                    key: data.key,
+                    value: data.value
+                  })"
+                    v-bind="component.props"
+                    :isEditing="isEditing"
+                  />
+                </edit-wrapper>
+              </div>
             </div>
           </div>
         </a-layout-content>
@@ -89,10 +102,12 @@
         </div>
       </a-layout>
       <a-layout-sider
-        v-show="isEditing"
         width="320"
         style="background: #fff"
         class="settings-panel"
+        collapsible
+        collapsedWidth="0"
+        :collapsed="!isEditing"
       >
         <a-tabs type="card" v-model:activeKey="activePanel">
           <a-tab-pane
@@ -109,7 +124,7 @@
               <div v-else>
                 <a-empty>
                   <template #description>
-                    <p>该元素被锁定，无法编辑</p>
+                    <p>该元素被锁定，只允许在画布编辑文字内容</p>
                   </template>
                 </a-empty>
               </div>
@@ -131,14 +146,14 @@
         </a-tabs>
       </a-layout-sider>
     </a-layout>
-  </div>
+  </a-flex>
 </template>
 
 <script lang="ts">
 import { defineComponent, computed, ref, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { GlobalDataProps } from '../store/index'
-import { CText, CImage } from 'iacg-block'
+import { CImage } from 'iacg-block'
 import ComponentsList from '../components/ComponentsList.vue'
 import EditWrapper from '../components/EditWrapper.vue'
 import PropsTable from '../components/PropsTable.vue'
@@ -147,7 +162,7 @@ import EditGroup from '../components/EditGroup.vue'
 import HistoryArea from './editor/HistoryArea.vue'
 import { ComponentData } from '../store/editor'
 import defaultTextTemplates from '../defaultTemplates'
-import { pickBy } from 'lodash-es'
+import { cloneDeep, pickBy } from 'lodash-es'
 import initHotKeys from '@/plugins/hotKeys'
 import initContextMenu from '../plugins/contextMenu'
 import { useRoute } from 'vue-router'
@@ -160,12 +175,14 @@ import PreviewForm from './editor/PreviewForm.vue'
 import {
   DoubleLeftOutlined,
   DoubleRightOutlined,
-  HomeTwoTone,
-  LeftCircleTwoTone,
+  HomeOutlined,
+  LeftCircleOutlined,
 } from '@ant-design/icons-vue'
 import { Empty as AEmpty } from 'ant-design-vue/es'
 import router from '@/router'
-
+import CText from '@/components/CText.vue'
+import '@chinese-fonts/mzxst/dist/MZPXflat/result.css'
+import '@chinese-fonts/hwmct/dist/汇文明朝体/result.css'
 export type TabType = 'component' | 'layer' | 'page'
 export default defineComponent({
   components: {
@@ -181,11 +198,11 @@ export default defineComponent({
     UserProfile,
     PublishForm,
     PreviewForm,
-    HomeTwoTone,
+    HomeOutlined,
     AEmpty,
     DoubleLeftOutlined,
     DoubleRightOutlined,
-    LeftCircleTwoTone,
+    LeftCircleOutlined,
   },
   setup() {
     initHotKeys()
@@ -202,10 +219,12 @@ export default defineComponent({
     const page = computed(() => store.state.editor.page)
     const userInfo = computed(() => store.state.user)
 
-    const addItem = (component: any) => {
-      console.log('addItem: ', component)
-
-      store.commit('addComponent', component)
+    const addItem = (component: ComponentData) => {
+      if (component.name === 'c-text') {
+        component.props.paddingTop = '3px'
+        component.props.paddingBottom = '3px'
+      }
+      store.commit('addComponent', cloneDeep(component))
     }
     const setActive = (id: string) => {
       store.commit('setActive', id)
@@ -272,6 +291,9 @@ export default defineComponent({
     const switchEditStatus = (status: boolean) => {
       store.commit('setEditStatus', !status)
     }
+    const onchange = (data: { id: string; key: string; value: string }) => {
+      handleChange(data)
+    }
     return {
       components,
       defaultTextTemplates,
@@ -299,6 +321,7 @@ export default defineComponent({
       back: () => {
         router.back()
       },
+      onchange,
     }
   },
 })
@@ -306,15 +329,20 @@ export default defineComponent({
 
 <style lang="scss">
 .editor-container {
+  height: 100vh;
+  overflow: hidden;
   .header {
     display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
     .ant-menu {
       flex: 1;
       justify-content: flex-end;
     }
   }
   .preview-container {
-    padding: 24px;
+    padding: 16px;
     margin: 0;
     min-height: 85vh;
     display: flex;
@@ -323,20 +351,27 @@ export default defineComponent({
     position: relative;
   }
   .preview-list {
-    padding: 0;
+    padding: 0 5px;
     margin: 0;
     min-width: 375px;
-    min-height: 200px;
-    border: 1px solid #efefef;
-    background: #fff;
-    overflow-x: hidden;
+    max-height: 85%;
+    top: 12%;
     overflow-y: auto;
     position: fixed;
-    margin-top: 50px;
-    max-height: 80vh;
+  }
+  .preview_container {
+    position: relative;
+    border: 1px dotted #efefef;
+    min-width: 375px;
+    overflow: hidden;
+    max-height: 85%;
+    *::-webkit-scrollbar {
+      visibility: hidden;
+    }
   }
   .action_warp {
     display: flex;
+    align-items: center;
   }
   .action_buttons {
     button {
@@ -386,8 +421,8 @@ export default defineComponent({
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
-  border-radius: 8px 0 0 8px;
-  background-color: #1890ff;
+  border-radius: 4px 0 0 4px;
+  background-color: #75409a;
   color: #fff !important;
 
   .text {

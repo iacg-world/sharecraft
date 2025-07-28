@@ -1,22 +1,43 @@
 <template>
   <div class="publish-channel-container">
-    <a-row :style="{ marginBottom: '20px' }">
-      <a-col :span="8" class="left-col">
-        封面图
-        <img :src="page.coverImg" :alt="page.title" />
-      </a-col>
-      <a-col :span="16" class="right-col">
-        <a-row>
-          <a-col :span="6">
+    <a-row :gutter="20" :style="{ marginBottom: '10px', marginTop: '20px' }">
+      <a-col :span="6" class="left-col">
+        <div class="final-preview">
+          <div class="final-preview-inner">
             <img :src="page.coverImg" :alt="page.title" />
-          </a-col>
+          </div>
+          <div class="home_key"></div>
+        </div>
+        <a-button type="primary" :href="page.coverImg">
+          <template #icon>
+            <DownloadOutlined />
+          </template>
+          下载图片
+        </a-button>
+      </a-col>
+      <a-col :span="14" class="right-col">
+        <a-row>
           <a-col :span="18" class="left-gap">
-            <h4>{{ page.title }}</h4>
-            <p>{{ page.desc }}</p>
+            <h4>标题：{{ page.title }}</h4>
+            <p>描述：{{ page.desc }}</p>
           </a-col>
         </a-row>
         <a-tabs type="card" :style="{ marginTop: '20px' }">
-          <a-tab-pane key="channels" tab="渠道管理">
+          <a-tab-pane key="template" tab="发布为模板">
+            <a-form>
+              <a-form-item label="发布模板">
+                <a-radio-group v-model:value="isPublic">
+                  <a-radio :value="0">发布为个人模板</a-radio>
+                  <a-radio :value="1">发布为公开模板</a-radio>
+                </a-radio-group>
+              </a-form-item>
+            </a-form>
+
+            <a-button type="primary" @click="publishTemplate">
+              一键发布模板
+            </a-button>
+          </a-tab-pane>
+          <a-tab-pane key="channels" tab="渠道管理" disabled>
             <a-row
               v-for="channel in channels"
               :key="channel.id"
@@ -76,21 +97,6 @@
               </a-form-item>
             </a-form>
           </a-tab-pane>
-
-          <a-tab-pane key="template" tab="发布为模板">
-            <a-form>
-              <a-form-item label="发布模板">
-                <a-radio-group v-model:value="isPublic">
-                  <a-radio :value="0">发布为个人模板</a-radio>
-                  <a-radio :value="1">发布为公开模板</a-radio>
-                </a-radio-group>
-              </a-form-item>
-            </a-form>
-
-            <a-button type="primary" @click="publishTemplate">
-              一键发布模板
-            </a-button>
-          </a-tab-pane>
         </a-tabs>
       </a-col>
     </a-row>
@@ -108,6 +114,7 @@ import { generateQRCode } from '@/helper'
 import { last } from 'lodash-es'
 import { message } from 'ant-design-vue/es'
 import ClipboardJS from 'clipboard'
+import { DownloadOutlined } from '@ant-design/icons-vue'
 
 const store = useStore<GlobalDataProps>()
 const route = useRoute()
@@ -185,19 +192,64 @@ const publishTemplate = async () => {
 }
 </script>
 
-<style>
-.left-col img {
-  width: 80%;
+<style lang="scss">
+.publish-channel-container {
+  position: relative;
+  height: 60vh;
+
+  .final-preview {
+    margin-bottom: 5px;
+    position: relative;
+    box-sizing: border-box;
+    height: 52vh;
+    background: transparent;
+    z-index: 1500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .home_key {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #d8d8d8;
+    bottom: 5px;
+  }
+  .final-preview-inner {
+    box-sizing: border-box;
+    height: 100%;
+    position: relative;
+    border-style: solid;
+    border-color: #bbb;
+    border-width: 20px 8px 30px;
+    border-radius: 20px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: #ffffff;
+  }
 }
-.right-col img {
-  width: 80px;
+.left-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  img {
+    width: 100%;
+    box-shadow: outset 10px 10px 10px #efefef;
+  }
 }
+
 .left-gap {
   padding-left: 5px;
   height: 80px;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  h4 {
+    font-size: large;
+    font-weight: bold;
+  }
 }
 .delete-area {
   position: absolute;

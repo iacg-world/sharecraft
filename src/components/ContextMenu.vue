@@ -77,12 +77,12 @@ export default defineComponent({
   position: absolute;
   background: #fff;
   z-index: 2000;
-  width: 220px;
   border: 1px solid #ccc;
 }
 .menu-container .ant-menu-item {
   display: flex;
   justify-content: space-between;
+  padding: 5px 10px;
 }
 .menu-container .ant-menu-item:hover {
   background: #efefef;

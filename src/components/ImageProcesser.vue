@@ -2,11 +2,14 @@
   <div class="image-processer">
     <a-modal
       title="裁剪图片"
+      style="top: 10px"
       v-model:visible="showModal"
       @ok="handleOk"
       @cancel="showModal = false"
       okText="确认"
       cancelText="取消"
+      width="800px"
+      :maskClosable="false"
     >
       <div class="image-cropper">
         <img :src="baseImageUrl" id="processed-image" ref="cropperImg" />
@@ -31,8 +34,9 @@
 
 <script lang="ts">
 import { defineComponent, computed, ref, watch, nextTick } from 'vue'
-import { message } from 'ant-design-vue/es'
+import { message, Modal } from 'ant-design-vue/es'
 import Cropper from 'cropperjs'
+import 'cropperjs/dist/cropper.css'
 import { DeleteOutlined, ScissorOutlined } from '@ant-design/icons-vue'
 import StyledUploader from './StyledUploader.vue'
 import { UploadResp } from '../extraType'
@@ -61,6 +65,7 @@ export default defineComponent({
     DeleteOutlined,
     StyledUploader,
     ScissorOutlined,
+    AModal: Modal,
   },
   emits: ['change', 'uploaded'],
   setup(props, context) {
@@ -145,9 +150,17 @@ export default defineComponent({
   flex-direction: column;
   justify-content: space-between;
 }
+.image-cropper {
+  max-height: 80vh;
+  overflow-y: auto;
+}
 .image-cropper img {
   display: block;
   /* This rule is very important, please don't ignore this */
   max-width: 100%;
+}
+.cropper-point {
+  height: 10px;
+  width: 10px;
 }
 </style>

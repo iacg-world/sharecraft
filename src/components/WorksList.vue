@@ -40,7 +40,7 @@
                       ><ShareAltOutlined /> 设置为公开模板</a
                     >
                   </a-menu-item>
-                  <a-menu-item v-if="item.isPublic">
+                  <a-menu-item v-if="item.isTemplate">
                     <a href="javascript:;" @click.prevent="copyClicked(item.id)"
                       ><CopyOutlined /> 复制</a
                     >
