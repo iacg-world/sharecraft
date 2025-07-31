@@ -16,11 +16,16 @@ function usePublishWork() {
   const publishWork = async (el: HTMLElement) => {
     try {
       isPublishing.value = true
-      store.commit('startLoading', { opName: 'prePublish', loadingText: '发布中' })
+      store.commit('startLoading', {
+        opName: 'prePublish',
+        loadingText: '发布中',
+      })
       const timer = setTimeout(() => {
-        store.commit('finishLoading', { opName: 'prePublish'})
-        store.commit('startLoading', { opName: 'prePublish', loadingText: '发布中, 三方字体渲染较慢，请耐心等待' })
-
+        store.commit('finishLoading', { opName: 'prePublish' })
+        store.commit('startLoading', {
+          opName: 'prePublish',
+          loadingText: '发布中, 三方字体渲染较慢，请耐心等待',
+        })
       }, 2000)
       store.commit('setEditStatus', false)
       await nextTick()
@@ -44,8 +49,7 @@ function usePublishWork() {
             data: { name: '默认', workId: parseInt(currentWorkId as string) },
           })
         }
-        store.commit('finishLoading', { opName: 'prePublish', init: true})
-
+        store.commit('finishLoading', { opName: 'prePublish', init: true })
       }
     } catch (e) {
       console.error(e)

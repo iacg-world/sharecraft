@@ -3,14 +3,14 @@
     <div class="shadow-item">
       <span>阴影颜色:</span>
       <div class="shadow-component">
-        <color-picker
+        <ColorPicker
           :value="values[3]"
           @change="
-            (v) => {
+            v => {
               updateValue(v, 3)
             }
           "
-        ></color-picker>
+        ></ColorPicker>
       </div>
     </div>
     <div class="shadow-item">
@@ -21,7 +21,7 @@
           :min="0"
           :max="20"
           @change="
-            (v) => {
+            v => {
               updateValue(v, [0, 1])
             }
           "
@@ -36,7 +36,7 @@
           :min="0"
           :max="20"
           @change="
-            (v) => {
+            v => {
               updateValue(v, 2)
             }
           "
@@ -71,7 +71,7 @@ export default defineComponent({
     })
     const updateValue = (
       newValue: number | string,
-      index: number | number[]
+      index: number | number[],
     ) => {
       const newValues = computed(() => {
         return values.value.map((item, i) => {

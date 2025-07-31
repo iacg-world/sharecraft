@@ -9,7 +9,7 @@ interface LoadParams {
 const useLoadMore = (
   actionName: string,
   total: ComputedRef<number>,
-  params: LoadParams = { pageIndex: 0, pageSize: 8 }
+  params: LoadParams = { pageIndex: 0, pageSize: 8 },
 ) => {
   const store = useStore()
   const requestParams = reactive(params)

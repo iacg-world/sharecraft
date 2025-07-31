@@ -93,16 +93,16 @@ export const textStylePropNames = without(
   Object.keys(textDefaultProps),
   'actionType',
   'url',
-  'text'
+  'text',
 )
 export const imageStylePropsNames = without(
   Object.keys(imageDefaultProps),
-  'src'
+  'src',
 )
 
 // 将text属性转换成Vue Props属性
 export const transformToComponentProps = <T extends object>(props: T) => {
-  return mapValues(props, (item) => {
+  return mapValues(props, item => {
     return {
       type: (item as any).constructor as StringConstructor,
       default: item,

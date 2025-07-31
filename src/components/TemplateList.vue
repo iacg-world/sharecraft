@@ -37,7 +37,7 @@
 import { defineComponent, PropType } from 'vue'
 import { TemplateProps } from '../store/templates'
 export default defineComponent({
-  name: 'template-list',
+  name: 'TemplateList',
   props: {
     list: {
       type: Array as PropType<TemplateProps[]>,

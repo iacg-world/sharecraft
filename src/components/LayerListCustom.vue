@@ -39,14 +39,14 @@
           <template v-slot:icon v-else><LockOutlined /> </template>
         </a-button>
       </a-tooltip>
-      <inline-edit
+      <InlineEdit
         :value="item.layerName || '未命名图层'"
         @change="
-          (value) => {
+          value => {
             handleChange(item.id, 'layerName', value)
           }
         "
-      ></inline-edit>
+      ></InlineEdit>
     </li>
   </ul>
 </template>
@@ -87,7 +87,7 @@ export default defineComponent({
       currentIndex: -1,
     })
 
-    let start = -1
+    const start = -1
     let end = -1
     const handleClick = (id: string) => {
       context.emit('select', id)
@@ -106,7 +106,7 @@ export default defineComponent({
     const onDrop = (e: DragEvent) => {
       const currentEle = getParentElement(
         e.target as HTMLElement,
-        'ant-list-item'
+        'ant-list-item',
       )
       if (currentEle && currentEle.dataset.index) {
         const moveIndex = parseInt(currentEle.dataset.index)

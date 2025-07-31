@@ -108,7 +108,7 @@ export default defineComponent({
     const filesList = ref<UploadFile[]>([])
     const isDragOver = ref(false)
     const isUploading = computed(() => {
-      return filesList.value.some((file) => file.status === 'loading')
+      return filesList.value.some(file => file.status === 'loading')
     })
     const lastFileData = computed(() => {
       const lastFile = last(filesList.value)
@@ -121,7 +121,7 @@ export default defineComponent({
       return false
     })
     const removeFile = (id: string) => {
-      filesList.value = filesList.value.filter((file) => file.uid !== id)
+      filesList.value = filesList.value.filter(file => file.uid !== id)
     }
 
     const triggerUpload = () => {
@@ -139,7 +139,7 @@ export default defineComponent({
             'Content-Type': 'multipart/form-data',
           },
         })
-        .then((resp) => {
+        .then(resp => {
           readyFile.status = 'success'
           const resData = {
             data: {
@@ -198,16 +198,16 @@ export default defineComponent({
           const result = props.beforeUpload(uploadedFile)
           if (result && result instanceof Promise) {
             result
-              .then((processedFile) => {
+              .then(processedFile => {
                 if (processedFile instanceof File) {
                   addFileToList(processedFile)
                 } else {
                   throw new Error(
-                    'beforeUpload Promise should return File object'
+                    'beforeUpload Promise should return File object',
                   )
                 }
               })
-              .catch((e) => {
+              .catch(e => {
                 console.error(e)
               })
           } else if (result === true) {
@@ -220,8 +220,8 @@ export default defineComponent({
     }
     const uploadFiles = () => {
       filesList.value
-        .filter((file) => file.status === 'ready')
-        .forEach((readyFile) => postFile(readyFile))
+        .filter(file => file.status === 'ready')
+        .forEach(readyFile => postFile(readyFile))
     }
 
     let events: { [key: string]: (e: any) => void } = {

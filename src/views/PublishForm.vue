@@ -150,15 +150,15 @@ const deleteChannel = (id: number) => {
 
 onMounted(() => {
   const clipboard = new ClipboardJS('.copy-button')
-  clipboard.on('success', (e) => {
+  clipboard.on('success', e => {
     message.success('复制成功', 1)
     e.clearSelection()
   })
-  channels.value.forEach(async (channel) => {
+  channels.value.forEach(async channel => {
     try {
       await generateQRCode(
         `channel-barcode-${channel.id}`,
-        generateChannelURL(channel.id)
+        generateChannelURL(channel.id),
       )
     } catch (e) {
       console.error(e)
@@ -173,14 +173,14 @@ watch(
       if (createdChannel) {
         await generateQRCode(
           `channel-barcode-${createdChannel.id}`,
-          generateChannelURL(createdChannel.id)
+          generateChannelURL(createdChannel.id),
         )
       }
     }
   },
   {
     flush: 'post',
-  }
+  },
 )
 
 const isPublic = ref(0)

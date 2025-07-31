@@ -43,13 +43,13 @@ const global: Module<GlobalStatus, GlobalDataProps> = {
     },
   },
   getters: {
-    isLoading: (state) => {
+    isLoading: state => {
       return state.requestNumber > 0
     },
-    loadingText: (state) => {
+    loadingText: state => {
       return state.loadingText
     },
-    isOpLoading: (state) => (opName: string) => {
+    isOpLoading: state => (opName: string) => {
       return state.opNames[opName]
     },
   },

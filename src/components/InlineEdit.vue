@@ -20,14 +20,13 @@ import useKeyPress from '../hooks/useKeyPress'
 import useClickOutside from '../hooks/useClickOutside'
 import { EditFilled } from '@ant-design/icons-vue'
 export default defineComponent({
-  name: 'inline-edit',
+  name: 'InlineEdit',
   components: {
     EditFilled,
   },
   props: {
     value: {
       type: String,
-      required: true,
     },
   },
   emits: ['change'],
@@ -35,9 +34,9 @@ export default defineComponent({
     const innerValue = ref(props.value)
     watch(
       () => props.value,
-      (newValue) => {
+      newValue => {
         innerValue.value = newValue
-      }
+      },
     )
     const wrapper = ref<null | HTMLElement>(null)
     const inputRef = ref<null | HTMLInputElement>(null)
@@ -49,7 +48,7 @@ export default defineComponent({
       isEditing.value = true
     }
     const validateCheck = computed(() => innerValue.value.trim() !== '')
-    watch(isEditing, async (isEditing) => {
+    watch(isEditing, async isEditing => {
       if (isEditing) {
         cachedOldValue = innerValue.value
         await nextTick()
@@ -58,7 +57,7 @@ export default defineComponent({
         }
       }
     })
-    watch(isOutside, (newValue) => {
+    watch(isOutside, newValue => {
       if (!validateCheck.value) {
         return
       }

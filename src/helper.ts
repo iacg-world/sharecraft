@@ -99,7 +99,7 @@ export function isMobile(mobile: string) {
 export async function uploadFile<R = any>(
   file: Blob,
   url = '/utils/upload-img',
-  fileName = 'screenshot.png'
+  fileName = 'screenshot.png',
 ) {
   const newFile = file instanceof File ? file : new File([file], fileName)
   const formData = new FormData()
@@ -112,15 +112,19 @@ export async function uploadFile<R = any>(
   return data
 }
 export function getCanvasBlob(canvas: HTMLCanvasElement) {
-  return new Promise<Blob | null>((resolve) => {
-    canvas.toBlob((blob) => {
+  return new Promise<Blob | null>(resolve => {
+    canvas.toBlob(blob => {
       resolve(blob)
     })
   })
 }
 export async function takeScreenshotAndUpload(ele: HTMLElement) {
-  const fontEmbedCSS = await getFontEmbedCSS(ele) || 'null'
-  const canvasBlob = await toBlob(ele, { width: 375, quality: 0.95, fontEmbedCSS })
+  const fontEmbedCSS = (await getFontEmbedCSS(ele)) || 'null'
+  const canvasBlob = await toBlob(ele, {
+    width: 375,
+    quality: 0.95,
+    fontEmbedCSS,
+  })
   if (canvasBlob) {
     const data = await uploadFile<RespUploadData>(canvasBlob)
     return data
@@ -132,12 +136,12 @@ export function generateQRCode(id: string, url: string, width = 100) {
   return QRCode.toCanvas(ele, url, { width })
 }
 export function timeout(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms))
+  return new Promise(resolve => setTimeout(resolve, ms))
 }
 
 export const objToQueryString = (queryObj: { [key: string]: any }) => {
   return Object.keys(queryObj)
-    .map((key) => `${key}=${queryObj[key]}`)
+    .map(key => `${key}=${queryObj[key]}`)
     .join('&')
 }
 
@@ -149,7 +153,7 @@ export const downloadFile = (src: string, fileName = 'default.png') => {
   if (link.origin !== location.origin) {
     axios
       .get(src, { responseType: 'blob' })
-      .then((data) => {
+      .then(data => {
         link.href = URL.createObjectURL(data.data)
         setTimeout(() => {
           link.dispatchEvent(new MouseEvent('click'))
@@ -158,7 +162,7 @@ export const downloadFile = (src: string, fileName = 'default.png') => {
           URL.revokeObjectURL(link.href)
         }, 10000)
       })
-      .catch((e) => {
+      .catch(e => {
         console.error(e)
         link.target = '_blank'
         link.href = src

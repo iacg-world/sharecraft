@@ -16,7 +16,9 @@
         <DownOutlined />
       </a-button> -->
     </a-dropdown>
-    <router-link v-if="$route.path === '/'" to="/works"><a-button>我的作品</a-button></router-link>
+    <router-link v-if="$route.path === '/'" to="/works"
+      ><a-button>我的作品</a-button></router-link
+    >
     <a-dropdown-button class="user-profile-component user-profile-container">
       <router-link to="/setting">{{
         user.data.nickName || user.data.username
@@ -42,7 +44,6 @@ import { message } from 'ant-design-vue/es'
 import { UserProps } from '../store/user'
 import axios from 'axios'
 
- 
 defineProps({
   user: {
     type: Object as PropType<UserProps>,

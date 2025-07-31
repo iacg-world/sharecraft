@@ -1,6 +1,6 @@
 <template>
   <div class="image-processer">
-    <a-modal
+    <AModal
       title="裁剪图片"
       style="top: 10px"
       v-model:visible="showModal"
@@ -14,14 +14,14 @@
       <div class="image-cropper">
         <img :src="baseImageUrl" id="processed-image" ref="cropperImg" />
       </div>
-    </a-modal>
+    </AModal>
     <div
       class="image-preview"
       :style="{ backgroundImage: backgrondUrl }"
       :class="{ extraHeight: showDelete }"
     ></div>
     <div class="image-process">
-      <styled-uploader @success="handleFileUploaded"></styled-uploader>
+      <StyledUploader @success="handleFileUploaded"></StyledUploader>
       <a-button @click="showModal = true">
         <template v-slot:icon><ScissorOutlined /></template>裁剪
       </a-button>
@@ -75,7 +75,7 @@ export default defineComponent({
     const cropperImg = ref<null | HTMLImageElement>(null)
     let cropper: Cropper
     let cropData: CropDataProps | null = null
-    watch(showModal, async (newValue) => {
+    watch(showModal, async newValue => {
       if (newValue) {
         await nextTick()
         if (cropperImg.value) {

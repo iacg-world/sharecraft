@@ -12,6 +12,6 @@ import LongPress from './directives/LongPress'
 
 const app = createApp(App)
 
-app.directive('longpress', LongPress);
+app.directive('longpress', LongPress)
 app.use(store).use(router).use(Antd).mount('#app')
 app.config.errorHandler = errorHandler

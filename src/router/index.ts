@@ -57,7 +57,7 @@ const router = createRouter({
   routes,
 })
 
-router.beforeEach(async (to) => {
+router.beforeEach(async to => {
   const { user } = store.state
   const { token, isLogin } = user
   const { redirectAlreadyLogin, requiredLogin, title } = to.meta

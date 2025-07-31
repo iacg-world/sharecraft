@@ -7,7 +7,7 @@ export interface ActionItem {
 }
 const useCreateContextMenu = (
   actions: ActionItem[],
-  triggerClass = 'edit-wrapper'
+  triggerClass = 'edit-wrapper',
 ) => {
   const container = document.createElement('div')
   const options = {

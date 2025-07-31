@@ -38,13 +38,13 @@
         <a-row type="flex" align="middle" :style="{ marginBottom: '20px' }">
           <a-col :span="6"> 上传封面： </a-col>
           <a-col :span="10">
-            <styled-uploader
+            <StyledUploader
               text="上传封面"
               :uploaded="form.uploaded"
               @success="updateAvatar"
               showUploaded
             >
-            </styled-uploader>
+            </StyledUploader>
           </a-col>
         </a-row>
         <a-form
@@ -104,7 +104,7 @@ export default defineComponent({
     const store = useStore<GlobalDataProps>()
     const pageState = computed(() => store.state.editor.page)
     const previewURL = computed(
-      () => `${baseH5URL}/p/${pageState.value.id}-${pageState.value.uuid}`
+      () => `${baseH5URL}/p/${pageState.value.id}-${pageState.value.uuid}`,
     )
     const { title, desc, setting } = pageState.value
     const { saveWork, saveIsLoading } = useSaveWork(true)

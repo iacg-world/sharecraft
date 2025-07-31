@@ -1,12 +1,12 @@
 <template>
   <div class="create-component-list">
     <div
-      v-for="(item, index) in (list as Array<object>)"
+      v-for="(item, index) in list as Array<object>"
       :key="index"
       class="component-item"
       @click="onItemClick(item)"
     >
-      <c-text v-bind="item"></c-text>
+      <CText v-bind="item"></CText>
     </div>
     <StyledUploader
       class="component-item"
@@ -16,15 +16,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-import { v4 as uuidv4 } from 'uuid'
+import { RespUploadData } from '@/respTypes'
 import { message } from 'ant-design-vue/es'
 import { CText } from 'iacg-block'
+import { v4 as uuidv4 } from 'uuid'
+import { defineComponent } from 'vue'
 import StyledUploader from '../components/StyledUploader.vue'
-import { ComponentData } from '../store/editor'
 import { imageDefaultProps, TextComponentProps } from '../defaultProps'
 import { getImageDimensions } from '../helper'
-import { RespUploadData } from '@/respTypes'
+import { ComponentData } from '../store/editor'
 export default defineComponent({
   props: {
     list: {
@@ -33,7 +33,7 @@ export default defineComponent({
     },
   },
   emits: ['on-item-click'],
-  name: 'components-list',
+  name: 'ComponentsList',
   components: {
     CText,
     StyledUploader,

@@ -22,7 +22,7 @@ const templates: Module<TemplatesProps, GlobalDataProps> = {
   mutations: {
     fetchTemplates(
       state,
-      rawData: RespListData<TemplateProps> & { isFirstPage: boolean }
+      rawData: RespListData<TemplateProps> & { isFirstPage: boolean },
     ) {
       const { count, list } = rawData.data
 
@@ -59,7 +59,7 @@ const templates: Module<TemplatesProps, GlobalDataProps> = {
       return dispatch('copyWork', { urlParams: { id: workId } }).then(
         ({ data }) => {
           router.push(`/editor/${data.id}`)
-        }
+        },
       )
     },
     deleteWorkAndFetch({ dispatch }, { id, isTemplate }) {
@@ -74,8 +74,8 @@ const templates: Module<TemplatesProps, GlobalDataProps> = {
     },
   },
   getters: {
-    getTemplateById: (state) => (id: number) => {
-      return state.data.find((t) => t.id === id)
+    getTemplateById: state => (id: number) => {
+      return state.data.find(t => t.id === id)
     },
   },
 }

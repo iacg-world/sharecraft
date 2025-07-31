@@ -73,7 +73,7 @@ const user: Module<UserProps, GlobalDataProps> = {
       method: 'post',
     }),
     fetchCurrentUser({ commit }) {
-      return axios.get('/users/getUserInfo').then((rawData) => {
+      return axios.get('/users/getUserInfo').then(rawData => {
         commit('fetchCurrentUser', rawData.data)
       })
     },
@@ -89,7 +89,7 @@ const user: Module<UserProps, GlobalDataProps> = {
     },
     signUpAndLoginByEmail({ dispatch }, loginData) {
       const delayLogin = () =>
-        new Promise((resolve) => {
+        new Promise(resolve => {
           setTimeout(() => {
             resolve(dispatch('loginByEmailAndFetch', loginData))
           }, 500)

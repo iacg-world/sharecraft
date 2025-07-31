@@ -37,7 +37,7 @@ export default defineComponent({
       const domElement = menuRef.value as HTMLElement
       const wrapperElement = getParentElement(
         e.target as HTMLElement,
-        props.triggerClass
+        props.triggerClass,
       )
       if (wrapperElement) {
         e.preventDefault()

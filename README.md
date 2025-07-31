@@ -1,47 +1,256 @@
-# sharecraft
-## Project description
+# ShareCraft - 零代码建站平台 Cursor 规则
 
-项目地址：https://sharecraft.lc404.cn
-- 这是一个用于创建活动页/落地页/分享页海报并支持在线浏览的零代码建站网站
-- 你可以通过添加元素、拖拽元素、改变元素属性的方式来丰富你的分享页
-  
-生成的活动页预览页
+## 项目概述
+ShareCraft 是一个基于 Vue 3 的零代码建站平台，支持拖拽式创建活动页/落地页/分享页，并集成了 AI Agent 功能，可通过自然语言自动生成页面组件。
+预览页
 
 
 ![alt](https://sharecraft-backend.oss-cn-shanghai.aliyuncs.com/sharecraft-test/AYLX4q.png)
+## 技术栈
+- 前端框架：Vue 3.4 + TypeScript
+- 状态管理：Vuex 4
+- UI 框架：Ant Design Vue 4
+- 构建工具：Vite 5
+- 包管理：npm/pnpm
+- 测试框架：Jest + Vue Test Utils
+- 代码质量：ESLint + Prettier
+- AI 集成：OpenAI、Claude 等多种 AI 服务
 
-## Technology
-- 前端：Vue3.4、Vuex、ant-design-vue、TypeScript
-  - [自定义组件库：https://github.com/iacg-world/iacg-block](https://github.com/iacg-world/iacg-block)
-  - [前端监控JSSDK：https://github.com/iacg-world/iacg-monitor](https://github.com/iacg-world/iacg-monitor)
-- 服务端：egg、TypeScript、MongoDB
-  - [服务端项目仓库：https://github.com/iacg-world/sharecraft-backend](https://github.com/iacg-world/sharecraft-backend)
-- 部署：Docker、nginx、github action
-- 云服务：阿里云ACR、阿里云OSS、阿里云短信服务
-## Project setup
-```
-npm install
-```
+## 编程规范
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
+### 1. TypeScript 使用规范
+- 所有新文件必须使用 TypeScript (.ts/.vue)
+- 严格使用类型声明，避免 `any` 类型
+- 组件 props 必须定义 TypeScript 接口
+- 使用 `@/` 路径别名引用 src 目录下文件
+- API 响应和请求必须定义类型接口
 
-### Compiles and minifies for production
-```
-yarn build
-```
+```typescript
+// ✅ 正确示例
+interface ComponentProps {
+  id: string
+  name: string
+  props: Record<string, any>
+}
 
-### Run your unit tests
-```
-yarn test:unit
-```
-
-### Lints and fixes files
-```
-yarn lint
+// ❌ 避免使用
+const data: any = response.data
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### 2. Vue 3 组件开发规范
+- 优先使用 Composition API
+- 使用 `<script setup>` 语法糖
+- 组件命名使用 PascalCase
+- 事件命名使用 kebab-case
+- Props 使用 camelCase
+
+```vue
+<!-- ✅ 正确示例 -->
+<script setup lang="ts">
+interface Props {
+  componentData: ComponentData
+  isEditing?: boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  isEditing: false
+})
+
+const emit = defineEmits<{
+  'update:component': [data: ComponentData]
+  'delete-component': [id: string]
+}>()
+</script>
+```
+
+### 3. 状态管理规范 (Vuex)
+- Store 模块按功能划分 (editor, user, templates, global)
+- 使用 TypeScript 定义 State 接口
+- Mutations 使用大写常量命名
+- Actions 处理异步操作和 API 调用
+
+```typescript
+// ✅ Store 模块示例
+export interface EditorState {
+  components: ComponentData[]
+  currentComponent: string | null
+  canvas: CanvasConfig
+}
+
+export const mutations = {
+  ADD_COMPONENT: 'ADD_COMPONENT',
+  UPDATE_COMPONENT: 'UPDATE_COMPONENT',
+  DELETE_COMPONENT: 'DELETE_COMPONENT'
+}
+```
+
+### 4. AI 功能开发规范
+- AI API 调用统一使用 `src/utils/aiApi.ts` 中的方法
+- 支持多种 AI 服务提供商 (OpenAI/Claude)
+- AI 响应必须进行错误处理和格式验证
+- 组件生成结果必须符合 ComponentData 接口
+
+```typescript
+// ✅ AI API 调用示例
+const response = await callAI({
+  message: userInput,
+  context: currentPage,
+  userId: user.id
+})
+
+if (response.success && response.data.components) {
+  store.commit('ADD_COMPONENTS', response.data.components)
+}
+```
+
+## 文件结构约定
+
+### 组件文件组织
+```
+src/components/
+├── AI相关/          # AIAgent.vue, AISettings.vue, FloatingAIAssistant.vue
+├── 编辑器核心/      # EditWrapper.vue, EditGroup.vue, LayerList.vue
+├── UI基础组件/      # ColorPicker.vue, IconSwitch.vue, FontFamilySelect.vue
+├── 工具组件/        # ContextMenu.vue, GridSystem.vue, ImageProcesser.vue
+└── 业务组件/        # UserProfile.vue, WorksList.vue, TemplateList.vue
+```
+
+### 工具类文件组织
+```
+src/utils/
+├── aiApi.ts         # AI 服务 API 调用
+├── aiSettings.ts    # AI 用户配置管理
+└── aiSchemaGenerator.ts # AI Schema 生成工具
+```
+
+### Store 模块组织
+```
+src/store/
+├── editor.ts        # 编辑器状态 (组件、画布、历史记录)
+├── user.ts          # 用户信息和认证
+├── templates.ts     # 模板管理
+└── global.ts        # 全局配置和设置
+```
+
+## 开发最佳实践
+
+### 1. 组件开发
+- 使用 `useComponentCommon` hook 处理通用组件逻辑
+- 拖拽功能使用 vuedraggable 库
+- 组件属性变更使用防抖处理
+- 图片处理统一使用 ImageProcesser 组件
+
+### 2. 样式管理
+- 使用 SCSS 预处理器
+- 全局样式定义在 `src/assets/reset-style.scss`
+- 组件样式使用 `<style scoped>`
+- Ant Design 主题定制通过 CSS 变量
+
+### 3. API 调用
+- 使用统一的 axios 配置 (`src/axios.ts`)
+- API 响应类型定义在 `src/respTypes.ts`
+- 错误处理使用全局错误处理器 (`src/errorHandler.ts`)
+
+### 4. 热键和交互
+- 热键管理使用 hotkeys-js 库
+- 右键菜单使用 `useCreateContextMenu` hook
+- 长按事件使用自定义指令 `v-longpress`
+
+### 5. 测试规范
+- 组件测试文件放在 `tests/unit/` 目录
+- 测试文件命名：`ComponentName.spec.ts`
+- 重要组件必须编写单元测试
+- 使用 Vue Test Utils 进行组件测试
+
+## AI 功能特殊约定
+
+### 1. AI 模板匹配
+- 关键词匹配不区分大小写
+- 支持中英文关键词
+- 模板类型：login, product, contact, news
+
+### 2. 组件生成规范
+- 组件类型仅支持 'c-text' 和 'c-image'
+- 所有位置和尺寸值必须包含 'px' 单位
+- 组件ID使用UUID格式
+- 必须设置 position: 'absolute'
+
+### 3. AI 设置管理
+- 用户AI配置存储在localStorage
+- 支持API Key、模型、参数自定义配置
+- 配置验证和错误提示
+
+## 代码质量要求
+
+### 1. ESLint 规则
+- 遵循项目 `eslint.config.js` 配置
+- 使用 `@typescript-eslint` 规则集
+- Vue 组件遵循 `eslint-plugin-vue` 规则
+
+### 2. Prettier 格式化
+- 使用项目统一的 Prettier 配置
+- 提交前自动格式化代码
+- 单引号、分号、缩进2空格
+
+### 3. Git 提交规范
+- 使用语义化提交信息
+- 格式：`type(scope): description`
+- 类型：feat, fix, docs, style, refactor, test, chore
+
+## 性能优化
+
+### 1. 组件懒加载
+- 路由组件使用动态导入
+- 大型组件按需加载
+- 图片使用懒加载
+
+### 2. 打包优化
+- 使用 Vite 的代码分割
+- 第三方库单独打包
+- 开启 gzip 压缩
+
+### 3. 运行时优化
+- 使用 Vue 3 的响应式优化
+- 大列表使用虚拟滚动
+- 防抖和节流处理用户操作
+
+## 环境配置
+
+### 开发环境变量
+```bash
+# AI 服务配置
+VUE_APP_AI_PROVIDER=openai
+VUE_APP_AI_API_KEY=your-api-key
+VUE_APP_AI_BASE_URL=https://api.openai.com/v1
+VUE_APP_AI_MODEL=gpt-3.5-turbo
+VUE_APP_AI_MAX_TOKENS=1500
+VUE_APP_AI_TEMPERATURE=0.7
+```
+
+## 调试和开发工具
+
+### 1. 开发命令
+- `npm run dev` - 启动开发服务器
+- `npm run lint` - 代码检查
+- `npm run format` - 代码格式化
+- `npm test` - 运行单元测试
+
+### 2. 浏览器调试
+- 使用 Vue DevTools 调试组件状态
+- Chrome DevTools 性能分析
+- Network 面板监控 AI API 调用
+
+### 3. AI 功能调试
+- 在控制台查看 AI API 请求/响应日志
+- 使用 AI 设置面板测试不同配置
+- 检查 localStorage 中的用户配置
+
+## 注意事项
+
+1. **AI 功能开发**：确保 AI 生成的组件数据符合现有的组件系统规范
+2. **拖拽功能**：注意处理拖拽过程中的性能问题和边界情况
+3. **状态管理**：编辑器状态变更要考虑撤销/重做功能
+4. **跨浏览器兼容**：确保在主流浏览器中功能正常
+5. **移动端适配**：考虑响应式设计和触摸交互
+
+遵循以上规则，确保代码质量和项目的可维护性。

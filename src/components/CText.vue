@@ -24,7 +24,7 @@ const defaultProps = transformToComponentProps(textDefaultProps)
 
 // array that contains style props
 export default defineComponent({
-  name: 'c-text',
+  name: 'CText',
   props: {
     tag: {
       type: String,
@@ -34,13 +34,13 @@ export default defineComponent({
   },
   emits: ['change'],
   setup(props, context) {
-    let isFocus = ref(false)
-    let innerText = ref(props.text)
+    const isFocus = ref(false)
+    const innerText = ref(props.text)
     // 重用并且简化
     // 抽离并且获得 styleProps
     const { styleProps, handleClick } = useComponentCommon(
       props,
-      textStylePropNames
+      textStylePropNames,
     )
     const onChange = (e: Event) => {
       const text = (e.target as HTMLParagraphElement).innerText

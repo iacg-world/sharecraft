@@ -13,7 +13,7 @@ export type ICustomAxiosConfig = AxiosRequestConfig & {
 
 axios.defaults.baseURL = `${baseBackendURL}/api/`
 
-axios.interceptors.request.use((config) => {
+axios.interceptors.request.use(config => {
   const newConfig = config as ICustomAxiosConfig
   store.commit('setError', { status: false, message: '' })
   store.commit('startLoading', { opName: newConfig.opName })
@@ -42,5 +42,5 @@ axios.interceptors.response.use(
     console.log(e)
 
     return Promise.reject(e)
-  }
+  },
 )

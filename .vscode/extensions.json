@@ -1,0 +1,36 @@
+{
+  "recommendations": [
+    // 代码格式化和检查
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    // Vue 开发
+    "Vue.volar",
+    "Vue.vscode-typescript-vue-plugin",
+    // TypeScript 支持
+    "ms-vscode.vscode-typescript-next",
+    // Git 相关
+    "eamodio.gitlens",
+    "mhutchie.git-graph",
+    // 开发效率工具
+    "formulahendry.auto-rename-tag",
+    "bradlc.vscode-tailwindcss",
+    "christian-kohler.path-intellisense",
+    "ms-vscode.vscode-json",
+    // 代码片段和自动完成
+    "hollowtree.vue-snippets",
+    "xabikos.javascriptsnippets",
+    // 调试和测试
+    "ms-vscode.vscode-jest",
+    // 主题和UI增强
+    "pkief.material-icon-theme",
+    "aaron-bond.better-comments",
+    // 其他实用工具
+    "gruntfuggly.todo-tree",
+    "streetsidesoftware.code-spell-checker",
+    "wayou.vscode-todo-highlight"
+  ],
+  "unwantedRecommendations": [
+    // 与 Volar 冲突的 Vue 扩展
+    "octref.vetur"
+  ]
+}

@@ -1,7 +1,7 @@
 <template>
   <div class="content-container">
     <a-row :gutter="16">
-      <template-list :list="testData"></template-list>
+      <TemplateList :list="testData"></TemplateList>
     </a-row>
     <a-row type="flex" justify="center">
       <a-button
@@ -31,7 +31,7 @@ export default defineComponent({
     const testData = computed(() => store.state.templates.data)
     const total = computed(() => store.state.templates.totalTemplates)
     const isLoading = computed(() =>
-      store.getters.isOpLoading('fetchTemplates')
+      store.getters.isOpLoading('fetchTemplates'),
     )
     const { loadMorePage, isLastPage, isFirstPage } = useLoadMore(
       'fetchTemplates',
@@ -39,7 +39,7 @@ export default defineComponent({
       {
         pageIndex: 0,
         pageSize: 4,
-      }
+      },
     )
     onMounted(() => {
       store.dispatch('fetchTemplates', {

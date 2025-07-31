@@ -45,10 +45,10 @@ export default defineComponent({
     const histories = computed(() => store.state.editor.histories)
     const historyIndex = computed(() => store.state.editor.historyIndex)
     const undoIsDisabled = computed<boolean>(
-      () => store.getters.checkUndoDisable
+      () => store.getters.checkUndoDisable,
     )
     const redoIsDisabled = computed<boolean>(
-      () => store.getters.checkRedoDisable
+      () => store.getters.checkRedoDisable,
     )
 
     const undoHistory = () => {
