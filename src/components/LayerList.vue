@@ -64,8 +64,7 @@
     </template>
   </draggable>
 </template>
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
+<script setup lang="ts">
 import draggable from 'vuedraggable'
 import {
   EyeOutlined,
@@ -77,51 +76,39 @@ import {
 } from '@ant-design/icons-vue'
 import { ComponentData } from '../store/editor'
 import InlineEdit from '../components/InlineEdit.vue'
-export default defineComponent({
-  props: {
-    list: {
-      type: Array as PropType<ComponentData[]>,
-      required: true,
-    },
-    selectedId: {
-      type: String,
-      required: true,
-    },
-  },
-  emits: ['select', 'change', 'drop'],
-  components: {
-    EyeOutlined,
-    EyeInvisibleOutlined,
-    LockOutlined,
-    UnlockOutlined,
-    InlineEdit,
-    draggable,
-    DragOutlined,
-    DeleteOutlined,
-  },
-  setup(props, context) {
-    const handleClick = (id: string) => {
-      context.emit('select', id)
-    }
-    const handleChange = (id: string, key: string, value: boolean) => {
-      const data = {
-        id,
-        key,
-        value,
-        isRoot: true,
-      }
-      context.emit('change', data)
-    }
-    const removeLayer = (id: string) => {
-      context.emit('drop', id)
-    }
-    return {
-      handleChange,
-      handleClick,
-      removeLayer,
-    }
-  },
-})
+
+// 定义 props
+interface Props {
+  list: ComponentData[]
+  selectedId: string
+}
+
+const props = defineProps<Props>()
+
+// 定义 emits
+const emit = defineEmits<{
+  select: [id: string]
+  change: [data: { id: string; key: string; value: any; isRoot: boolean }]
+  drop: [id: string]
+}>()
+
+const handleClick = (id: string) => {
+  emit('select', id)
+}
+
+const handleChange = (id: string, key: string, value: any) => {
+  const data = {
+    id,
+    key,
+    value,
+    isRoot: true,
+  }
+  emit('change', data)
+}
+
+const removeLayer = (id: string) => {
+  emit('drop', id)
+}
 </script>
 
 <style scoped>

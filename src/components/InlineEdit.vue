@@ -14,83 +14,79 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, watch, computed, nextTick } from 'vue'
+<script setup lang="ts">
+import { ref, watch, computed, nextTick } from 'vue'
 import useKeyPress from '../hooks/useKeyPress'
 import useClickOutside from '../hooks/useClickOutside'
 import { EditFilled } from '@ant-design/icons-vue'
-export default defineComponent({
-  name: 'InlineEdit',
-  components: {
-    EditFilled,
-  },
-  props: {
-    value: {
-      type: String,
-    },
-  },
-  emits: ['change'],
-  setup(props, context) {
-    const innerValue = ref(props.value)
-    watch(
-      () => props.value,
-      newValue => {
-        innerValue.value = newValue
-      },
-    )
-    const wrapper = ref<null | HTMLElement>(null)
-    const inputRef = ref<null | HTMLInputElement>(null)
-    const isOutside = useClickOutside(wrapper)
-    let cachedOldValue = ''
-    const isEditing = ref(false)
 
-    const handleClick = () => {
-      isEditing.value = true
-    }
-    const validateCheck = computed(() => innerValue.value.trim() !== '')
-    watch(isEditing, async isEditing => {
-      if (isEditing) {
-        cachedOldValue = innerValue.value
-        await nextTick()
-        if (inputRef.value) {
-          inputRef.value.focus()
-        }
-      }
-    })
-    watch(isOutside, newValue => {
-      if (!validateCheck.value) {
-        return
-      }
-      if (newValue && isEditing.value) {
-        isEditing.value = false
-        context.emit('change', innerValue.value)
-      }
-      isOutside.value = false
-    })
-    useKeyPress('Enter', () => {
-      if (!validateCheck.value) {
-        return
-      }
-      if (isEditing.value) {
-        isEditing.value = false
-        context.emit('change', innerValue.value)
-      }
-    })
-    useKeyPress('Escape', () => {
-      if (isEditing.value) {
-        isEditing.value = false
-        innerValue.value = cachedOldValue
-      }
-    })
-    return {
-      handleClick,
-      innerValue,
-      isEditing,
-      wrapper,
-      inputRef,
-      validateCheck,
-    }
+// 定义 props
+interface Props {
+  value?: string
+}
+
+const props = defineProps<Props>()
+
+// 定义 emits
+const emit = defineEmits<{
+  change: [value: string]
+}>()
+
+const innerValue = ref(props.value)
+watch(
+  () => props.value,
+  newValue => {
+    innerValue.value = newValue
   },
+)
+const wrapper = ref<null | HTMLElement>(null)
+const inputRef = ref<null | HTMLInputElement>(null)
+const isOutside = useClickOutside(wrapper)
+let cachedOldValue = ''
+const isEditing = ref(false)
+
+const handleClick = () => {
+  isEditing.value = true
+}
+
+const validateCheck = computed(() => innerValue.value?.trim() !== '')
+
+watch(isEditing, async isEditing => {
+  if (isEditing) {
+    cachedOldValue = innerValue.value || ''
+    await nextTick()
+    if (inputRef.value) {
+      inputRef.value.focus()
+    }
+  }
+})
+
+watch(isOutside, newValue => {
+  if (!validateCheck.value) {
+    return
+  }
+  if (newValue && isEditing.value) {
+    isEditing.value = false
+    emit('change', innerValue.value || '')
+  }
+  isOutside.value = false
+})
+
+useKeyPress('Enter', () => {
+  if (!validateCheck.value) {
+    return
+  }
+  if (isEditing.value) {
+    isEditing.value = false
+    emit('change', innerValue.value || '')
+  }
+})
+
+useKeyPress('Escape', () => {
+  if (isEditing.value) {
+    isEditing.value = false
+    innerValue.value = cachedOldValue
+  }
 })
 </script>
 
