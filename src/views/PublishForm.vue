@@ -37,7 +37,7 @@
               一键发布模板
             </a-button>
           </a-tab-pane>
-          <a-tab-pane key="channels" tab="渠道管理" disabled>
+          <a-tab-pane key="channels" tab="渠道管理">
             <a-row
               v-for="channel in channels"
               :key="channel.id"
