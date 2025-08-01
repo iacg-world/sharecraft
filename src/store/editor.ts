@@ -4,7 +4,7 @@ import store, { actionWrapper, GlobalDataProps } from './index'
 import { AllComponentProps, textDefaultProps } from '../defaultProps'
 import { message } from 'ant-design-vue/es'
 import { cloneDeep, debounce } from 'lodash-es'
-import { insertAt } from '../helper'
+import { insertAt, limitComponentWidth } from '../helper'
 import { RespData, RespListData, RespWorkData } from '@/respTypes'
 import { CSSProperties } from 'vue'
 
@@ -327,10 +327,20 @@ const editor: Module<EditorProps, GlobalDataProps> = {
             if (Array.isArray(key) && Array.isArray(value)) {
               // 若是数组，批量更新
               key.forEach((keyName, index) => {
-                updatedComponent.props[keyName] = value[index]
+                let finalValue = value[index]
+                // 如果修改的是宽度属性，需要检查是否超过画布宽度
+                if (keyName === 'width' && typeof finalValue === 'string') {
+                  finalValue = limitComponentWidth(finalValue)
+                }
+                updatedComponent.props[keyName] = finalValue
               })
             } else if (typeof key === 'string' && typeof value === 'string') {
-              updatedComponent.props[key] = value
+              let finalValue = value
+              // 如果修改的是宽度属性，需要检查是否超过画布宽度
+              if (key === 'width') {
+                finalValue = limitComponentWidth(value)
+              }
+              updatedComponent.props[key] = finalValue
             }
           }
         }

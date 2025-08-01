@@ -4,6 +4,7 @@ import { getFontEmbedCSS, toBlob } from 'html-to-image'
 import { RespUploadData } from './respTypes'
 import QRCode from 'qrcode'
 import { saveAs } from 'file-saver'
+import { EDGE_DISTANCE } from './CONST'
 
 interface CheckCondition {
   format?: string[]
@@ -79,6 +80,35 @@ export const getParentElement = (element: HTMLElement, className: string) => {
 
 export const insertAt = (arr: any[], index: number, newItem: any) => {
   return [...arr.slice(0, index), newItem, ...arr.slice(index)]
+}
+
+/**
+ * 限制组件宽度不超过画布宽度
+ * @param width 组件宽度字符串 (如 "200px")
+ * @param canvasWidth 画布宽度 (数字)
+ * @returns 限制后的宽度字符串
+ */
+export const limitComponentWidth = (
+  width: string,
+  canvasWidth?: number,
+): string => {
+  if (!canvasWidth) {
+    // 如果没有提供画布宽度，尝试从DOM中获取
+    const canvasContainer = document.querySelector(
+      '.canvas-container',
+    ) as HTMLElement
+    canvasWidth = canvasContainer ? canvasContainer.offsetWidth : 375 // 默认最小宽度
+  }
+
+  // 解析宽度数值（移除px单位）
+  const widthValue = parseInt(width.replace('px', ''))
+
+  // 如果组件宽度超过画布宽度，限制为画布宽度
+  if (widthValue > canvasWidth) {
+    return canvasWidth - EDGE_DISTANCE + 'px'
+  }
+
+  return width
 }
 
 export const debounce = (callback: (...args: any) => void, timeout = 500) => {

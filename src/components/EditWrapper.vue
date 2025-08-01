@@ -43,6 +43,8 @@ import { GlobalDataProps } from '@/store'
 import { defineComponent, computed, ref, nextTick, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { pick } from 'lodash-es'
+import { limitComponentWidth } from '@/helper'
+import { EDGE_DISTANCE } from '@/CONST'
 
 type ResizeDirection = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
 interface OriginalPositions {
@@ -76,7 +78,6 @@ export default defineComponent({
     const store = useStore<GlobalDataProps>()
     const isEditing = computed(() => store.state.editor.isEditing)
     const editWrapper = ref<null | HTMLElement>(null)
-    const EDGE_DISTANCE = 2
     let canvasContainer: HTMLElement
     onMounted(() => {
       canvasContainer = document.querySelector(
@@ -237,9 +238,13 @@ export default defineComponent({
       const topHeight = bottom - clientY
       const topOffset = clientY - container.offsetTop + container.scrollTop
       const leftOffset = clientX - container.offsetLeft
+
+      // 获取画布宽度用于宽度限制
+      const canvasWidth = canvasContainer ? canvasContainer.offsetWidth : 375
+
       const directionMap = {
         'top-left': () => {
-          const result = {
+          let result = {
             width: leftWidth,
             height: topHeight,
             top: topOffset,
@@ -271,10 +276,18 @@ export default defineComponent({
             }
           }
 
+          // 宽度限制：确保组件宽度不超过画布宽度
+          result.width = parseInt(
+            limitComponentWidth(result.width + 'px', canvasWidth).replace(
+              'px',
+              '',
+            ),
+          )
+
           return result
         },
         'top-right': () => {
-          const result = {
+          let result = {
             width: rightWidth,
             height: topHeight,
             top: topOffset,
@@ -300,10 +313,18 @@ export default defineComponent({
             }
           }
 
+          // 宽度限制：确保组件宽度不超过画布宽度
+          result.width = parseInt(
+            limitComponentWidth(result.width + 'px', canvasWidth).replace(
+              'px',
+              '',
+            ),
+          )
+
           return result
         },
         'bottom-left': () => {
-          const result = {
+          let result = {
             width: leftWidth,
             height: bottomHeight,
             top: undefined,
@@ -328,10 +349,18 @@ export default defineComponent({
             }
           }
 
+          // 宽度限制：确保组件宽度不超过画布宽度
+          result.width = parseInt(
+            limitComponentWidth(result.width + 'px', canvasWidth).replace(
+              'px',
+              '',
+            ),
+          )
+
           return result
         },
         'bottom-right': () => {
-          const result = {
+          let result = {
             width: rightWidth,
             height: bottomHeight,
             top: undefined,
@@ -344,6 +373,14 @@ export default defineComponent({
             result.width = Math.round(result.width / spacing) * spacing
             result.height = Math.round(result.height / spacing) * spacing
           }
+
+          // 宽度限制：确保组件宽度不超过画布宽度
+          result.width = parseInt(
+            limitComponentWidth(result.width + 'px', canvasWidth).replace(
+              'px',
+              '',
+            ),
+          )
 
           return result
         },
