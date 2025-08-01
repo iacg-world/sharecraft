@@ -40,7 +40,7 @@
 
 <script lang="ts">
 import { GlobalDataProps } from '@/store'
-import { defineComponent, computed, ref, nextTick } from 'vue'
+import { defineComponent, computed, ref, nextTick, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { pick } from 'lodash-es'
 
@@ -76,6 +76,13 @@ export default defineComponent({
     const store = useStore<GlobalDataProps>()
     const isEditing = computed(() => store.state.editor.isEditing)
     const editWrapper = ref<null | HTMLElement>(null)
+    const EDGE_DISTANCE = 2
+    let canvasContainer: HTMLElement
+    onMounted(() => {
+      canvasContainer = document.querySelector(
+        '.canvas-container',
+      ) as HTMLElement
+    })
 
     const onItemClick = (id: string) => {
       if (isEditing.value) {
@@ -104,22 +111,17 @@ export default defineComponent({
       pick(props.props, ['position', 'top', 'left', 'width', 'height']),
     )
     const calculateMovePosition = (e: MouseEvent) => {
-      const container = document.querySelector('.preview-list') as HTMLElement
-      const canvasContainer = document.querySelector(
-        '.canvas-container',
-      ) as HTMLElement
-
-      if (!container || !canvasContainer) {
+      if (!canvasContainer) {
         return { left: 0, top: 0 }
       }
 
       // 统一使用getBoundingClientRect()来保持坐标系统一致
-      const containerRect = container.getBoundingClientRect()
       const canvasRect = canvasContainer.getBoundingClientRect()
 
       // 计算画布在预览容器中的相对位置
-      const canvasLeft = canvasRect.left - containerRect.left
-      const canvasTop = canvasRect.top - containerRect.top + container.scrollTop
+      const canvasLeft = 0
+
+      const canvasTop = canvasContainer.scrollTop
       const canvasWidth = canvasContainer.offsetWidth
       const canvasHeight = canvasContainer.offsetHeight
 
@@ -147,8 +149,8 @@ export default defineComponent({
       }
 
       // 转换为相对于container的位置
-      let left = relativeLeft + canvasLeft
-      let top = relativeTop + canvasTop
+      let left = relativeLeft
+      let top = relativeTop
 
       // 边界检测：确保组件不超出画布边界
       // 左边界检测
@@ -157,7 +159,7 @@ export default defineComponent({
       }
       // 右边界检测
       if (left + componentWidth > canvasLeft + canvasWidth) {
-        left = canvasLeft + canvasWidth - componentWidth
+        left = canvasLeft + canvasWidth - componentWidth - EDGE_DISTANCE
       }
       // 上边界检测
       if (top < canvasTop) {
@@ -165,7 +167,7 @@ export default defineComponent({
       }
       // 下边界检测
       if (top + componentHeight > canvasTop + canvasHeight) {
-        top = canvasTop + canvasHeight - componentHeight
+        top = canvasTop + canvasHeight - componentHeight - EDGE_DISTANCE
       }
 
       return {
@@ -180,10 +182,6 @@ export default defineComponent({
       }
       const currentElement = editWrapper.value
       if (currentElement) {
-        // 获取画布和元素的位置信息
-        const canvasContainer = document.querySelector(
-          '.canvas-container',
-        ) as HTMLElement
         const elementRect = currentElement.getBoundingClientRect()
         const canvasRect = canvasContainer.getBoundingClientRect()
 
@@ -251,9 +249,7 @@ export default defineComponent({
           // 网格吸附
           if (store && store.state.editor.gridSettings.enabled) {
             const spacing = store.state.editor.gridSettings.spacing
-            const canvasContainer = document.querySelector(
-              '.canvas-container',
-            ) as HTMLElement
+
             if (canvasContainer) {
               const canvasRect = canvasContainer.getBoundingClientRect()
               const containerRect = container.getBoundingClientRect()
@@ -288,9 +284,7 @@ export default defineComponent({
           // 网格吸附
           if (store && store.state.editor.gridSettings.enabled) {
             const spacing = store.state.editor.gridSettings.spacing
-            const canvasContainer = document.querySelector(
-              '.canvas-container',
-            ) as HTMLElement
+
             if (canvasContainer) {
               const canvasRect = canvasContainer.getBoundingClientRect()
               const containerRect = container.getBoundingClientRect()
@@ -319,9 +313,7 @@ export default defineComponent({
           // 网格吸附
           if (store && store.state.editor.gridSettings.enabled) {
             const spacing = store.state.editor.gridSettings.spacing
-            const canvasContainer = document.querySelector(
-              '.canvas-container',
-            ) as HTMLElement
+
             if (canvasContainer) {
               const canvasRect = canvasContainer.getBoundingClientRect()
               const containerRect = container.getBoundingClientRect()
