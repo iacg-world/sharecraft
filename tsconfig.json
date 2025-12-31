@@ -4,7 +4,7 @@
     "module": "esnext",
     "strict": true,
     "jsx": "preserve",
-    "outDir": "/dist",
+    "outDir": "dist",
     "moduleResolution": "node",
     "experimentalDecorators": true,
     "skipLibCheck": true,
@@ -14,9 +14,6 @@
     "useDefineForClassFields": true,
     "sourceMap": true,
     "baseUrl": ".",
-    "types": [
-      "jest"
-    ],
     "paths": {
       "@/*": [
         "src/*"
@@ -34,7 +31,8 @@
     "src/**/*.tsx",
     "src/**/*.vue",
     "tests/**/*.ts",
-    "tests/**/*.tsx", "vite-env.d.ts",
+    "tests/**/*.tsx",
+    "vite-env.d.ts",
   ],
   "exclude": [
     "node_modules"

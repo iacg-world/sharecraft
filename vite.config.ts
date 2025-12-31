@@ -69,7 +69,7 @@ export default defineConfig(({ mode }) => {
       }),
       Components({
         dts: true,
-        resolvers: [AntDesignVueResolver({importStyle: 'less'})],
+        resolvers: [AntDesignVueResolver({ importStyle: 'less' })],
         include: [/\.vue$/, /\.vue\?vue/, /\.vue\.[tj]sx?\?vue/, /\.md$/]
       }),
       Vue(),
@@ -91,6 +91,7 @@ export default defineConfig(({ mode }) => {
     css: {
       preprocessorOptions: {
         scss: {
+          api: 'modern-compiler',
           javascriptEnabled: true
         }
       },

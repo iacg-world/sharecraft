@@ -9,7 +9,6 @@ ShareCraft 是一个基于 Vue 3 的零代码建站平台，支持拖拽式创�
 - UI 框架：Ant Design Vue 4
 - 构建工具：Vite 5
 - 包管理：npm/pnpm
-- 测试框架：Jest + Vue Test Utils
 - 代码质量：ESLint + Prettier
 - AI 集成：OpenAI、Claude 等多种 AI 服务
 
