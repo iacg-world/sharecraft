@@ -4,7 +4,7 @@ WORKDIR /usr/src/sharecraft
 COPY ./ /usr/src/sharecraft
 RUN npm i pnpm -g
 RUN pnpm install --registry=https://registry.npmmirror.com/
-RUN pnpm run build:vite
+RUN pnpm run build
 
 FROM nginx:latest
 RUN mkdir -p /app
