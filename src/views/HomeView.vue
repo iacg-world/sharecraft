@@ -38,12 +38,12 @@ export default defineComponent({
       total,
       {
         pageIndex: 0,
-        pageSize: 4,
+        pageSize: 8,
       },
     )
     onMounted(() => {
       store.dispatch('fetchTemplates', {
-        searchParams: { pageIndex: 0, pageSize: 4 },
+        searchParams: { pageIndex: 0, pageSize: 8 },
         props: {
           isFirstPage,
         },

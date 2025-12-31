@@ -66,7 +66,7 @@ const templates: Module<TemplatesProps, GlobalDataProps> = {
       return dispatch('deleteWork', { urlParams: { id } }).then(() => {
         const searchParams = {
           pageIndex: 0,
-          pageSize: 4,
+          pageSize: 8,
           isTemplate,
         }
         return dispatch('fetchWorks', { searchParams })
