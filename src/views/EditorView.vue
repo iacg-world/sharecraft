@@ -81,9 +81,9 @@
                   :props="component.props"
                 >
                   <component
-                    :is="component.name"
+                    :is="dynamicComponents[component.name]"
                     @change="
-                      (data: any) =>
+                      (data: { key: string; value: string }) =>
                         onchange({
                           id: component.id,
                           key: data.key,
@@ -150,7 +150,7 @@
           </a-tab-pane>
 
           <a-tab-pane key="page" tab="页面设置">
-            <PropsTable :props="page.props" @change="pageChange"></PropsTable>
+            <PropsTable :props="pageProps" @change="pageChange"></PropsTable>
             <a-divider>网格设置</a-divider>
             <GridSettings />
           </a-tab-pane>
@@ -160,23 +160,24 @@
   </a-flex>
 </template>
 
-<script lang="ts">
-import { defineComponent, computed, ref, onMounted, nextTick } from 'vue'
+<script setup lang="ts">
+import { computed, ref, onMounted, nextTick } from 'vue'
 import { useStore } from 'vuex'
 import { GlobalDataProps } from '../store/index'
-import { CImage } from 'iacg-block'
+import { CImage, CText } from 'iacg-block'
+
 import ComponentsList from '../components/ComponentsList.vue'
 import EditWrapper from '../components/EditWrapper.vue'
 import PropsTable from '../components/PropsTable.vue'
 import LayerList from '../components/LayerList.vue'
 import EditGroup from '../components/EditGroup.vue'
 import HistoryArea from './editor/HistoryArea.vue'
-import { ComponentData } from '../store/editor'
+import type { ComponentData, AllFormProps, PageProps } from '../store/editor'
 import defaultTextTemplates from '../defaultTemplates'
 import { cloneDeep, pickBy } from 'lodash-es'
 import initHotKeys from '@/plugins/hotKeys'
 import initContextMenu from '../plugins/contextMenu'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import InlineEdit from '../components/InlineEdit.vue'
 import UserProfile from '../components/UserProfile.vue'
 import useSaveWork from '@/hooks/useSaveWork'
@@ -190,210 +191,190 @@ import {
   LeftCircleOutlined,
 } from '@ant-design/icons-vue'
 import { Empty as AEmpty } from 'ant-design-vue/es'
-import router from '@/router'
-import CText from '@/components/CText.vue'
+import { message } from 'ant-design-vue'
 import GridSystem from '@/components/GridSystem.vue'
 import GridSettings from '@/components/GridSettings.vue'
 import '@chinese-fonts/mzxst/dist/MZPXflat/result.css'
 import '@chinese-fonts/hwmct/dist/汇文明朝体/result.css'
-export type TabType = 'component' | 'layer' | 'page'
-export default defineComponent({
-  components: {
-    CText,
-    CImage,
-    ComponentsList,
-    EditWrapper,
-    PropsTable,
-    LayerList,
-    EditGroup,
-    HistoryArea,
-    InlineEdit,
-    UserProfile,
-    PublishForm,
-    PreviewForm,
-    GridSystem,
-    GridSettings,
 
-    HomeOutlined,
-    AEmpty,
-    DoubleLeftOutlined,
-    DoubleRightOutlined,
-    LeftCircleOutlined,
-  },
-  setup() {
-    initHotKeys()
-    initContextMenu()
-    const route = useRoute()
-    const currentWorkId = route.params.id as string
-    const store = useStore<GlobalDataProps>()
-    const activePanel = ref<TabType>('component')
-    const components = computed(() => store.state.editor.components)
-    const isEditing = computed(() => store.state.editor.isEditing)
-    const currentElement = computed<ComponentData | null>(
-      () => store.getters.getCurrentElement,
-    )
-    const page = computed(() => store.state.editor.page)
-    const userInfo = computed(() => store.state.user)
+type TabType = 'component' | 'layer' | 'page'
 
-    const isDragOver = ref(false)
+initHotKeys()
+initContextMenu()
 
-    const addItem = (component: ComponentData) => {
-      if (component.name === 'c-text') {
-        component.props.paddingTop = '3px'
-        component.props.paddingBottom = '3px'
-      }
-      store.commit('addComponent', cloneDeep(component))
-    }
+const dynamicComponents: Record<string, typeof CImage | typeof CText> = {
+  'c-image': CImage,
+  'c-text': CText,
+}
 
-    const onDragOver = (event: DragEvent) => {
-      event.preventDefault()
-      event.dataTransfer!.dropEffect = 'copy'
-      isDragOver.value = true
-    }
+const route = useRoute()
+const router = useRouter()
+const currentWorkId = route.params.id as string
+const store = useStore<GlobalDataProps>()
 
-    const onDragLeave = (event: DragEvent) => {
-      const target = event.target as HTMLElement
-      const relatedTarget = event.relatedTarget as HTMLElement
-      if (target.id === 'canvas-area' && !target.contains(relatedTarget)) {
-        isDragOver.value = false
-      }
-    }
+const activePanel = ref<TabType>('component')
+const isDragOver = ref(false)
+const canvasFix = ref(false)
+const showPublishForm = ref(false)
+const showPreviewForm = ref(false)
 
-    const onDrop = (event: DragEvent) => {
-      event.preventDefault()
-      isDragOver.value = false
+const components = computed(() => store.state.editor.components)
+const isEditing = computed(() => store.state.editor.isEditing)
+const currentElement = computed<ComponentData | null>(
+  () => store.getters.getCurrentElement,
+)
+const page = computed(() => store.state.editor.page)
+const userInfo = computed(() => store.state.user)
+const defaultPageProps: Partial<AllFormProps> = {
+  backgroundColor: '#ffffff',
+  backgroundImage: '',
+  backgroundRepeat: 'no-repeat',
+  backgroundSize: 'contain',
+  height: '560px',
+}
+const createPageComponentProps = (props?: PageProps): Partial<AllFormProps> => {
+  if (!props) {
+    return { ...defaultPageProps }
+  }
+  return {
+    backgroundColor: props.backgroundColor ?? defaultPageProps.backgroundColor,
+    backgroundImage: props.backgroundImage ?? defaultPageProps.backgroundImage,
+    backgroundRepeat:
+      props.backgroundRepeat ?? defaultPageProps.backgroundRepeat,
+    backgroundSize: props.backgroundSize ?? defaultPageProps.backgroundSize,
+    height: props.height ?? defaultPageProps.height,
+  }
+}
+const pageProps = computed<Partial<AllFormProps>>(() =>
+  createPageComponentProps(page.value.props),
+)
 
-      const componentDataStr = event.dataTransfer?.getData('component-data')
-      if (!componentDataStr) {
-        return
-      }
+const { saveWork, saveIsLoading } = useSaveWork()
+const { publishWork, isPublishing } = usePublishWork()
 
-      const componentData: ComponentData = JSON.parse(componentDataStr)
-      const canvasEl = document.getElementById('canvas-area')
-      if (!canvasEl) {
-        return
-      }
+const addItem = (component: ComponentData) => {
+  if (component.name === 'c-text') {
+    component.props.paddingTop = '3px'
+    component.props.paddingBottom = '3px'
+  }
+  store.commit('addComponent', cloneDeep(component))
+}
 
-      const canvasRect = canvasEl.getBoundingClientRect()
-      const dropX = event.clientX - canvasRect.left
-      const dropY = event.clientY - canvasRect.top + canvasEl.scrollTop
+const onDragOver = (event: DragEvent) => {
+  event.preventDefault()
+  event.dataTransfer!.dropEffect = 'copy'
+  isDragOver.value = true
+}
 
-      componentData.props.left = Math.max(0, dropX) + 'px'
-      componentData.props.top = Math.max(0, dropY) + 'px'
+const onDragLeave = (event: DragEvent) => {
+  const target = event.target as HTMLElement
+  const relatedTarget = event.relatedTarget as HTMLElement
+  if (target.id === 'canvas-area' && !target.contains(relatedTarget)) {
+    isDragOver.value = false
+  }
+}
 
-      if (componentData.name === 'c-text') {
-        componentData.props.paddingTop = '3px'
-        componentData.props.paddingBottom = '3px'
-      }
+const onDrop = (event: DragEvent) => {
+  event.preventDefault()
+  isDragOver.value = false
 
-      store.commit('addComponent', cloneDeep(componentData))
+  const componentDataStr = event.dataTransfer?.getData('component-data')
+  if (!componentDataStr) {
+    return
+  }
 
-      nextTick(() => {
-        store.commit('setActive', componentData.id)
-      })
-    }
-    const setActive = (id: string) => {
-      store.commit('setActive', id)
-    }
-    const removeComponent = (id: string) => {
-      store.commit('removeComponent', id)
-    }
-    const handleChange = (e: any) => {
-      store.commit('updateComponent', e)
-    }
-    const pageChange = (e: any) => {
-      store.commit('updatePage', e)
-    }
-    const titleChange = (newTitle: string) => {
-      store.commit('updatePage', {
-        key: 'title',
-        value: newTitle,
-        isRoot: true,
-      })
-    }
+  const componentData: ComponentData = JSON.parse(componentDataStr)
+  const canvasEl = document.getElementById('canvas-area')
+  if (!canvasEl) {
+    return
+  }
 
-    const updatePosition = (data: {
-      left: number
-      top: number
-      id: string
-    }) => {
-      const { id } = data
-      const updatedData = pickBy<number>(data, (v, k) => k !== 'id')
-      // 将位置变化合并为数组传递
-      const keysArr = Object.keys(updatedData)
-      const valuesArr = Object.values(updatedData).map(v => v + 'px')
-      store.commit('updateComponent', { key: keysArr, value: valuesArr, id })
-    }
-    const { saveWork, saveIsLoading } = useSaveWork()
-    onMounted(() => {
-      if (currentWorkId) {
-        store.dispatch('fetchWork', { urlParams: { id: currentWorkId } })
-      }
-    })
-    const canvasFix = ref(false)
-    const showPublishForm = ref(false)
+  const canvasRect = canvasEl.getBoundingClientRect()
+  const dropX = event.clientX - canvasRect.left
+  const dropY = event.clientY - canvasRect.top + canvasEl.scrollTop
 
-    const { publishWork, isPublishing } = usePublishWork()
-    const publish = async () => {
-      store.commit('setActive', '')
-      const el = document.getElementById('canvas-area') as HTMLElement
-      canvasFix.value = true
-      try {
-        await publishWork(el)
-        showPublishForm.value = true
-      } catch (e) {
-        console.error(e)
-      } finally {
-        canvasFix.value = false
-      }
-    }
+  componentData.props.left = Math.max(0, dropX) + 'px'
+  componentData.props.top = Math.max(0, dropY) + 'px'
 
-    const showPreviewForm = ref(false)
-    const preview = async () => {
-      await saveWork()
-      showPreviewForm.value = true
-    }
+  if (componentData.name === 'c-text') {
+    componentData.props.paddingTop = '3px'
+    componentData.props.paddingBottom = '3px'
+  }
 
-    const switchEditStatus = (status: boolean) => {
-      store.commit('setEditStatus', !status)
-    }
-    const onchange = (data: { id: string; key: string; value: string }) => {
-      handleChange(data)
-    }
-    return {
-      components,
-      defaultTextTemplates,
-      addItem,
-      setActive,
-      removeComponent,
-      currentElement,
-      handleChange,
-      isEditing,
-      activePanel,
-      page,
-      pageChange,
-      updatePosition,
-      titleChange,
-      userInfo,
-      saveWork,
-      saveIsLoading,
-      publish,
-      canvasFix,
-      isPublishing,
-      showPublishForm,
-      preview,
-      showPreviewForm,
-      switchEditStatus,
-      isDragOver,
-      onDragOver,
-      onDragLeave,
-      onDrop,
-      back: () => {
-        router.back()
-      },
-      onchange,
-    }
-  },
+  store.commit('addComponent', cloneDeep(componentData))
+
+  nextTick(() => {
+    store.commit('setActive', componentData.id)
+  })
+}
+
+const setActive = (id: string) => {
+  store.commit('setActive', id)
+}
+
+const removeComponent = (id: string) => {
+  store.commit('removeComponent', id)
+}
+
+const handleChange = (e: { key: string; value: string; id?: string }) => {
+  store.commit('updateComponent', e)
+}
+
+const pageChange = (e: { key: string; value: string }) => {
+  store.commit('updatePage', e)
+}
+
+const titleChange = (newTitle: string) => {
+  store.commit('updatePage', {
+    key: 'title',
+    value: newTitle,
+    isRoot: true,
+  })
+}
+
+const updatePosition = (data: { left: number; top: number; id: string }) => {
+  const { id } = data
+  const updatedData = pickBy<number>(data, (_v, k) => k !== 'id')
+  const keysArr = Object.keys(updatedData)
+  const valuesArr = Object.values(updatedData).map(v => v + 'px')
+  store.commit('updateComponent', { key: keysArr, value: valuesArr, id })
+}
+
+const publish = async () => {
+  store.commit('setActive', '')
+  const el = document.getElementById('canvas-area') as HTMLElement
+  canvasFix.value = true
+  try {
+    await publishWork(el)
+    showPublishForm.value = true
+  } catch (e) {
+    message.error(`发布失败，请稍后再试${e}`)
+  } finally {
+    canvasFix.value = false
+  }
+}
+
+const preview = async () => {
+  await saveWork()
+  showPreviewForm.value = true
+}
+
+const switchEditStatus = (status: boolean) => {
+  store.commit('setEditStatus', !status)
+}
+
+const onchange = (data: { id: string; key: string; value: string }) => {
+  handleChange(data)
+}
+
+const back = () => {
+  router.back()
+}
+
+onMounted(() => {
+  if (currentWorkId) {
+    store.dispatch('fetchWork', { urlParams: { id: currentWorkId } })
+  }
 })
 </script>
 

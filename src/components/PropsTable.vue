@@ -35,7 +35,7 @@
 import { computed, defineComponent, PropType, VNode } from 'vue'
 import { reduce } from 'lodash-es'
 import { mapPropsToForms } from '../propsMap'
-import { AllComponentProps } from '@/defaultProps'
+import type { AllFormProps } from '@/store/editor'
 import RenderVnode from './RenderVnode'
 import ColorPicker from './ColorPicker.vue'
 import ImageProcesser from './ImageProcesser.vue'
@@ -46,19 +46,19 @@ import FontFamilySelect from './FontFamilySelect.vue'
 interface FormProps {
   component: string
   subComponent?: string
-  value: string
-  extraProps?: { [key: string]: any }
+  value: unknown
+  extraProps?: Record<string, unknown>
   text?: string
-  options?: { text: string | VNode; value: any }[]
+  options?: { text: string | VNode; value: unknown }[]
   valueProp: string
   eventName: string
-  events: { [key: string]: (e: any) => void }
+  events: Record<string, (e: unknown) => void>
 }
 export default defineComponent({
   name: 'PropsTable',
   props: {
     props: {
-      type: Object as PropType<Partial<AllComponentProps>>,
+      type: Object as PropType<Partial<AllFormProps>>,
       required: true,
     },
   },
@@ -77,7 +77,7 @@ export default defineComponent({
       return reduce(
         props.props,
         (result, value, key) => {
-          const newKey = key as keyof AllComponentProps
+          const newKey = key as keyof AllFormProps
           const item = mapPropsToForms[newKey]
           if (item) {
             const {
@@ -92,7 +92,7 @@ export default defineComponent({
               valueProp,
               eventName,
               events: {
-                [eventName]: (e: any) => {
+                [eventName]: (e: unknown) => {
                   context.emit('change', {
                     key,
                     value: afterTransform ? afterTransform(e) : e,

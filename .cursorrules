@@ -30,7 +30,7 @@ ShareCraft 是一个基于 Vue 3 的零代码建站平台，支持拖拽式创�
 // ✅ 正确
 type ComponentProps = {
   id: string
-  name: 'c-text' | 'c-image' | 'c-shape'
+  name: 'c-text' | 'c-image'
   props: Partial<AllComponentProps>
 }
 
@@ -158,12 +158,12 @@ src/
 
 ### 核心组件类型
 
-组件类型仅支持：`c-text`、`c-image`、`c-shape`
+组件类型仅支持：`c-text`、`c-image`
 
 ```typescript
 type ComponentData = {
   id: string
-  name: 'c-text' | 'c-image' | 'c-shape'
+  name: 'c-text' | 'c-image'
   props: Partial<AllComponentProps>
   layerName?: string
   isHidden?: boolean

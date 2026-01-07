@@ -15,7 +15,7 @@ export interface ComponentData {
   // id，uuid v4 生成
   id: string
   // 业务组件库名称 c-text，c-image 等等
-  name: 'c-text' | 'c-image' | 'c-shape'
+  name: 'c-text' | 'c-image'
   // 图层是否隐藏
   isHidden?: boolean
   // 图层是否锁定
@@ -315,7 +315,7 @@ const editor: Module<EditorProps, GlobalDataProps> = {
         if (updatedComponent) {
           if (isRoot) {
             // https://github.com/microsoft/TypeScript/issues/31663
-            ;(updatedComponent as any)[key as string] = value
+            ; (updatedComponent as any)[key as string] = value
           } else {
             const oldValue = Array.isArray(key)
               ? key.map(key => updatedComponent.props[key])
