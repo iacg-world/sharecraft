@@ -4,8 +4,8 @@ import path from 'path'
 import compression from 'vite-plugin-compression'
 import eslintPlugin from 'vite-plugin-eslint'
 import VueJsx from '@vitejs/plugin-vue-jsx'
-import Components from "unplugin-vue-components/vite";
-import { AntDesignVueResolver } from "unplugin-vue-components/resolvers";
+import Components from 'unplugin-vue-components/vite'
+import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), 'VUE_APP_')
@@ -43,21 +43,21 @@ export default defineConfig(({ mode }) => {
             ],
             'antd-data': [
               'ant-design-vue/es/table',
-              'ant-design-vue/es/pagination'
+              'ant-design-vue/es/pagination',
             ],
             'antd-feedback': [
               'ant-design-vue/es/modal',
               'ant-design-vue/es/message',
-              'ant-design-vue/es/notification'
+              'ant-design-vue/es/notification',
             ],
 
           },
-        }
-      }
+        },
+      },
     },
     envPrefix: 'VUE_APP_',
     define: {
-      'process.env': env
+      'process.env': env,
     },
     plugins: [
       compression({
@@ -70,7 +70,7 @@ export default defineConfig(({ mode }) => {
       Components({
         dts: true,
         resolvers: [AntDesignVueResolver({ importStyle: 'less' })],
-        include: [/\.vue$/, /\.vue\?vue/, /\.vue\.[tj]sx?\?vue/, /\.md$/]
+        include: [/\.vue$/, /\.vue\?vue/, /\.vue\.[tj]sx?\?vue/, /\.md$/],
       }),
       Vue(),
       VueJsx(),
@@ -84,16 +84,16 @@ export default defineConfig(({ mode }) => {
     // 别名配置
     resolve: {
       alias: {
-        '@': path.resolve(__dirname, 'src')
-      }
+        '@': path.resolve(__dirname, 'src'),
+      },
 
     },
     css: {
       preprocessorOptions: {
         scss: {
           api: 'modern-compiler',
-          javascriptEnabled: true
-        }
+          javascriptEnabled: true,
+        },
       },
 
     },
