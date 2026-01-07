@@ -149,7 +149,7 @@ const chatHistory = reactive<ChatMessage[]>([
 ])
 
 const examplePrompts = [
-  '创建一个简单的登录页面',
+  '设计一个自我介绍页面',
   '设计一个产品展示卡片',
   '制作一个联系我们页面',
   '生成一个新闻文章布局',

@@ -146,56 +146,132 @@ export async function callClaude(
   }
 }
 
+// 画布边界常量
+const CANVAS_CONSTRAINTS = {
+  width: 375,
+  minComponentWidth: 20,
+  maxComponentWidth: 373,
+  minComponentHeight: 20,
+  edgeDistance: 2,
+} as const
+
 // 生成AI提示词
 function generatePrompt(userMessage: string): string {
-  return `你是一个专业的UI/UX设计师助手，专门帮助用户创建网页组件。请根据用户的描述生成相应的页面组件数据。
+  return `你是 ShareCraft 零代码建站平台的 UI/UX 设计师助手，专门帮助用户创建移动端活动页/落地页/分享页的组件布局。
 
-用户需求：${userMessage}
+## 用户需求
+${userMessage}
 
-请严格按照以下JSON格式返回结果，不要包含任何其他文字：
+## 画布约束条件
+- 画布宽度：${CANVAS_CONSTRAINTS.width}px（移动端标准宽度）
+- 组件宽度范围：${CANVAS_CONSTRAINTS.minComponentWidth}px ~ ${CANVAS_CONSTRAINTS.maxComponentWidth}px
+- 组件最小高度：${CANVAS_CONSTRAINTS.minComponentHeight}px
+- 边缘安全距离：${CANVAS_CONSTRAINTS.edgeDistance}px
+- left 取值范围：0px ~ ${CANVAS_CONSTRAINTS.width - CANVAS_CONSTRAINTS.minComponentWidth}px
+- 组件不能超出画布右边界：left + width <= ${CANVAS_CONSTRAINTS.width - CANVAS_CONSTRAINTS.edgeDistance}px
+
+## 组件类型说明
+仅支持两种组件类型：
+1. **c-text**：文本组件，用于标题、正文、按钮、标签、链接等所有文字内容
+2. **c-image**：图片组件，用于展示图片、图标、背景图等
+
+## 返回格式要求
+请严格返回以下 JSON 格式，不要包含任何其他文字或 markdown 标记：
 
 {
-  "description": "对生成页面的文字描述",
+  "description": "对生成页面的简要描述",
   "components": [
     {
-      "id": "组件的唯一ID",
-      "name": "c-text | c-image",
-      "layerName": "组件名称",
+      "id": "uuid-v4格式的唯一标识",
+      "name": "c-text",
+      "layerName": "组件在图层面板中的显示名称",
       "props": {
-        "text": "文本内容（只有c-text需要）",
-        "src": "图片地址（只有c-image需要）",
-        "fontSize": "14px",
+        "text": "文本内容（c-text必填）",
+        "fontSize": "字号，如 14px、16px、24px",
         "fontWeight": "normal | bold",
-        "color": "#333333",
-        "backgroundColor": "#ffffff",
+        "fontStyle": "normal | italic",
+        "fontFamily": "字体族，可为空",
+        "letterSpacing": "字间距，如 1px",
+        "textDecoration": "none | underline | line-through",
+        "lineHeight": "行高，如 1、1.5、2",
         "textAlign": "left | center | right",
-        "lineHeight": "1.5",
-        "borderStyle": "none | solid",
-        "borderColor": "#000000",
-        "borderWidth": "0px",
-        "borderRadius": "0px",
-        "paddingLeft": "0px",
-        "paddingRight": "0px",
-        "paddingTop": "0px",
-        "paddingBottom": "0px",
-        "left": "位置x坐标（如：50px）",
-        "top": "位置y坐标（如：50px）",
-        "width": "组件宽度（如：200px）",
-        "height": "组件高度（如：30px）",
+        "color": "文字颜色，如 #333333",
+        "backgroundColor": "背景色，如 #ffffff 或空字符串表示透明",
+        "opacity": "透明度，0~1 之间",
+        "borderStyle": "none | solid | dashed | dotted",
+        "borderColor": "边框颜色，如 #000000",
+        "borderWidth": "边框宽度，如 0、1px、2px",
+        "borderRadius": "圆角，如 0、4px、8px、50%",
+        "boxShadow": "阴影，如 0 2px 8px rgba(0,0,0,0.1) 或 0 0 0 #000000",
+        "paddingTop": "内边距，如 0px、8px、12px",
+        "paddingBottom": "内边距",
+        "paddingLeft": "内边距",
+        "paddingRight": "内边距",
+        "position": "absolute（固定值）",
+        "left": "x坐标，如 0px、50px",
+        "top": "y坐标，如 0px、100px",
+        "width": "宽度，如 200px、318px",
+        "height": "高度，如 30px、40px",
+        "actionType": "点击行为类型，可选值：'' | 'url'",
+        "url": "跳转链接（actionType为url时生效）"
+      }
+    },
+    {
+      "id": "uuid-v4格式",
+      "name": "c-image",
+      "layerName": "图片组件名称",
+      "props": {
+        "src": "图片URL地址（c-image必填）",
+        "width": "宽度",
+        "height": "高度",
+        "left": "x坐标",
+        "top": "y坐标",
         "position": "absolute",
-        "opacity": "1"
+        "borderRadius": "圆角",
+        "opacity": "透明度",
+        "boxShadow": "阴影"
       }
     }
   ]
 }
 
-重要要求：
-1. 组件类型只能是 "c-text" 或 "c-image"
-2. 每个组件必须有唯一的id（使用uuid格式）
-3. 合理安排组件位置，避免重叠
-4. 文本组件使用c-text，图片组件使用c-image
-5. 所有尺寸和位置值必须包含px单位
-6. 返回的必须是有效的JSON格式
+## 设计规范
+1. **布局原则**
+   - 组件从上到下依次排列，top 值递增
+   - 相邻组件间保持合理间距（建议 8px~24px）
+   - 同类内容水平对齐
+   - 重要信息放在视觉焦点位置
+
+2. **尺寸规范**
+   - 标题字号：20px~28px，fontWeight: bold
+   - 副标题：16px~18px
+   - 正文：14px~16px
+   - 辅助文字：12px~14px，颜色偏灰如 #666666 或 #999999
+   - 按钮高度：36px~48px，圆角 4px~8px
+   - 图片宽度：建议 318px 或 ${CANVAS_CONSTRAINTS.maxComponentWidth}px 以适应画布
+
+3. **配色建议**
+   - 主色调：#1890ff（蓝色）、#52c41a（绿色）、#ff4d4f（红色）
+   - 正文颜色：#333333 或 #000000
+   - 次要文字：#666666
+   - 辅助文字：#999999
+   - 背景色：#ffffff、#f5f5f5、#fafafa
+
+4. **交互元素**
+   - 可点击按钮设置 actionType: 'url' 和对应 url
+   - 按钮样式：backgroundColor 使用主题色，color 为 #ffffff
+   - 链接文字可使用 textDecoration: 'underline'
+
+5. **ID格式**
+   - 使用 UUID v4 格式，如：550e8400-e29b-41d4-a716-446655440000
+
+## 禁止事项
+- 不要生成 c-text 和 c-image 以外的组件类型
+- 不要遗漏 position: "absolute" 属性
+- 不要让组件超出画布边界（left + width > ${CANVAS_CONSTRAINTS.width - CANVAS_CONSTRAINTS.edgeDistance}px）
+- 不要使用不带 px 单位的尺寸值（除了 lineHeight、opacity）
+- 不要返回空的 components 数组
+- 不要在 JSON 外添加任何说明文字
 
 请根据用户需求生成合适的组件布局。`
 }
