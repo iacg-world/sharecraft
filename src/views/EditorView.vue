@@ -60,6 +60,10 @@
                 class="canvas-container"
                 id="canvas-area"
                 :style="page.props"
+                @dragover="onDragOver"
+                @dragleave="onDragLeave"
+                @drop="onDrop"
+                :class="{ 'drag-over': isDragOver }"
               >
                 <GridSystem />
                 <EditWrapper
@@ -157,7 +161,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref, onMounted } from 'vue'
+import { defineComponent, computed, ref, onMounted, nextTick } from 'vue'
 import { useStore } from 'vuex'
 import { GlobalDataProps } from '../store/index'
 import { CImage } from 'iacg-block'
@@ -231,12 +235,62 @@ export default defineComponent({
     const page = computed(() => store.state.editor.page)
     const userInfo = computed(() => store.state.user)
 
+    const isDragOver = ref(false)
+
     const addItem = (component: ComponentData) => {
       if (component.name === 'c-text') {
         component.props.paddingTop = '3px'
         component.props.paddingBottom = '3px'
       }
       store.commit('addComponent', cloneDeep(component))
+    }
+
+    const onDragOver = (event: DragEvent) => {
+      event.preventDefault()
+      event.dataTransfer!.dropEffect = 'copy'
+      isDragOver.value = true
+    }
+
+    const onDragLeave = (event: DragEvent) => {
+      const target = event.target as HTMLElement
+      const relatedTarget = event.relatedTarget as HTMLElement
+      if (target.id === 'canvas-area' && !target.contains(relatedTarget)) {
+        isDragOver.value = false
+      }
+    }
+
+    const onDrop = (event: DragEvent) => {
+      event.preventDefault()
+      isDragOver.value = false
+
+      const componentDataStr = event.dataTransfer?.getData('component-data')
+      if (!componentDataStr) {
+        return
+      }
+
+      const componentData: ComponentData = JSON.parse(componentDataStr)
+      const canvasEl = document.getElementById('canvas-area')
+      if (!canvasEl) {
+        return
+      }
+
+      const canvasRect = canvasEl.getBoundingClientRect()
+      const dropX = event.clientX - canvasRect.left
+      const dropY = event.clientY - canvasRect.top + canvasEl.scrollTop
+
+      componentData.props.left = Math.max(0, dropX) + 'px'
+      componentData.props.top = Math.max(0, dropY) + 'px'
+
+      if (componentData.name === 'c-text') {
+        componentData.props.paddingTop = '3px'
+        componentData.props.paddingBottom = '3px'
+      }
+
+      store.commit('addComponent', cloneDeep(componentData))
+
+      nextTick(() => {
+        store.commit('setActive', componentData.id)
+      })
     }
     const setActive = (id: string) => {
       store.commit('setActive', id)
@@ -330,6 +384,10 @@ export default defineComponent({
       preview,
       showPreviewForm,
       switchEditStatus,
+      isDragOver,
+      onDragOver,
+      onDragLeave,
+      onDrop,
       back: () => {
         router.back()
       },
@@ -441,6 +499,34 @@ export default defineComponent({
     width: 14px;
     line-height: 18px;
     font-size: 12px;
+  }
+}
+
+.canvas-container {
+  transition:
+    box-shadow 0.2s,
+    background-color 0.2s;
+
+  &.drag-over {
+    box-shadow: inset 0 0 0 3px #75409a;
+    background-color: rgba(117, 64, 154, 0.05) !important;
+
+    &::after {
+      content: '松开鼠标放置组件';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 12px 24px;
+      background: rgba(117, 64, 154, 0.9);
+      color: #fff;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      pointer-events: none;
+      z-index: 1000;
+      white-space: nowrap;
+    }
   }
 }
 </style>
