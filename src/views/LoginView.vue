@@ -268,7 +268,7 @@ const getCode = () => {
     })
 }
 
-const loginType = ref<LoginType>('phone')
+const loginType = ref<LoginType>('email')
 const changeLoginType = () => {
   loginType.value = loginType.value === 'phone' ? 'email' : 'phone'
 }

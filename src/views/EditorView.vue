@@ -164,7 +164,7 @@
 import { computed, ref, onMounted, nextTick } from 'vue'
 import { useStore } from 'vuex'
 import { GlobalDataProps } from '../store/index'
-import { CImage, CText } from 'iacg-block'
+import { CImage } from 'iacg-block'
 
 import ComponentsList from '../components/ComponentsList.vue'
 import EditWrapper from '../components/EditWrapper.vue'
@@ -192,6 +192,7 @@ import {
 } from '@ant-design/icons-vue'
 import { Empty as AEmpty } from 'ant-design-vue/es'
 import { message } from 'ant-design-vue'
+import CText from '@/components/CText.vue'
 import GridSystem from '@/components/GridSystem.vue'
 import GridSettings from '@/components/GridSettings.vue'
 import '@chinese-fonts/mzxst/dist/MZPXflat/result.css'
